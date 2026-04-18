@@ -5,7 +5,7 @@ import logging
 from fastapi import Request
 from fastapi.responses import JSONResponse
 
-from backend.core.exceptions import (
+from core.exceptions import (
     AppError,
     DataError,
     ExternalServiceError,

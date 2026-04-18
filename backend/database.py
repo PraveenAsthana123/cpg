@@ -7,7 +7,7 @@ from pathlib import Path
 import psycopg2
 import psycopg2.extras
 
-from backend.core.config import get_settings
+from core.config import get_settings
 
 logger = logging.getLogger(__name__)
 
