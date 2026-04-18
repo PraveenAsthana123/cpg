@@ -1,0 +1,135 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: cpg_postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: cpg_analytics
+      POSTGRES_USER: cpg_user
+      POSTGRES_PASSWORD: cpg_secret_password
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cpg_user -d cpg_analytics"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: cpg_redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: cpg_ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    restart: unless-stopped
+
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:v2.12.1
+    container_name: cpg_mlflow
+    ports:
+      - "5001:5000"
+    environment:
+      MLFLOW_BACKEND_STORE_URI: postgresql://cpg_user:cpg_secret_password@postgres:5432/cpg_analytics
+      MLFLOW_DEFAULT_ARTIFACT_ROOT: /mlartifacts
+    volumes:
+      - mlartifacts:/mlartifacts
+    command: >
+      mlflow server
+      --backend-store-uri postgresql://cpg_user:cpg_secret_password@postgres:5432/cpg_analytics
+      --default-artifact-root /mlartifacts
+      --host 0.0.0.0
+      --port 5000
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: cpg_backend
+    ports:
+      - "8000:8000"
+    environment:
+      CPG_POSTGRES_HOST: postgres
+      CPG_POSTGRES_PORT: 5432
+      CPG_POSTGRES_DB: cpg_analytics
+      CPG_POSTGRES_USER: cpg_user
+      CPG_POSTGRES_PASSWORD: cpg_secret_password
+      CPG_REDIS_HOST: redis
+      CPG_REDIS_PORT: 6379
+      CPG_MLFLOW_TRACKING_URI: http://mlflow:5000
+      CPG_OLLAMA_HOST: http://ollama:11434
+      CPG_CORS_ORIGINS: "http://localhost:3000,http://frontend:3000"
+    volumes:
+      - ./backend:/app
+      - ./data:/data
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: cpg_worker
+    command: celery -A workers.celery_app worker --loglevel=info
+    environment:
+      CPG_POSTGRES_HOST: postgres
+      CPG_POSTGRES_PORT: 5432
+      CPG_POSTGRES_DB: cpg_analytics
+      CPG_POSTGRES_USER: cpg_user
+      CPG_POSTGRES_PASSWORD: cpg_secret_password
+      CPG_REDIS_HOST: redis
+      CPG_REDIS_PORT: 6379
+      CPG_MLFLOW_TRACKING_URI: http://mlflow:5000
+      CPG_OLLAMA_HOST: http://ollama:11434
+    volumes:
+      - ./backend:/app
+      - ./data:/data
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: cpg_frontend
+    ports:
+      - "3000:3000"
+    environment:
+      VITE_API_BASE_URL: http://localhost:8000
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+  ollama_data:
+  mlartifacts:
