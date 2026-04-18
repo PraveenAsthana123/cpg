@@ -1,0 +1,87 @@
+# ============================================================
+# CPG Analytics Dashboard — .gitignore
+# ============================================================
+
+# --- Secrets & Keys ---
+.env
+.env.local
+.env.*.local
+*.key
+*.pem
+.encryption.key
+credentials.*
+secrets.*
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+pip-wheel-metadata/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# --- Node / Frontend ---
+node_modules/
+frontend/dist/
+frontend/build/
+.pnp
+.pnp.js
+
+# --- Data Files ---
+*.db
+*.pkl
+*.h5
+*.joblib
+data/kaggle/*.csv
+data/kaggle/*.zip
+data/kaggle/images/
+data/raw/
+data/processed/
+
+# --- IDE ---
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# --- Docker ---
+docker-compose.override.yml
+
+# --- MLflow ---
+mlruns/
+mlartifacts/
+
+# --- OS ---
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- Logs ---
+logs/
+*.log
+*.log.*
+
+# --- Coverage ---
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+
+# --- Celery ---
+celerybeat-schedule
+celerybeat.pid
+
+# --- Temp ---
+tmp/
+temp/
+*.tmp
+*.bak
+*.bak2
+*.old
