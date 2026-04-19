@@ -19,6 +19,8 @@ import ProcessAIInfraTab from '../components/process-tabs/ProcessAIInfraTab';
 import ProcessSchedulingTab from '../components/process-tabs/ProcessSchedulingTab';
 import ProcessDatabaseTab from '../components/process-tabs/ProcessDatabaseTab';
 import ProcessMathTab from '../components/process-tabs/ProcessMathTab';
+import ProcessFeedbackTab from '../components/process-tabs/ProcessFeedbackTab';
+import ProcessSimulationTab from '../components/process-tabs/ProcessSimulationTab';
 
 const TABS = [
   { id: 'overview',      label: 'Overview',          icon: '📋' },
@@ -31,6 +33,8 @@ const TABS = [
   { id: 'analysis',      label: 'Analysis',           icon: '🔬' },
   { id: 'mathematics',   label: 'Mathematics',        icon: '∑' },
   { id: 'testing',       label: 'Testing',            icon: '🧪' },
+  { id: 'feedback',      label: 'Feedback & RLHF',    icon: '🔁' },
+  { id: 'simulation',    label: 'Simulation',         icon: '🎮' },
   { id: 'governance',    label: 'AI Governance',      icon: '🏛️' },
   { id: 'aiinfra',       label: 'AI Infrastructure',  icon: '⚙️' },
   { id: 'docs',          label: 'Documentation',      icon: '📚' },
@@ -114,6 +118,12 @@ export default function ProcessPage() {
           </div>
           <div className={`tab-panel${activeTab === 'testing' ? ' active has-padding' : ''}`}>
             <ProcessTestingTab process={process} dept={dept} />
+          </div>
+          <div className={`tab-panel${activeTab === 'feedback' ? ' active has-padding' : ''}`}>
+            <ProcessFeedbackTab process={process} dept={dept} />
+          </div>
+          <div className={`tab-panel${activeTab === 'simulation' ? ' active has-padding' : ''}`}>
+            <ProcessSimulationTab process={process} dept={dept} />
           </div>
           <div className={`tab-panel${activeTab === 'governance' ? ' active has-padding' : ''}`}>
             <ProcessGovernanceTab process={process} dept={dept} />
