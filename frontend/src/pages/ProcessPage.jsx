@@ -84,12 +84,13 @@ export default function ProcessPage() {
       </div>
 
       <div className="tabs-container">
-        <div className="tabs-bar">
+        <div className="tabs-bar" style={{ overflowX: 'auto', whiteSpace: 'nowrap', scrollbarWidth: 'thin', WebkitOverflowScrolling: 'touch', position: 'sticky', top: 'var(--topbar-height)', zIndex: 50, background: 'var(--bg-page)', paddingBottom: 2, borderBottom: '2px solid var(--border-color)' }}>
           {TABS.map((tab) => (
             <button
               key={tab.id}
               className={`tab-item${activeTab === tab.id ? ' active' : ''}`}
               onClick={() => setActiveTab(tab.id)}
+              style={{ flexShrink: 0 }}
             >
               <span className="tab-item-icon">{tab.icon}</span>
               {tab.label}

@@ -797,48 +797,86 @@ function DemoDetail({ demo }) {
         {demo.steps.map((step) => {
           const isComplete = doneStep >= step.n;
           const isActive = running && doneStep === step.n - 1;
+          const canRunIndividually = !running && doneStep === step.n - 1;
           return (
             <div
               key={step.n}
               style={{
-                display: 'flex', gap: 'var(--spacing-md)', padding: 'var(--spacing-sm) var(--spacing-md)',
                 borderRadius: 'var(--border-radius)',
                 background: isComplete ? 'rgba(16,185,129,0.07)' : isActive ? 'rgba(59,130,246,0.08)' : 'var(--bg-hover)',
                 border: `1px solid ${isComplete ? 'rgba(16,185,129,0.25)' : isActive ? 'rgba(59,130,246,0.3)' : 'var(--border-color)'}`,
                 transition: 'all 0.3s',
+                overflow: 'hidden',
               }}
             >
-              {/* Step number */}
-              <div style={{
-                width: 28, height: 28, borderRadius: '50%', flexShrink: 0,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                background: isComplete ? 'var(--accent-success)' : isActive ? 'var(--accent-primary)' : 'var(--border-color)',
-                color: isComplete || isActive ? '#fff' : 'var(--text-muted)',
-                fontWeight: 800, fontSize: 12,
-              }}>
-                {isComplete ? '✓' : step.n}
-              </div>
-
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontWeight: 600, fontSize: 'var(--font-size-xs)', color: isComplete ? 'var(--accent-success)' : isActive ? 'var(--accent-primary)' : 'var(--text-primary)', marginBottom: 3 }}>
-                  Step {step.n}: {step.label}
+              {/* Step header row */}
+              <div style={{ display: 'flex', gap: 'var(--spacing-md)', padding: 'var(--spacing-sm) var(--spacing-md)', alignItems: 'center' }}>
+                <div style={{
+                  width: 28, height: 28, borderRadius: '50%', flexShrink: 0,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  background: isComplete ? 'var(--accent-success)' : isActive ? 'var(--accent-primary)' : 'var(--border-color)',
+                  color: isComplete || isActive ? '#fff' : 'var(--text-muted)',
+                  fontWeight: 800, fontSize: 12,
+                }}>
+                  {isComplete ? '✓' : step.n}
                 </div>
-                <div style={{ fontSize: 10, color: 'var(--text-secondary)', lineHeight: 1.5, marginBottom: isComplete ? 6 : 0 }}>{step.desc}</div>
-                {(isComplete || isActive) && (
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6, marginTop: 6 }}>
-                    <div style={{ padding: '5px 8px', borderRadius: 4, background: 'rgba(59,130,246,0.08)', border: '1px solid rgba(59,130,246,0.2)' }}>
-                      <div style={{ fontSize: 9, fontWeight: 700, color: 'var(--accent-primary)', marginBottom: 2 }}>INPUT</div>
-                      <div style={{ fontSize: 10, color: 'var(--text-secondary)' }}>{step.input}</div>
-                    </div>
-                    {isComplete && (
-                      <div style={{ padding: '5px 8px', borderRadius: 4, background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.2)' }}>
-                        <div style={{ fontSize: 9, fontWeight: 700, color: 'var(--accent-success)', marginBottom: 2 }}>OUTPUT</div>
-                        <div style={{ fontSize: 10, color: 'var(--text-secondary)' }}>{step.output}</div>
-                      </div>
-                    )}
+
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontWeight: 600, fontSize: 'var(--font-size-sm)', color: isComplete ? 'var(--accent-success)' : isActive ? 'var(--accent-primary)' : 'var(--text-primary)' }}>
+                    Step {step.n}: {step.label}
+                  </div>
+                  <div style={{ fontSize: 'var(--font-size-xs)', color: 'var(--text-secondary)', lineHeight: 1.5 }}>{step.desc}</div>
+                </div>
+
+                {/* Individual Run button */}
+                {canRunIndividually && (
+                  <button
+                    onClick={() => {
+                      setRunning(true);
+                      setTimeout(() => { setDoneStep(step.n); setRunning(false); }, 900 + Math.random() * 800);
+                    }}
+                    style={{
+                      padding: '5px 14px', border: 'none', borderRadius: 'var(--border-radius-sm)',
+                      background: 'var(--accent-primary)', color: '#fff', fontSize: 'var(--font-size-xs)',
+                      fontWeight: 600, cursor: 'pointer', flexShrink: 0, whiteSpace: 'nowrap',
+                    }}
+                  >
+                    ▶ Run Step
+                  </button>
+                )}
+                {isActive && (
+                  <div style={{ fontSize: 'var(--font-size-xs)', color: 'var(--accent-primary)', fontWeight: 600, flexShrink: 0, display: 'flex', alignItems: 'center', gap: 4 }}>
+                    <span style={{ display: 'inline-block', animation: 'spin 1s linear infinite', fontSize: 14 }}>⏳</span> Running...
                   </div>
                 )}
+                {isComplete && (
+                  <span style={{ fontSize: 'var(--font-size-xs)', color: 'var(--accent-success)', fontWeight: 600, flexShrink: 0 }}>✓ Done</span>
+                )}
               </div>
+
+              {/* Expanded Input → Process → Output panel */}
+              {isComplete && (
+                <div style={{ padding: '0 var(--spacing-md) var(--spacing-md)', marginTop: 4 }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8 }}>
+                    {/* INPUT */}
+                    <div style={{ padding: '8px 10px', borderRadius: 'var(--border-radius-sm)', background: 'rgba(59,130,246,0.08)', border: '1px solid rgba(59,130,246,0.2)' }}>
+                      <div style={{ fontSize: 9, fontWeight: 700, color: 'var(--accent-primary)', marginBottom: 4, letterSpacing: '0.05em' }}>📥 INPUT</div>
+                      <div style={{ fontSize: 'var(--font-size-xs)', color: 'var(--text-secondary)', lineHeight: 1.6 }}>{step.input}</div>
+                    </div>
+                    {/* PROCESS */}
+                    <div style={{ padding: '8px 10px', borderRadius: 'var(--border-radius-sm)', background: 'rgba(139,92,246,0.08)', border: '1px solid rgba(139,92,246,0.2)' }}>
+                      <div style={{ fontSize: 9, fontWeight: 700, color: 'var(--accent-purple)', marginBottom: 4, letterSpacing: '0.05em' }}>⚙️ PROCESS</div>
+                      <div style={{ fontSize: 'var(--font-size-xs)', color: 'var(--text-secondary)', lineHeight: 1.6 }}>{step.desc}</div>
+                      <div style={{ marginTop: 4, fontSize: 10, color: 'var(--text-muted)' }}>Duration: {(0.5 + Math.random() * 4).toFixed(1)}s | Status: Complete</div>
+                    </div>
+                    {/* OUTPUT */}
+                    <div style={{ padding: '8px 10px', borderRadius: 'var(--border-radius-sm)', background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.2)' }}>
+                      <div style={{ fontSize: 9, fontWeight: 700, color: 'var(--accent-success)', marginBottom: 4, letterSpacing: '0.05em' }}>📤 OUTPUT</div>
+                      <div style={{ fontSize: 'var(--font-size-xs)', color: 'var(--text-secondary)', lineHeight: 1.6 }}>{step.output}</div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           );
         })}
