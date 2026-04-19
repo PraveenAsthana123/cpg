@@ -17,15 +17,19 @@ import ProcessDataPipelineTab from '../components/process-tabs/ProcessDataPipeli
 import ProcessAnalysisTab from '../components/process-tabs/ProcessAnalysisTab';
 import ProcessAIInfraTab from '../components/process-tabs/ProcessAIInfraTab';
 import ProcessSchedulingTab from '../components/process-tabs/ProcessSchedulingTab';
+import ProcessDatabaseTab from '../components/process-tabs/ProcessDatabaseTab';
+import ProcessMathTab from '../components/process-tabs/ProcessMathTab';
 
 const TABS = [
   { id: 'overview',      label: 'Overview',          icon: '📋' },
   { id: 'problem',       label: 'Problem & Use Case', icon: '🎯' },
   { id: 'data',          label: 'Data',               icon: '🗂️' },
   { id: 'datapipeline',  label: 'Data Pipeline',      icon: '🔁' },
+  { id: 'databases',     label: 'Databases',          icon: '🗄️' },
   { id: 'models',        label: 'Models',             icon: '🧠' },
   { id: 'accuracy',      label: 'Accuracy',           icon: '📈' },
   { id: 'analysis',      label: 'Analysis',           icon: '🔬' },
+  { id: 'mathematics',   label: 'Mathematics',        icon: '∑' },
   { id: 'testing',       label: 'Testing',            icon: '🧪' },
   { id: 'governance',    label: 'AI Governance',      icon: '🏛️' },
   { id: 'aiinfra',       label: 'AI Infrastructure',  icon: '⚙️' },
@@ -102,6 +106,9 @@ export default function ProcessPage() {
           <div className={`tab-panel${activeTab === 'datapipeline' ? ' active has-padding' : ''}`}>
             <ProcessDataPipelineTab process={process} dept={dept} />
           </div>
+          <div className={`tab-panel${activeTab === 'databases' ? ' active has-padding' : ''}`}>
+            <ProcessDatabaseTab process={process} dept={dept} />
+          </div>
           <div className={`tab-panel${activeTab === 'models' ? ' active has-padding' : ''}`}>
             <ProcessModelsTab process={process} dept={dept} />
           </div>
@@ -125,6 +132,9 @@ export default function ProcessPage() {
           </div>
           <div className={`tab-panel${activeTab === 'analysis' ? ' active has-padding' : ''}`}>
             <ProcessAnalysisTab process={process} dept={dept} />
+          </div>
+          <div className={`tab-panel${activeTab === 'mathematics' ? ' active has-padding' : ''}`}>
+            <ProcessMathTab process={process} dept={dept} />
           </div>
           <div className={`tab-panel${activeTab === 'aiinfra' ? ' active has-padding' : ''}`}>
             <ProcessAIInfraTab process={process} dept={dept} />
