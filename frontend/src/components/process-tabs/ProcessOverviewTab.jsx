@@ -2,14 +2,110 @@ import { useState, useRef } from 'react';
 import '../../styles/workbench.css';
 
 const PIPELINE_STEPS = [
-  { id: 'data-input', label: 'Data Input', icon: '📥', desc: 'Load raw data from source system or custom path.', output: 'Raw dataset loaded — {rows} rows × {cols} columns' },
-  { id: 'eda', label: 'EDA', icon: '🔍', desc: 'Exploratory data analysis: shape, distributions, correlations.', output: 'EDA complete — 3 high-missing columns flagged, skewness detected' },
-  { id: 'preprocessing', label: 'Preprocessing', icon: '🧹', desc: 'Clean nulls, remove duplicates, fix data types.', output: 'Preprocessing done — 0 nulls, 0 duplicates, types validated' },
-  { id: 'feature-eng', label: 'Feature Eng.', icon: '🛠️', desc: 'Create lag features, rolling stats, one-hot encoding.', output: 'Feature engineering done — 12 new features added (33 → 45 total)' },
-  { id: 'model-select', label: 'Model Select', icon: '🧠', desc: 'Auto-select best model from candidates.', output: 'XGBoost selected — highest CV score (0.91 AUROC)' },
-  { id: 'training', label: 'Training', icon: '🏋️', desc: 'Train selected model with tuned hyperparameters.', output: 'Training complete — 50 epochs, best val loss: 0.082' },
-  { id: 'evaluation', label: 'Evaluation', icon: '📊', desc: 'Score on holdout set, generate metrics and charts.', output: 'Accuracy: 92.4% | F1: 0.914 | AUC: 0.963' },
-  { id: 'output', label: 'Output', icon: '📤', desc: 'Export predictions, push to ERP/dashboard.', output: 'Predictions exported to /output/predictions_v1.csv (750K rows)' },
+  {
+    id: 'data-input', label: 'Data Input', icon: '📥',
+    desc: 'Load raw data from source system or custom path.',
+    output: 'Raw dataset loaded — {rows} rows × {cols} columns',
+    richOutput: [
+      { label: 'Source', value: 'data/kaggle/sales/train.csv' },
+      { label: 'Rows loaded', value: '3,000,000' },
+      { label: 'Columns', value: '10 (store_id, item_id, date, sales, …)' },
+      { label: 'Date range', value: '2013-01-01 → 2015-10-31' },
+      { label: 'File size', value: '52.4 MB' },
+      { label: 'Load time', value: '1.8s' },
+    ],
+  },
+  {
+    id: 'eda', label: 'EDA', icon: '🔍',
+    desc: 'Exploratory data analysis: shape, distributions, correlations.',
+    output: 'EDA complete — 3 high-missing columns flagged, skewness detected',
+    richOutput: [
+      { label: 'Columns analysed', value: '10' },
+      { label: 'Missing values', value: '3.2% (96,000 rows affected)' },
+      { label: 'Outliers detected', value: '847 (IQR method)' },
+      { label: 'Skewed features', value: 'sales (+2.4), promo_cost (+1.9)' },
+      { label: 'Correlations >0.8', value: '3 pairs flagged (multicollinearity risk)' },
+      { label: 'Seasonality', value: 'Weekly + Annual patterns confirmed' },
+    ],
+  },
+  {
+    id: 'preprocessing', label: 'Preprocessing', icon: '🧹',
+    desc: 'Clean nulls, remove duplicates, fix data types.',
+    output: 'Preprocessing done — 0 nulls, 0 duplicates, types validated',
+    richOutput: [
+      { label: 'Strategy: missing values', value: 'Median imputation (numerical), mode (categorical)' },
+      { label: 'Strategy: outliers', value: 'IQR capping (1.5×)' },
+      { label: 'Duplicate rows removed', value: '127' },
+      { label: 'Clean rows', value: '2,987,153' },
+      { label: 'Type fixes', value: 'date → datetime, store_id → category' },
+      { label: 'Processing time', value: '3.2s' },
+    ],
+  },
+  {
+    id: 'feature-eng', label: 'Feature Eng.', icon: '🛠️',
+    desc: 'Create lag features, rolling stats, one-hot encoding.',
+    output: 'Feature engineering done — 12 new features added (33 → 45 total)',
+    richOutput: [
+      { label: 'Lag features', value: '7 (lag_1, lag_7, lag_14, lag_28, lag_30, lag_60, lag_90)' },
+      { label: 'Rolling window features', value: '5 (mean_7d, mean_30d, std_7d, min_30d, max_30d)' },
+      { label: 'Calendar features', value: '8 (day_of_week, month, quarter, is_holiday, …)' },
+      { label: 'Interaction features', value: '13 (promo × lag_1, store × item, …)' },
+      { label: 'Total features', value: '33 (original: 10, engineered: 23)' },
+      { label: 'Time elapsed', value: '5.7s' },
+    ],
+  },
+  {
+    id: 'model-select', label: 'Model Select', icon: '🧠',
+    desc: 'Auto-select best model from candidates.',
+    output: 'XGBoost selected — highest CV score (0.91 AUROC)',
+    richOutput: [
+      { label: 'Models evaluated', value: '4 (XGBoost, LightGBM, Ridge, ARIMA)' },
+      { label: 'Selection metric', value: 'MAPE (5-fold CV)' },
+      { label: 'Best model', value: 'XGBoost — MAPE: 7.8%' },
+      { label: 'Runner-up', value: 'LightGBM — MAPE: 8.4%' },
+      { label: 'Baseline (naive)', value: 'MAPE: 22.4%' },
+      { label: 'Improvement vs baseline', value: '+65.2%' },
+    ],
+  },
+  {
+    id: 'training', label: 'Training', icon: '🏋️',
+    desc: 'Train selected model with tuned hyperparameters.',
+    output: 'Training complete — 50 epochs, best val loss: 0.082',
+    richOutput: [
+      { label: 'Algorithm', value: 'XGBoost (gradient boosted trees)' },
+      { label: 'Training time', value: '42.3s' },
+      { label: 'Trees trained', value: '100 (n_estimators=100)' },
+      { label: 'Max depth', value: '6' },
+      { label: 'Best val loss', value: '0.082' },
+      { label: 'MLflow run ID', value: 'abc123def456' },
+    ],
+  },
+  {
+    id: 'evaluation', label: 'Evaluation', icon: '📊',
+    desc: 'Score on holdout set, generate metrics and charts.',
+    output: 'Accuracy: 92.4% | F1: 0.914 | AUC: 0.963',
+    richOutput: [
+      { label: 'MAPE', value: '7.8%' },
+      { label: 'RMSE', value: '34.2' },
+      { label: 'R²', value: '0.94' },
+      { label: 'Bias', value: '+0.3% (near-zero)' },
+      { label: 'Accuracy (cls)', value: '92.4%' },
+      { label: 'F1 / AUC', value: '0.914 / 0.963' },
+    ],
+  },
+  {
+    id: 'output', label: 'Output', icon: '📤',
+    desc: 'Export predictions, push to ERP/dashboard.',
+    output: 'Predictions exported to /output/predictions_v1.csv (750K rows)',
+    richOutput: [
+      { label: 'Forecast horizon', value: '30 days' },
+      { label: 'Stores', value: '50' },
+      { label: 'SKUs', value: '200' },
+      { label: 'Total predictions', value: '300,000' },
+      { label: 'Output file', value: '/output/predictions_2024W48_v1.csv' },
+      { label: 'Dashboard', value: 'Updated — live at /forecasts/v1' },
+    ],
+  },
 ];
 
 /* ---- User Stories by process ID ---- */
@@ -503,8 +599,20 @@ export default function ProcessOverviewTab({ process, dept }) {
               </div>
               <p style={{ fontSize: 'var(--font-size-xs)', color: 'var(--text-secondary)', marginBottom: 8 }}>{step.desc}</p>
               {status === 'complete' && (
-                <div style={{ padding: '6px 10px', background: 'rgba(16,185,129,0.06)', borderRadius: 4, fontSize: 'var(--font-size-xs)', color: 'var(--accent-success)', fontWeight: 500 }}>
-                  ✓ {step.output}
+                <div>
+                  <div style={{ padding: '6px 10px', background: 'rgba(16,185,129,0.06)', borderRadius: 4, fontSize: 'var(--font-size-xs)', color: 'var(--accent-success)', fontWeight: 500, marginBottom: 8 }}>
+                    ✓ {step.output}
+                  </div>
+                  {step.richOutput && (
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 6 }}>
+                      {step.richOutput.map((r) => (
+                        <div key={r.label} style={{ padding: '6px 10px', background: 'rgba(16,185,129,0.04)', border: '1px solid rgba(16,185,129,0.15)', borderRadius: 6 }}>
+                          <div style={{ fontSize: 9, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: 2 }}>{r.label}</div>
+                          <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-primary)' }}>{r.value}</div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               )}
               {status === 'error' && (

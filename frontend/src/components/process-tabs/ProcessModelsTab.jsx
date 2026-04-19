@@ -35,20 +35,73 @@ const MODEL_CATEGORIES = {
     icon: '📈',
     models: ['Prophet', 'DeepAR', 'Temporal Fusion Transformer', 'NeuralProphet', 'TBATS', 'Additive Model', 'Diffusion'],
   },
+  cv: {
+    label: 'Computer Vision',
+    color: '#ec4899',
+    bg: 'rgba(236,72,153,0.1)',
+    icon: '👁️',
+    models: ['ResNet', 'YOLO', 'EfficientNet', 'U-Net', 'Mask R-CNN', 'Vision Transformer'],
+  },
+  hybrid: {
+    label: 'Hybrid',
+    color: '#06b6d4',
+    bg: 'rgba(6,182,212,0.1)',
+    icon: '🔗',
+    models: ['XGBoost + LSTM Ensemble', 'CNN + LSTM', 'Prophet + XGBoost', 'Stacking (RF + XGB + LGB)'],
+  },
 };
 
 function inferCategory(algorithm = '', name = '') {
   const text = `${algorithm} ${name}`.toLowerCase();
+  if (MODEL_CATEGORIES.hybrid.models.some((m) => text.includes(m.toLowerCase()))) return 'hybrid';
+  if (MODEL_CATEGORIES.cv.models.some((m) => text.includes(m.toLowerCase()))) return 'cv';
   if (MODEL_CATEGORIES.dl.models.some((m) => text.includes(m.toLowerCase()))) return 'dl';
   if (MODEL_CATEGORIES.timeseries.models.some((m) => text.includes(m.toLowerCase()))) return 'timeseries';
   if (MODEL_CATEGORIES.ml.models.some((m) => text.includes(m.toLowerCase()))) return 'ml';
   if (MODEL_CATEGORIES.statistical.models.some((m) => text.includes(m.toLowerCase()))) return 'statistical';
   // fallback by keyword
+  if (/resnet|yolo|efficientnet|unet|u-net|mask|vit|vision transformer/.test(text)) return 'cv';
+  if (/ensemble|stacking|hybrid/.test(text)) return 'hybrid';
   if (/deep|lstm|gru|cnn|transformer|neural|bert|rnn/.test(text)) return 'dl';
   if (/prophet|arima|sarima|ets|tbats|var|holt/.test(text)) return 'timeseries';
   if (/boost|forest|regression|ridge|catboost|lightgbm/.test(text)) return 'ml';
   return 'statistical';
 }
+
+/* ---- CV Task Types ---- */
+const CV_TASK_TYPES = [
+  {
+    id: 'classification',
+    label: 'Classification',
+    icon: '🏷️',
+    desc: 'Assigns a single label to the entire image. Answers: "What class does this image belong to?"',
+    example: 'Is this product image showing damage? Yes/No',
+    models: ['ResNet-50', 'EfficientNet-B4', 'Vision Transformer (ViT)'],
+    accuracy: '94.2% top-1',
+    color: '#3b82f6',
+  },
+  {
+    id: 'detection',
+    label: 'Detection',
+    icon: '📦',
+    desc: 'Locates and classifies multiple objects in an image using bounding boxes.',
+    example: 'Detect shelf gaps, misplaced products, or damaged packaging on retail shelves.',
+    models: ['YOLO v8', 'Faster R-CNN', 'SSD MobileNet'],
+    accuracy: '87.6% mAP@50',
+    color: '#10b981',
+  },
+  {
+    id: 'segmentation',
+    label: 'Segmentation',
+    icon: '🖼️',
+    desc: 'Assigns a class label to every pixel — pixel-level classification of the image.',
+    example: 'Segment product labels from background for OCR or quality inspection.',
+    models: ['U-Net', 'Mask R-CNN', 'DeepLab v3'],
+    accuracy: '82.3% mIoU',
+    color: '#8b5cf6',
+  },
+];
+
 
 /* ---- Default hyperparams per algorithm ---- */
 const HYPERPARAM_PRESETS = {
@@ -164,7 +217,7 @@ function ConfusionMatrix({ metrics }) {
 
 /* ---- Category Summary ---- */
 function CategorySummary({ models }) {
-  const counts = { statistical: 0, ml: 0, dl: 0, timeseries: 0 };
+  const counts = { statistical: 0, ml: 0, dl: 0, timeseries: 0, cv: 0, hybrid: 0 };
   const bestByCategory = {};
 
   models.forEach((m) => {
@@ -195,7 +248,7 @@ function CategorySummary({ models }) {
           </span>
         )}
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 'var(--spacing-sm)' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: 'var(--spacing-sm)' }}>
         {Object.entries(MODEL_CATEGORIES).map(([key, cat]) => {
           const best = bestByCategory[key];
           const isOverallBest = key === overallBestCat;
@@ -250,7 +303,8 @@ export default function ProcessModelsTab({ process }) {
   const [trainState, setTrainState] = useState('idle'); // idle | running | done
   const [trainProgress, setTrainProgress] = useState(0);
   const [selectedModels, setSelectedModels] = useState(() => new Set([0]));
-  const [activeCategories, setActiveCategories] = useState(() => new Set(['statistical', 'ml', 'dl', 'timeseries']));
+  const [activeCategories, setActiveCategories] = useState(() => new Set(['statistical', 'ml', 'dl', 'timeseries', 'cv', 'hybrid']));
+  const [activeCvTask, setActiveCvTask] = useState(null);
 
   const { key: algoKey, params } = useMemo(() => getHyperparams(models[selectedModel]?.algorithm), [selectedModel, models]);
 
@@ -368,6 +422,51 @@ export default function ProcessModelsTab({ process }) {
               );
             })}
           </div>
+
+          {/* CV Task Types — shown when CV category active */}
+          {activeCategories.has('cv') && (
+            <div className="content-section" style={{ marginBottom: 'var(--spacing-md)' }}>
+              <div className="content-section-header">
+                <span className="content-section-title">👁️ Computer Vision Task Types</span>
+                <span style={{ fontSize: 'var(--font-size-xs)', color: 'var(--text-muted)' }}>Click to expand details</span>
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 'var(--spacing-sm)' }}>
+                {CV_TASK_TYPES.map((task) => (
+                  <div
+                    key={task.id}
+                    onClick={() => setActiveCvTask(activeCvTask === task.id ? null : task.id)}
+                    style={{
+                      padding: 'var(--spacing-md)', borderRadius: 'var(--border-radius-lg)',
+                      background: `rgba(${task.color === '#3b82f6' ? '59,130,246' : task.color === '#10b981' ? '16,185,129' : '139,92,246'},0.08)`,
+                      border: `1px solid ${activeCvTask === task.id ? task.color : 'var(--border-color)'}`,
+                      cursor: 'pointer', transition: 'border 0.15s',
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
+                      <span style={{ fontSize: '1.4rem' }}>{task.icon}</span>
+                      <span style={{ fontWeight: 700, color: task.color, fontSize: 'var(--font-size-sm)' }}>{task.label}</span>
+                      <span style={{ marginLeft: 'auto', fontSize: 10, fontWeight: 700, color: task.color }}>{task.accuracy}</span>
+                    </div>
+                    <div style={{ fontSize: 'var(--font-size-xs)', color: 'var(--text-secondary)', lineHeight: 1.5 }}>{task.desc}</div>
+                    {activeCvTask === task.id && (
+                      <div style={{ marginTop: 'var(--spacing-sm)', paddingTop: 'var(--spacing-sm)', borderTop: '1px solid var(--border-color)' }}>
+                        <div style={{ fontSize: 10, fontWeight: 700, color: 'var(--text-muted)', marginBottom: 4 }}>EXAMPLE</div>
+                        <div style={{ fontSize: 10, color: 'var(--text-secondary)', marginBottom: 8, fontStyle: 'italic' }}>{task.example}</div>
+                        <div style={{ fontSize: 10, fontWeight: 700, color: 'var(--text-muted)', marginBottom: 4 }}>COMMON MODELS</div>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                          {task.models.map((m) => (
+                            <div key={m} style={{ fontSize: 10, padding: '2px 8px', background: 'var(--bg-hover)', borderRadius: 4, color: 'var(--text-secondary)' }}>
+                              {m}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           <div className="content-section">
             <div className="content-section-header">
