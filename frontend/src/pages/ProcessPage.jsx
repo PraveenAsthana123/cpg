@@ -16,6 +16,7 @@ import ProcessChatbotTab from '../components/process-tabs/ProcessChatbotTab';
 import ProcessDataPipelineTab from '../components/process-tabs/ProcessDataPipelineTab';
 import ProcessAnalysisTab from '../components/process-tabs/ProcessAnalysisTab';
 import ProcessAIInfraTab from '../components/process-tabs/ProcessAIInfraTab';
+import ProcessSchedulingTab from '../components/process-tabs/ProcessSchedulingTab';
 
 const TABS = [
   { id: 'overview',      label: 'Overview',          icon: '📋' },
@@ -31,6 +32,7 @@ const TABS = [
   { id: 'docs',          label: 'Documentation',      icon: '📚' },
   { id: 'demos',         label: 'Demo Scenarios',     icon: '🎬' },
   { id: 'automation',    label: 'Automation',         icon: '⚡' },
+  { id: 'scheduling',    label: 'Scheduling',         icon: '🗓️' },
   { id: 'chatbot',       label: 'Chatbot',            icon: '🤖' },
 ];
 
@@ -126,6 +128,9 @@ export default function ProcessPage() {
           </div>
           <div className={`tab-panel${activeTab === 'aiinfra' ? ' active has-padding' : ''}`}>
             <ProcessAIInfraTab process={process} dept={dept} />
+          </div>
+          <div className={`tab-panel${activeTab === 'scheduling' ? ' active has-padding' : ''}`}>
+            <ProcessSchedulingTab process={process} dept={dept} />
           </div>
           <div className={`tab-panel${activeTab === 'chatbot' ? ' active has-padding' : ''}`}>
             <ProcessChatbotTab process={process} dept={dept} />
