@@ -1,9 +1,54 @@
 import { useState, useMemo } from 'react';
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-  BarChart, Bar, RadarChart, Radar, PolarGrid, PolarAngleAxis, Legend,
+  BarChart, Bar, RadarChart, Radar, PolarGrid, PolarAngleAxis, Legend, Cell,
 } from 'recharts';
 import '../../styles/workbench.css';
+
+/* ---- Model Categories ---- */
+const MODEL_CATEGORIES = {
+  statistical: {
+    label: 'Statistical',
+    color: 'var(--accent-primary)',
+    bg: 'rgba(59,130,246,0.1)',
+    icon: '📐',
+    models: ['ARIMA', 'ETS', 'Holt-Winters', 'SARIMA', 'VAR'],
+  },
+  ml: {
+    label: 'ML',
+    color: 'var(--accent-success)',
+    bg: 'rgba(16,185,129,0.1)',
+    icon: '🤖',
+    models: ['XGBoost', 'LightGBM', 'Random Forest', 'Ridge Regression', 'Gradient Boosting', 'CatBoost'],
+  },
+  dl: {
+    label: 'Deep Learning',
+    color: 'var(--accent-purple)',
+    bg: 'rgba(139,92,246,0.1)',
+    icon: '🧠',
+    models: ['LSTM', 'GRU', 'Temporal CNN', 'Transformer', 'N-BEATS', 'RNN', 'Neural'],
+  },
+  timeseries: {
+    label: 'Time Series',
+    color: 'var(--accent-warning)',
+    bg: 'rgba(245,158,11,0.1)',
+    icon: '📈',
+    models: ['Prophet', 'DeepAR', 'Temporal Fusion Transformer', 'NeuralProphet', 'TBATS', 'Additive Model', 'Diffusion'],
+  },
+};
+
+function inferCategory(algorithm = '', name = '') {
+  const text = `${algorithm} ${name}`.toLowerCase();
+  if (MODEL_CATEGORIES.dl.models.some((m) => text.includes(m.toLowerCase()))) return 'dl';
+  if (MODEL_CATEGORIES.timeseries.models.some((m) => text.includes(m.toLowerCase()))) return 'timeseries';
+  if (MODEL_CATEGORIES.ml.models.some((m) => text.includes(m.toLowerCase()))) return 'ml';
+  if (MODEL_CATEGORIES.statistical.models.some((m) => text.includes(m.toLowerCase()))) return 'statistical';
+  // fallback by keyword
+  if (/deep|lstm|gru|cnn|transformer|neural|bert|rnn/.test(text)) return 'dl';
+  if (/prophet|arima|sarima|ets|tbats|var|holt/.test(text)) return 'timeseries';
+  if (/boost|forest|regression|ridge|catboost|lightgbm/.test(text)) return 'ml';
+  return 'statistical';
+}
 
 /* ---- Default hyperparams per algorithm ---- */
 const HYPERPARAM_PRESETS = {
@@ -117,8 +162,86 @@ function ConfusionMatrix({ metrics }) {
   );
 }
 
+/* ---- Category Summary ---- */
+function CategorySummary({ models }) {
+  const counts = { statistical: 0, ml: 0, dl: 0, timeseries: 0 };
+  const bestByCategory = {};
+
+  models.forEach((m) => {
+    const cat = m.category || inferCategory(m.algorithm, m.name);
+    counts[cat] = (counts[cat] || 0) + 1;
+    if (!bestByCategory[cat] || m.accuracy > bestByCategory[cat].accuracy) {
+      bestByCategory[cat] = m;
+    }
+  });
+
+  const overallBestCat = Object.entries(bestByCategory).reduce((best, [cat, m]) => {
+    if (!best || m.accuracy > bestByCategory[best].accuracy) return cat;
+    return best;
+  }, null);
+
+  return (
+    <div className="content-section" style={{ marginBottom: 'var(--spacing-md)' }}>
+      <div className="content-section-header">
+        <span className="content-section-title">🏆 Model Category Summary</span>
+        {overallBestCat && (
+          <span style={{
+            fontSize: 'var(--font-size-xs)', fontWeight: 700,
+            padding: '2px 10px', borderRadius: 8,
+            background: MODEL_CATEGORIES[overallBestCat].bg,
+            color: MODEL_CATEGORIES[overallBestCat].color,
+          }}>
+            Best: {MODEL_CATEGORIES[overallBestCat].label} ({bestByCategory[overallBestCat]?.accuracy}%)
+          </span>
+        )}
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 'var(--spacing-sm)' }}>
+        {Object.entries(MODEL_CATEGORIES).map(([key, cat]) => {
+          const best = bestByCategory[key];
+          const isOverallBest = key === overallBestCat;
+          return (
+            <div key={key} style={{
+              padding: 'var(--spacing-md)', borderRadius: 'var(--border-radius-lg)',
+              background: cat.bg,
+              border: `1px solid ${isOverallBest ? cat.color : 'transparent'}`,
+              position: 'relative',
+            }}>
+              {isOverallBest && (
+                <span style={{
+                  position: 'absolute', top: 6, right: 8,
+                  fontSize: 10, fontWeight: 700, color: cat.color,
+                }}>★ BEST</span>
+              )}
+              <div style={{ fontSize: '1.4rem', marginBottom: 4 }}>{cat.icon}</div>
+              <div style={{ fontWeight: 700, color: cat.color, fontSize: 'var(--font-size-sm)' }}>{cat.label}</div>
+              <div style={{ fontSize: 24, fontWeight: 800, color: 'var(--text-primary)', margin: '4px 0' }}>{counts[key] || 0}</div>
+              <div style={{ fontSize: 10, color: 'var(--text-muted)' }}>models evaluated</div>
+              {best && (
+                <div style={{
+                  marginTop: 8, padding: '4px 8px',
+                  background: 'rgba(255,255,255,0.6)', borderRadius: 'var(--border-radius-sm)',
+                  fontSize: 10, color: 'var(--text-secondary)',
+                }}>
+                  Best: <strong>{best.name}</strong> ({best.accuracy}%)
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 export default function ProcessModelsTab({ process }) {
-  const models = process.models || [];
+  const rawModels = process.models || [];
+
+  // Enrich models with category
+  const models = useMemo(() => rawModels.map((m) => ({
+    ...m,
+    category: m.category || inferCategory(m.algorithm, m.name),
+  })), [rawModels]);
+
   const best = models[0];
 
   const [selectedModel, setSelectedModel] = useState(0);
@@ -127,6 +250,7 @@ export default function ProcessModelsTab({ process }) {
   const [trainState, setTrainState] = useState('idle'); // idle | running | done
   const [trainProgress, setTrainProgress] = useState(0);
   const [selectedModels, setSelectedModels] = useState(() => new Set([0]));
+  const [activeCategories, setActiveCategories] = useState(() => new Set(['statistical', 'ml', 'dl', 'timeseries']));
 
   const { key: algoKey, params } = useMemo(() => getHyperparams(models[selectedModel]?.algorithm), [selectedModel, models]);
 
@@ -147,6 +271,24 @@ export default function ProcessModelsTab({ process }) {
     { name: 'Industry Avg', value: Math.max(60, metrics.accuracy - 12), fill: 'var(--accent-warning)' },
     { name: 'Best in Class', value: Math.min(99, metrics.accuracy + 3), fill: 'var(--accent-purple)' },
   ];
+
+  // Filtered models based on active categories
+  const filteredModels = useMemo(
+    () => models.filter((m) => activeCategories.has(m.category)),
+    [models, activeCategories],
+  );
+
+  function toggleCategory(cat) {
+    setActiveCategories((prev) => {
+      const next = new Set(prev);
+      if (next.has(cat)) {
+        if (next.size > 1) next.delete(cat);
+      } else {
+        next.add(cat);
+      }
+      return next;
+    });
+  }
 
   function startTraining() {
     setTrainState('running');
@@ -199,59 +341,99 @@ export default function ProcessModelsTab({ process }) {
       {/* ---- MODEL COMPARISON ---- */}
       {activeSection === 'comparison' && (
         <div>
+          {/* Category Summary */}
+          <CategorySummary models={models} />
+
+          {/* Category Filter Toggles */}
+          <div style={{ display: 'flex', gap: 8, marginBottom: 'var(--spacing-md)', flexWrap: 'wrap', alignItems: 'center' }}>
+            <span style={{ fontSize: 'var(--font-size-xs)', color: 'var(--text-muted)', fontWeight: 600 }}>Filter by category:</span>
+            {Object.entries(MODEL_CATEGORIES).map(([key, cat]) => {
+              const active = activeCategories.has(key);
+              return (
+                <button
+                  key={key}
+                  onClick={() => toggleCategory(key)}
+                  style={{
+                    padding: '5px 14px', borderRadius: 'var(--border-radius-lg)',
+                    border: `1px solid ${active ? cat.color : 'var(--border-color)'}`,
+                    background: active ? cat.bg : 'var(--bg-card)',
+                    color: active ? cat.color : 'var(--text-muted)',
+                    fontSize: 'var(--font-size-xs)', fontWeight: 700, cursor: 'pointer',
+                    display: 'flex', alignItems: 'center', gap: 4,
+                  }}
+                >
+                  <span>{cat.icon}</span>
+                  {cat.label}
+                </button>
+              );
+            })}
+          </div>
+
           <div className="content-section">
             <div className="content-section-header">
               <span className="content-section-title">🧠 Model Selection Panel</span>
-              <span style={{ fontSize: 'var(--font-size-xs)', color: 'var(--text-muted)' }}>{models.length} models evaluated</span>
+              <span style={{ fontSize: 'var(--font-size-xs)', color: 'var(--text-muted)' }}>{filteredModels.length} of {models.length} models shown</span>
             </div>
             <div className="table-wrapper">
               <table className="model-comparison">
                 <thead>
                   <tr>
-                    <th>Select</th><th>Model</th><th>Algorithm</th><th>Type</th><th>Accuracy</th><th>Status</th>
+                    <th>Select</th><th>Model</th><th>Algorithm</th><th>Category</th><th>Type</th><th>Accuracy</th><th>Status</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {models.map((m, i) => (
-                    <tr key={i} className={i === 0 ? 'best-model' : ''} style={{ cursor: 'pointer' }} onClick={() => { setSelectedModel(i); }}>
-                      <td>
-                        <input
-                          type="checkbox"
-                          checked={selectedModels.has(i)}
-                          onChange={() => toggleModelSelect(i)}
-                          onClick={(e) => e.stopPropagation()}
-                          style={{ cursor: 'pointer' }}
-                        />
-                      </td>
-                      <td>
-                        <div className="model-name-cell">
-                          {i === 0 && <span className="best-model-crown">👑</span>}
-                          {m.name}
-                        </div>
-                      </td>
-                      <td style={{ fontSize: 'var(--font-size-xs)', color: 'var(--text-secondary)' }}>{m.algorithm}</td>
-                      <td>
-                        <span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 8, background: 'var(--bg-hover)', fontWeight: 700, color: 'var(--text-muted)' }}>
-                          {m.algorithm?.includes('LSTM') || m.algorithm?.includes('Neural') ? 'DL' : 'ML'}
-                        </span>
-                      </td>
-                      <td>
-                        <div className="accuracy-bar">
-                          <div className="accuracy-fill" style={{ width: `${Math.min(m.accuracy, 100)}px`, maxWidth: 80, background: i === 0 ? 'var(--accent-success)' : 'var(--accent-primary)' }} />
-                          <span className="accuracy-value">{m.accuracy}%</span>
-                        </div>
-                      </td>
-                      <td>
-                        <span style={{
-                          fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 8,
-                          background: i === 0 ? 'rgba(16,185,129,0.1)' : selectedModels.has(i) ? 'rgba(59,130,246,0.1)' : 'var(--bg-hover)',
-                          color: i === 0 ? 'var(--accent-success)' : selectedModels.has(i) ? 'var(--accent-primary)' : 'var(--text-muted)',
-                        }}>
-                          {i === 0 ? '✓ Selected' : selectedModels.has(i) ? '○ Ensemble' : 'Evaluated'}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
+                  {filteredModels.map((m, i) => {
+                    const origIdx = models.indexOf(m);
+                    const cat = MODEL_CATEGORIES[m.category] || MODEL_CATEGORIES.ml;
+                    return (
+                      <tr key={origIdx} className={origIdx === 0 ? 'best-model' : ''} style={{ cursor: 'pointer' }} onClick={() => { setSelectedModel(origIdx); }}>
+                        <td>
+                          <input
+                            type="checkbox"
+                            checked={selectedModels.has(origIdx)}
+                            onChange={() => toggleModelSelect(origIdx)}
+                            onClick={(e) => e.stopPropagation()}
+                            style={{ cursor: 'pointer' }}
+                          />
+                        </td>
+                        <td>
+                          <div className="model-name-cell">
+                            {origIdx === 0 && <span className="best-model-crown">👑</span>}
+                            {m.name}
+                          </div>
+                        </td>
+                        <td style={{ fontSize: 'var(--font-size-xs)', color: 'var(--text-secondary)' }}>{m.algorithm}</td>
+                        <td>
+                          <span style={{
+                            fontSize: 10, padding: '2px 8px', borderRadius: 8,
+                            background: cat.bg, color: cat.color, fontWeight: 700,
+                          }}>
+                            {cat.icon} {cat.label}
+                          </span>
+                        </td>
+                        <td>
+                          <span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 8, background: 'var(--bg-hover)', fontWeight: 700, color: 'var(--text-muted)' }}>
+                            {m.algorithm?.includes('LSTM') || m.algorithm?.includes('Neural') ? 'DL' : 'ML'}
+                          </span>
+                        </td>
+                        <td>
+                          <div className="accuracy-bar">
+                            <div className="accuracy-fill" style={{ width: `${Math.min(m.accuracy, 100)}px`, maxWidth: 80, background: origIdx === 0 ? 'var(--accent-success)' : 'var(--accent-primary)' }} />
+                            <span className="accuracy-value">{m.accuracy}%</span>
+                          </div>
+                        </td>
+                        <td>
+                          <span style={{
+                            fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 8,
+                            background: origIdx === 0 ? 'rgba(16,185,129,0.1)' : selectedModels.has(origIdx) ? 'rgba(59,130,246,0.1)' : 'var(--bg-hover)',
+                            color: origIdx === 0 ? 'var(--accent-success)' : selectedModels.has(origIdx) ? 'var(--accent-primary)' : 'var(--text-muted)',
+                          }}>
+                            {origIdx === 0 ? '✓ Selected' : selectedModels.has(origIdx) ? '○ Ensemble' : 'Evaluated'}
+                          </span>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
@@ -288,6 +470,16 @@ export default function ProcessModelsTab({ process }) {
                         <div className="test-case-meta">
                           <span className="test-case-tag">{m.algorithm}</span>
                           <span className="test-case-tag">{m.accuracy}% accuracy</span>
+                          {m.category && (
+                            <span style={{
+                              fontSize: 10, padding: '1px 6px', borderRadius: 6,
+                              background: MODEL_CATEGORIES[m.category]?.bg,
+                              color: MODEL_CATEGORIES[m.category]?.color,
+                              fontWeight: 700,
+                            }}>
+                              {MODEL_CATEGORIES[m.category]?.label}
+                            </span>
+                          )}
                         </div>
                       </div>
                     </div>
