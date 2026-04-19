@@ -8,7 +8,7 @@
 
 ## Summary
 
-Add two new sub-pages to every department — **Admin** and **Manager** — reached from dedicated sidebar sub-links. Introduce 2 new departments (Contact Center, Marketing) taking the total from 11 → 13. Define four roles (Manager, Team Member, Compliance, Reporting & Monitoring) with responsibilities per department. Catalog ~100+ AI use cases across 12 categories (RPA, n8n, Voice AI, CRM, Campaign, Email Marketing, Digital Marketing, Vendor Mgmt, Contact Center Mgmt, Recommendation, Anomaly Detection, Fraud Detection) — each with inputs, outputs, model, trigger, owner, and impact. Surface 23 report types filtered per role. Add a cross-department data-flow visualization at both per-dept and global scope.
+Add two new sub-pages to every department — **Admin** and **Manager** — reached from dedicated sidebar sub-links. Introduce 3 new departments (Contact Center, Marketing, Telehealth) taking the total from 11 → 14. Define four roles (Manager, Team Member, Compliance, Reporting & Monitoring) with responsibilities per department. Catalog ~100+ AI use cases across 16 categories (RPA, n8n, Voice AI, CRM, Campaign, Email Marketing, Digital Marketing, Vendor Mgmt, Contact Center Mgmt, Recommendation, Anomaly Detection, Fraud Detection, **AI Agent**, **Generative Marketing**, **SEO Content**, **Funnel Optimization**) — each with inputs, outputs, model, trigger, owner, and impact. Surface 23 report types filtered per role. Add a cross-department data-flow visualization at both per-dept and global scope.
 
 Phase 1 delivers the foundation: data files, routes, sidebar links, and stub pages with tab scaffolding. Phases 2–5 will fill the tabs.
 
@@ -42,7 +42,7 @@ Phase 1 delivers the foundation: data files, routes, sidebar links, and stub pag
 ## Data Model
 
 ### File 1: `frontend/src/data/departments.js` — **EDIT**
-Add two entries at appropriate positions:
+Add three entries at appropriate positions:
 ```js
 {
   id: 'contact-center',
@@ -62,11 +62,23 @@ Add two entries at appropriate positions:
   icon: '📣',
   route: '/marketing',
   color: '#f97316',
-  description: 'Campaigns, email, digital, CRM, attribution, personalization',
+  description: 'AI-native campaigns, generative ads/landing/email, SEO content, funnel optimization, attribution',
   processCount: 8,
-  aiTypes: ['ML', 'NLP', 'RAG', 'n8n', 'RPA'],
+  aiTypes: ['ML', 'NLP', 'RAG', 'GenAI', 'n8n', 'RPA'],
   kaggleDataset: 'marketing-campaigns',
   roi: '25–35% campaign ROI uplift',
+},
+{
+  id: 'telehealth',
+  name: 'Telehealth',
+  icon: '🩺',
+  route: '/telehealth',
+  color: '#22c55e',
+  description: 'Virtual care, remote diagnostics, patient AI triage, clinician workflow automation',
+  processCount: 6,
+  aiTypes: ['NLP', 'CV', 'RAG', 'ML', 'n8n'],
+  kaggleDataset: 'telehealth-analytics',
+  roi: '30–40% triage time reduction',
 },
 ```
 
@@ -82,10 +94,10 @@ export const rolesByDept = {
     compliance: { title: 'Sales Compliance Officer', responsibilities: [...], kpis: [...], reports: [...] },
     'reporting-monitoring': { title: 'Sales Ops Monitor', responsibilities: [...], kpis: [...], reports: [...] },
   },
-  // ... repeated for all 13 depts
+  // ... repeated for all 14 depts
 };
 ```
-**Phase 1 seed:** populate for **3 depts** (sales, marketing, contact-center) with full content to validate the shape. The remaining 10 depts get `{}` placeholder entries; the Roles & Responsibilities tab (built in Phase 2) will render a "Data not yet populated" fallback for those.
+**Phase 1 seed:** populate for **3 depts** (sales, marketing, contact-center) with full content to validate the shape. The remaining 11 depts get `{}` placeholder entries; the Roles & Responsibilities tab (built in Phase 2) will render a "Data not yet populated" fallback for those.
 
 ### File 3: `frontend/src/data/reports.js` — **NEW**
 ```js
@@ -123,6 +135,7 @@ export const USE_CASE_CATEGORIES = [
   'RPA', 'n8n', 'Voice AI', 'CRM', 'Campaign', 'Email Marketing',
   'Digital Marketing', 'Vendor Mgmt', 'Contact Center Mgmt',
   'Recommendation', 'Anomaly Detection', 'Fraud Detection',
+  'AI Agent', 'Generative Marketing', 'SEO Content', 'Funnel Optimization',
 ];
 
 export const aiUseCases = [
@@ -143,7 +156,7 @@ export const aiUseCases = [
   // ... 8–10 per dept, 13 depts, ≈100+ entries
 ];
 ```
-**Phase 1 seed:** ~15 representative use cases spanning all 12 categories and the 3 seed depts (sales, marketing, contact-center) — enough to validate the data shape. Full ~100-entry catalog is Phase 2.
+**Phase 1 seed:** ~20 representative use cases spanning all 16 categories and the 3 seed depts (sales, marketing, contact-center) — enough to validate the data shape. Full ~100-entry catalog is Phase 2.
 
 ### File 5: `frontend/src/data/dataFlow.js` — **NEW**
 ```js
@@ -173,12 +186,14 @@ export const dataFlowEdges = [
 ## Components (NEW)
 
 ### `frontend/src/pages/AdminPage.jsx`
-Renders page header + tab bar with **9 tabs**. Phase 1 tab panels are stubs showing "Coming in Phase 2–5".
-Tabs: Users & Roles · Permissions · **Integrations & Data Sources** · **MCP Servers** · Model Registry · AI Use Cases & Automations · Scheduled Jobs · Audit Log · Settings
+Renders page header + tab bar with **10 tabs**. Phase 1 tab panels are stubs showing "Coming in Phase 2–5".
+Tabs: Users & Roles · Permissions · **Integrations & Data Sources** · **MCP Servers** · Model Registry · AI Use Cases & Automations · **Workflows** · Scheduled Jobs · Audit Log · Settings
 
 **Integrations & Data Sources** tab (Phase 2+) covers: REST/GraphQL APIs · databases (Postgres, Snowflake, etc.) · Kaggle datasets · SaaS connectors (Salesforce, SAP, Shopify) · ETL pipeline schedules · field mappings · sync health.
 
 **MCP Servers** tab (Phase 2+) covers Model Context Protocol server registrations the dept's AI features consume: server URL · transport (stdio/HTTP/SSE) · auth · advertised tools & resources · health check · rate limits.
+
+**Workflows** tab (Phase 2+) catalogs workflow automations across 6 domains: **Customer · Process · Employee · Admin · Testing · Security**. Each workflow shows trigger · steps · AI actions (response/follow-up/approvals) · owner · status.
 
 ### `frontend/src/pages/ManagerPage.jsx`
 Same structure, 7 tabs:
@@ -207,12 +222,12 @@ Inside each expanded department group, inject two fixed sub-links above the proc
 
 ## Acceptance Criteria (Phase 1)
 
-- [ ] Sidebar shows "⚙️ Admin" and "📊 Manager" sub-links under every department (13 depts total incl. new Contact Center + Marketing).
+- [ ] Sidebar shows "⚙️ Admin" and "📊 Manager" sub-links under every department (14 depts total incl. new Contact Center + Marketing + Telehealth).
 - [ ] Clicking a link navigates to `/:deptId/admin` or `/:deptId/manager`.
-- [ ] Admin page renders header + tab bar with 9 tabs (panels stubbed).
+- [ ] Admin page renders header + tab bar with 10 tabs (panels stubbed).
 - [ ] Manager page renders header + tab bar with 7 tabs (panels stubbed).
 - [ ] Data files (`roles.js`, `reports.js`, `aiUseCases.js`, `dataFlow.js`) exist, import cleanly, validate Phase-1 seed data for at least 3 depts.
-- [ ] `departments.js` now lists 13 departments; Dashboard tile grid renders all 13 without layout break.
+- [ ] `departments.js` now lists 14 departments; Dashboard tile grid renders all 14 without layout break.
 - [ ] No console errors. Vite dev server runs clean. Existing routes (Dashboard, DepartmentPage, ProcessPage) still work.
 
 ---
@@ -236,19 +251,19 @@ Inside each expanded department group, inject two fixed sub-links above the proc
 
 | Risk | Mitigation |
 |---|---|
-| Sidebar becomes too tall with 13 × (Admin + Manager + processes) | Collapsed by default (existing behavior); divider between Admin/Manager and processes for visual separation. |
-| Tab proliferation on Admin/Manager pages (9 + 7 = 16 tabs) | Existing `.tabs-bar` already supports horizontal scroll (used in ProcessPage). Reuse the same CSS. |
+| Sidebar becomes too tall with 14 × (Admin + Manager + processes) | Collapsed by default (existing behavior); divider between Admin/Manager and processes for visual separation. |
+| Tab proliferation on Admin/Manager pages (10 + 7 = 17 tabs) | Existing `.tabs-bar` already supports horizontal scroll (used in ProcessPage). Reuse the same CSS. |
 | New departments break Dashboard tile grid | Dashboard already uses CSS grid `auto-fill` — should flow. Verify in Phase 1. |
-| Data file seed inconsistency across 13 depts | Phase 1 fully seeds only 3 depts; others have skeleton + `TODO:` comments. Phase 2 completes them. |
+| Data file seed inconsistency across 14 depts | Phase 1 fully seeds only 3 depts; others have skeleton + `TODO:` comments. Phase 2 completes them. |
 
 ---
 
 ## Build Order (Phase 1 tasks)
 
-1. Edit `data/departments.js` → add Contact Center + Marketing.
-2. Create `data/roles.js` with seed data for 3 depts + skeletons for 10.
+1. Edit `data/departments.js` → add Contact Center + Marketing + Telehealth.
+2. Create `data/roles.js` with seed data for 3 depts + skeletons for 11.
 3. Create `data/reports.js` with full 23-report catalog.
-4. Create `data/aiUseCases.js` with ~15 seed entries spanning all 12 categories.
+4. Create `data/aiUseCases.js` with ~20 seed entries spanning all 16 categories.
 5. Create `data/dataFlow.js` with ~20 edges covering the 3 seed depts + connectivity to others.
 6. Create `pages/AdminPage.jsx` + `components/admin-tabs/*` stubs.
 7. Create `pages/ManagerPage.jsx` + `components/manager-tabs/*` stubs.
@@ -274,7 +289,9 @@ Inside each expanded department group, inject two fixed sub-links above the proc
 | Q | Decision |
 |---|---|
 | Scope | **Phase 1 only first** |
-| New depts | Add Contact Center + Marketing (13 total) |
+| New depts | Add Contact Center + Marketing + Telehealth (14 total) |
 | Data flow viz | Both per-dept and global (Phase 4) |
 | Data source | Static mock data in JS files |
-| Use case categories | 12 (RPA, n8n, Voice AI, CRM, Campaign, Email Mkt, Digital Mkt, Vendor Mgmt, Contact Center Mgmt, Recommendation, Anomaly Detection, Fraud Detection) |
+| Use case categories | **16** — RPA, n8n, Voice AI, CRM, Campaign, Email Mkt, Digital Mkt, Vendor Mgmt, Contact Center Mgmt, Recommendation, Anomaly Detection, Fraud Detection, AI Agent, Generative Marketing, SEO Content, Funnel Optimization |
+| Admin tabs | 10 (adds Workflows covering customer/process/employee/admin/testing/security) |
+| Structural changes | **LOCKED** — no more additions; further requirements become Phase 2+ content |
