@@ -13,19 +13,25 @@ import ProcessProblemTab from '../components/process-tabs/ProcessProblemTab';
 import ProcessDemoTab from '../components/process-tabs/ProcessDemoTab';
 import ProcessAccuracyTab from '../components/process-tabs/ProcessAccuracyTab';
 import ProcessChatbotTab from '../components/process-tabs/ProcessChatbotTab';
+import ProcessDataPipelineTab from '../components/process-tabs/ProcessDataPipelineTab';
+import ProcessAnalysisTab from '../components/process-tabs/ProcessAnalysisTab';
+import ProcessAIInfraTab from '../components/process-tabs/ProcessAIInfraTab';
 
 const TABS = [
-  { id: 'overview',    label: 'Overview',          icon: '📋' },
-  { id: 'problem',     label: 'Problem & Use Case', icon: '🎯' },
-  { id: 'data',        label: 'Data',               icon: '🗂️' },
-  { id: 'models',      label: 'Models',             icon: '🧠' },
-  { id: 'accuracy',    label: 'Accuracy',           icon: '🎯' },
-  { id: 'testing',     label: 'Testing',            icon: '🧪' },
-  { id: 'governance',  label: 'AI Governance',      icon: '🏛️' },
-  { id: 'docs',        label: 'Documentation',      icon: '📚' },
-  { id: 'demos',       label: 'Demo Scenarios',     icon: '🎬' },
-  { id: 'automation',  label: 'Automation',         icon: '⚡' },
-  { id: 'chatbot',     label: 'Chatbot',            icon: '🤖' },
+  { id: 'overview',      label: 'Overview',          icon: '📋' },
+  { id: 'problem',       label: 'Problem & Use Case', icon: '🎯' },
+  { id: 'data',          label: 'Data',               icon: '🗂️' },
+  { id: 'datapipeline',  label: 'Data Pipeline',      icon: '🔁' },
+  { id: 'models',        label: 'Models',             icon: '🧠' },
+  { id: 'accuracy',      label: 'Accuracy',           icon: '📈' },
+  { id: 'analysis',      label: 'Analysis',           icon: '🔬' },
+  { id: 'testing',       label: 'Testing',            icon: '🧪' },
+  { id: 'governance',    label: 'AI Governance',      icon: '🏛️' },
+  { id: 'aiinfra',       label: 'AI Infrastructure',  icon: '⚙️' },
+  { id: 'docs',          label: 'Documentation',      icon: '📚' },
+  { id: 'demos',         label: 'Demo Scenarios',     icon: '🎬' },
+  { id: 'automation',    label: 'Automation',         icon: '⚡' },
+  { id: 'chatbot',       label: 'Chatbot',            icon: '🤖' },
 ];
 
 export default function ProcessPage() {
@@ -91,6 +97,9 @@ export default function ProcessPage() {
           <div className={`tab-panel${activeTab === 'data' ? ' active has-padding' : ''}`}>
             <ProcessDataTab process={process} dept={dept} />
           </div>
+          <div className={`tab-panel${activeTab === 'datapipeline' ? ' active has-padding' : ''}`}>
+            <ProcessDataPipelineTab process={process} dept={dept} />
+          </div>
           <div className={`tab-panel${activeTab === 'models' ? ' active has-padding' : ''}`}>
             <ProcessModelsTab process={process} dept={dept} />
           </div>
@@ -111,6 +120,12 @@ export default function ProcessPage() {
           </div>
           <div className={`tab-panel${activeTab === 'accuracy' ? ' active has-padding' : ''}`}>
             <ProcessAccuracyTab process={process} dept={dept} />
+          </div>
+          <div className={`tab-panel${activeTab === 'analysis' ? ' active has-padding' : ''}`}>
+            <ProcessAnalysisTab process={process} dept={dept} />
+          </div>
+          <div className={`tab-panel${activeTab === 'aiinfra' ? ' active has-padding' : ''}`}>
+            <ProcessAIInfraTab process={process} dept={dept} />
           </div>
           <div className={`tab-panel${activeTab === 'chatbot' ? ' active has-padding' : ''}`}>
             <ProcessChatbotTab process={process} dept={dept} />
