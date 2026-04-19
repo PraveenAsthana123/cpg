@@ -12,9 +12,205 @@ const PIPELINE_STEPS = [
   { id: 'output', label: 'Output', icon: '📤', desc: 'Export predictions, push to ERP/dashboard.', output: 'Predictions exported to /output/predictions_v1.csv (750K rows)' },
 ];
 
+/* ---- User Stories by process ID ---- */
+const USER_STORIES = {
+  'demand-forecasting': [
+    {
+      role: 'Demand Planner',
+      avatar: '📋',
+      action: 'see next 30-day forecasts by SKU',
+      benefit: 'align production schedules and avoid stockouts',
+      priority: 'High',
+      status: 'Done',
+      criteria: ['Forecast available at SKU-level', 'Confidence bands shown (±15%)', 'Downloadable as CSV'],
+    },
+    {
+      role: 'Supply Chain Manager',
+      avatar: '🔗',
+      action: 'receive alerts when forecast deviates >15% from baseline',
+      benefit: 'proactively adjust inventory before disruptions occur',
+      priority: 'High',
+      status: 'Done',
+      criteria: ['Deviation threshold configurable', 'Email + dashboard alert', 'Root cause shown'],
+    },
+    {
+      role: 'Finance Analyst',
+      avatar: '💰',
+      action: 'see forecast confidence bands',
+      benefit: 'plan budget ranges and set risk reserves appropriately',
+      priority: 'Medium',
+      status: 'In Progress',
+      criteria: ['P10/P50/P90 forecasts shown', 'Financial impact estimated', 'Exportable to Excel'],
+    },
+    {
+      role: 'Category Manager',
+      avatar: '🗂️',
+      action: 'filter forecasts by product category and region',
+      benefit: 'make targeted assortment decisions without noise',
+      priority: 'Medium',
+      status: 'Planned',
+      criteria: ['Category filter in UI', 'Regional view available', 'Trend annotations visible'],
+    },
+  ],
+  'price-elasticity': [
+    {
+      role: 'Pricing Analyst',
+      avatar: '💲',
+      action: 'see price elasticity by SKU and channel',
+      benefit: 'set optimal prices that maximise revenue without losing volume',
+      priority: 'High',
+      status: 'Done',
+      criteria: ['Elasticity coefficient shown', 'Revenue impact simulated', 'Competitor price factored in'],
+    },
+    {
+      role: 'Trade Marketing Manager',
+      avatar: '📣',
+      action: 'simulate "what-if" price scenarios',
+      benefit: 'evaluate promo ROI before committing budget',
+      priority: 'High',
+      status: 'Done',
+      criteria: ['Scenario builder available', 'Volume & margin impact shown', 'Comparison table exported'],
+    },
+    {
+      role: 'Sales Director',
+      avatar: '🏆',
+      action: 'see cross-elasticity between competing SKUs',
+      benefit: 'prevent cannibalisation when changing prices',
+      priority: 'Medium',
+      status: 'In Progress',
+      criteria: ['Substitution matrix visible', 'Alert when cross-elasticity > 0.8', 'Historical validation provided'],
+    },
+  ],
+  'inventory-optimization': [
+    {
+      role: 'Inventory Planner',
+      avatar: '📦',
+      action: 'receive automated reorder recommendations',
+      benefit: 'reduce manual planning time and prevent stock-outs',
+      priority: 'High',
+      status: 'Done',
+      criteria: ['Recommendations auto-generated daily', 'ERP integration complete', 'Override capability present'],
+    },
+    {
+      role: 'Warehouse Manager',
+      avatar: '🏭',
+      action: 'see safety stock levels per SKU',
+      benefit: 'optimise storage utilisation without service level risk',
+      priority: 'High',
+      status: 'Done',
+      criteria: ['Safety stock shown per location', 'Service level trade-off visible', 'Seasonal adjustments included'],
+    },
+    {
+      role: 'CFO',
+      avatar: '💼',
+      action: 'view working capital impact of inventory decisions',
+      benefit: 'balance cash flow with service level targets',
+      priority: 'Medium',
+      status: 'Planned',
+      criteria: ['Cash impact quantified', 'Scenario comparison available', 'Board-ready export format'],
+    },
+  ],
+  '__default__': [
+    {
+      role: 'Business Analyst',
+      avatar: '📊',
+      action: 'view real-time model outputs in a dashboard',
+      benefit: 'make faster, data-driven decisions without waiting for reports',
+      priority: 'High',
+      status: 'Done',
+      criteria: ['Dashboard refreshes every 15 min', 'KPIs highlighted', 'Alert on anomaly detected'],
+    },
+    {
+      role: 'Operations Manager',
+      avatar: '⚙️',
+      action: 'trigger manual pipeline re-runs when needed',
+      benefit: 'ensure data quality and timely outputs during incidents',
+      priority: 'High',
+      status: 'Done',
+      criteria: ['One-click pipeline restart', 'Run log captured', 'Failure notification sent'],
+    },
+    {
+      role: 'Data Engineer',
+      avatar: '🔧',
+      action: 'monitor data pipeline health via metrics',
+      benefit: 'detect and fix ingestion failures before they impact models',
+      priority: 'Medium',
+      status: 'In Progress',
+      criteria: ['Row count checks automated', 'Schema drift alerts enabled', 'SLA dashboard created'],
+    },
+    {
+      role: 'Executive Sponsor',
+      avatar: '🎯',
+      action: 'see ROI and performance summaries monthly',
+      benefit: 'validate AI investment and prioritise next initiatives',
+      priority: 'Low',
+      status: 'Planned',
+      criteria: ['Monthly PDF report auto-sent', 'Trend vs baseline shown', 'Cost savings quantified'],
+    },
+  ],
+};
+
+/* ---- Demo Scenarios by process ID ---- */
+const DEMO_SCENARIOS = {
+  'demand-forecasting': {
+    title: 'Predict next 30 days demand and explain it',
+    steps: [
+      { icon: '📂', label: 'Load Kaggle Data', desc: 'Import retail sales dataset — 500K rows, 12 columns', status: 'completed' },
+      { icon: '🔍', label: 'Run EDA', desc: 'Show distributions, seasonality, missing values heatmap', status: 'completed' },
+      { icon: '🧹', label: 'Preprocess', desc: 'Handle missing values, encode promotions, scale features', status: 'completed' },
+      { icon: '🤖', label: 'Train XGBoost', desc: 'Show training metrics: RMSE=142, MAPE=6.2%, R²=0.94', status: 'current' },
+      { icon: '📈', label: 'Generate Forecast', desc: 'Plot 30-day forecast with confidence bands per SKU', status: 'upcoming' },
+      { icon: '💬', label: 'RAG Explain', desc: 'LLM explains: "Spike driven by promotions + seasonality"', status: 'upcoming' },
+      { icon: '📄', label: 'Export Report', desc: 'Download PDF with metrics, charts, and interpretation', status: 'upcoming' },
+    ],
+  },
+  'price-elasticity': {
+    title: 'Estimate price elasticity and simulate price change',
+    steps: [
+      { icon: '📂', label: 'Load Price Data', desc: 'Import historical pricing and volume data per SKU', status: 'completed' },
+      { icon: '🔍', label: 'EDA & Correlation', desc: 'Analyse price-volume relationship and competitor impact', status: 'completed' },
+      { icon: '🧹', label: 'Feature Engineering', desc: 'Create lag prices, promo flags, cross-elasticity terms', status: 'current' },
+      { icon: '🤖', label: 'Fit Ridge Model', desc: 'Show elasticity coefficients per SKU: avg -1.4', status: 'upcoming' },
+      { icon: '💡', label: 'Scenario Builder', desc: 'Simulate +5% price → volume impact, revenue change', status: 'upcoming' },
+      { icon: '💬', label: 'AI Recommendation', desc: 'LLM recommends optimal price point per category', status: 'upcoming' },
+      { icon: '📄', label: 'Export Playbook', desc: 'Download pricing playbook as PDF with all scenarios', status: 'upcoming' },
+    ],
+  },
+  '__default__': {
+    title: 'Run end-to-end AI pipeline and generate insights',
+    steps: [
+      { icon: '📂', label: 'Load Data', desc: 'Ingest data from source system — preview sample rows', status: 'completed' },
+      { icon: '🔍', label: 'Run EDA', desc: 'Explore distributions, correlations, and data quality', status: 'completed' },
+      { icon: '🧹', label: 'Preprocess', desc: 'Clean, validate, and engineer features for modelling', status: 'current' },
+      { icon: '🤖', label: 'Train Model', desc: 'Fit best-selected algorithm — show training metrics', status: 'upcoming' },
+      { icon: '📈', label: 'Generate Output', desc: 'Produce predictions or recommendations with charts', status: 'upcoming' },
+      { icon: '💬', label: 'RAG Explain', desc: 'Language model explains results in business terms', status: 'upcoming' },
+      { icon: '📄', label: 'Export Report', desc: 'Download full report: metrics, charts, interpretation', status: 'upcoming' },
+    ],
+  },
+};
+
 function fmt(d) {
   return d.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
 }
+
+const PRIORITY_COLORS = {
+  High: { bg: 'rgba(239,68,68,0.1)', color: 'var(--accent-danger)', border: 'rgba(239,68,68,0.2)' },
+  Medium: { bg: 'rgba(245,158,11,0.1)', color: 'var(--accent-warning)', border: 'rgba(245,158,11,0.2)' },
+  Low: { bg: 'rgba(16,185,129,0.1)', color: 'var(--accent-success)', border: 'rgba(16,185,129,0.2)' },
+};
+
+const STATUS_COLORS = {
+  Done: { bg: 'rgba(16,185,129,0.1)', color: 'var(--accent-success)' },
+  'In Progress': { bg: 'rgba(59,130,246,0.1)', color: 'var(--accent-primary)' },
+  Planned: { bg: 'var(--bg-hover)', color: 'var(--text-muted)' },
+};
+
+const STEP_STATUS_STYLES = {
+  completed: { color: 'var(--accent-success)', bg: 'rgba(16,185,129,0.1)', dot: 'var(--accent-success)', label: '✓ Done' },
+  current: { color: 'var(--accent-primary)', bg: 'rgba(59,130,246,0.08)', dot: 'var(--accent-primary)', label: '▶ Current' },
+  upcoming: { color: 'var(--text-muted)', bg: 'var(--bg-hover)', dot: 'var(--border-color)', label: '○ Next' },
+};
 
 export default function ProcessOverviewTab({ process, dept }) {
   const [stepStates, setStepStates] = useState(() => Object.fromEntries(PIPELINE_STEPS.map((s) => [s.id, 'pending'])));
@@ -67,6 +263,10 @@ export default function ProcessOverviewTab({ process, dept }) {
   const completedCount = Object.values(stepStates).filter((s) => s === 'complete').length;
   const hasError = Object.values(stepStates).includes('error');
 
+  // Resolve user stories and demo scenario for this process
+  const userStories = USER_STORIES[process.id] || USER_STORIES['__default__'];
+  const demoScenario = DEMO_SCENARIOS[process.id] || DEMO_SCENARIOS['__default__'];
+
   return (
     <div>
       {/* Process description */}
@@ -80,6 +280,142 @@ export default function ProcessOverviewTab({ process, dept }) {
           </div>
         </div>
         <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--text-secondary)', lineHeight: 1.7 }}>{process.description}</p>
+      </div>
+
+      {/* ---- USER STORIES ---- */}
+      <div className="content-section">
+        <div className="content-section-header">
+          <span className="content-section-title">📖 User Stories</span>
+          <span style={{ fontSize: 'var(--font-size-xs)', color: 'var(--text-muted)' }}>{userStories.length} stories</span>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 'var(--spacing-md)' }}>
+          {userStories.map((story, i) => {
+            const priStyle = PRIORITY_COLORS[story.priority] || PRIORITY_COLORS.Medium;
+            const stStyle = STATUS_COLORS[story.status] || STATUS_COLORS.Planned;
+            return (
+              <div key={i} style={{
+                padding: 'var(--spacing-md)', borderRadius: 'var(--border-radius-lg)',
+                background: 'var(--bg-card)', border: '1px solid var(--border-color)',
+                display: 'flex', flexDirection: 'column', gap: 'var(--spacing-sm)',
+              }}>
+                {/* Header row */}
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <div style={{
+                      width: 36, height: 36, borderRadius: '50%',
+                      background: 'rgba(59,130,246,0.1)', display: 'flex', alignItems: 'center',
+                      justifyContent: 'center', fontSize: '1.2rem', flexShrink: 0,
+                    }}>
+                      {story.avatar}
+                    </div>
+                    <div>
+                      <div style={{ fontSize: 'var(--font-size-xs)', fontWeight: 700, color: 'var(--text-primary)' }}>{story.role}</div>
+                      <div style={{ fontSize: 10, color: 'var(--text-muted)' }}>Stakeholder</div>
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+                    <span style={{
+                      fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 6,
+                      background: priStyle.bg, color: priStyle.color, border: `1px solid ${priStyle.border}`,
+                    }}>{story.priority}</span>
+                    <span style={{
+                      fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 6,
+                      background: stStyle.bg, color: stStyle.color,
+                    }}>{story.status}</span>
+                  </div>
+                </div>
+
+                {/* Story text */}
+                <div style={{
+                  padding: '8px 12px', background: 'var(--bg-hover)', borderRadius: 'var(--border-radius)',
+                  fontSize: 'var(--font-size-xs)', color: 'var(--text-secondary)', lineHeight: 1.6,
+                }}>
+                  <span style={{ color: 'var(--accent-primary)', fontWeight: 700 }}>As a </span>
+                  {story.role},
+                  <span style={{ color: 'var(--accent-primary)', fontWeight: 700 }}> I want to </span>
+                  {story.action},
+                  <span style={{ color: 'var(--accent-primary)', fontWeight: 700 }}> so that </span>
+                  {story.benefit}.
+                </div>
+
+                {/* Acceptance criteria */}
+                <div>
+                  <div style={{ fontSize: 10, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: 4 }}>
+                    Acceptance Criteria
+                  </div>
+                  <ul style={{ margin: 0, paddingLeft: 16, listStyle: 'none' }}>
+                    {story.criteria.map((c, ci) => (
+                      <li key={ci} style={{ fontSize: 10, color: 'var(--text-secondary)', marginBottom: 2, display: 'flex', alignItems: 'flex-start', gap: 4 }}>
+                        <span style={{ color: story.status === 'Done' ? 'var(--accent-success)' : 'var(--text-muted)', flexShrink: 0 }}>
+                          {story.status === 'Done' ? '✓' : '○'}
+                        </span>
+                        {c}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* ---- DEMO SCENARIO ---- */}
+      <div className="content-section">
+        <div className="content-section-header">
+          <span className="content-section-title">🎬 Demo Scenario</span>
+          <span style={{ fontSize: 'var(--font-size-xs)', color: 'var(--text-muted)', fontStyle: 'italic' }}>
+            "{demoScenario.title}"
+          </span>
+        </div>
+        <div style={{ position: 'relative', paddingLeft: 32 }}>
+          {/* Vertical connector line */}
+          <div style={{
+            position: 'absolute', left: 15, top: 18, bottom: 18,
+            width: 2, background: 'var(--border-color)', borderRadius: 1,
+          }} />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-sm)' }}>
+            {demoScenario.steps.map((step, idx) => {
+              const sStyle = STEP_STATUS_STYLES[step.status] || STEP_STATUS_STYLES.upcoming;
+              return (
+                <div key={idx} style={{ display: 'flex', gap: 'var(--spacing-md)', alignItems: 'flex-start', position: 'relative' }}>
+                  {/* Step dot on timeline */}
+                  <div style={{
+                    position: 'absolute', left: -24, top: 10,
+                    width: 12, height: 12, borderRadius: '50%',
+                    background: sStyle.dot, border: '2px solid var(--bg-card)',
+                    boxShadow: `0 0 0 2px ${sStyle.dot}`,
+                    zIndex: 1,
+                  }} />
+                  {/* Step number */}
+                  <div style={{
+                    width: 22, height: 22, borderRadius: '50%',
+                    background: sStyle.bg, color: sStyle.color,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: 10, fontWeight: 800, flexShrink: 0, marginTop: 2,
+                  }}>
+                    {idx + 1}
+                  </div>
+                  {/* Content */}
+                  <div style={{
+                    flex: 1, padding: '8px 12px', borderRadius: 'var(--border-radius)',
+                    background: sStyle.bg, border: `1px solid ${step.status === 'current' ? 'var(--accent-primary)' : 'transparent'}`,
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 2 }}>
+                      <span>{step.icon}</span>
+                      <span style={{ fontWeight: 700, fontSize: 'var(--font-size-xs)', color: sStyle.color }}>{step.label}</span>
+                      <span style={{
+                        marginLeft: 'auto', fontSize: 9, fontWeight: 700, padding: '1px 6px', borderRadius: 4,
+                        background: 'rgba(255,255,255,0.5)', color: sStyle.color,
+                      }}>{sStyle.label}</span>
+                    </div>
+                    <div style={{ fontSize: 10, color: 'var(--text-secondary)', lineHeight: 1.5 }}>{step.desc}</div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
       </div>
 
       {/* Manual Pipeline Runner */}
