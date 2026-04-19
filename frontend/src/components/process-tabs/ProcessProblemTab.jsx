@@ -507,6 +507,319 @@ function ValueProposition({ value }) {
 }
 
 /* =========================================================
+   NEW SECTIONS: A–E
+   ========================================================= */
+
+const NOT_DOING_DATA = [
+  { title: 'Real-time Store-level Replenishment', impact: 'DC teams manually calculate reorder quantities — 6-8 hour lag between signal and purchase order creation, causing avoidable stockouts.' },
+  { title: 'Multi-echelon Inventory Optimisation', impact: 'Safety stock is set at DC level only — no cross-DC balancing or retail shelf optimisation, leaving $0.8M in avoidable holding costs.' },
+  { title: 'Causal Machine Learning (Why demand changes)', impact: 'Model identifies that demand rose but cannot distinguish competitor OOS from genuine trend — causal inference not yet implemented.' },
+  { title: 'New Market / Greenfield Forecast', impact: 'No capability to forecast demand for new geographies or new retail partners — currently 100% human estimation with high error rates.' },
+  { title: 'Autonomous Promotional ROI Optimisation', impact: 'Promotional plans are drafted by Trade Marketing without AI input — post-hoc ROI analysis only, no upfront optimisation.' },
+];
+
+const DOING_DATA = [
+  { title: 'Weekly SKU-level Demand Forecasting', status: 'Active', detail: 'XGBoost + LightGBM ensemble producing 30-day rolling forecasts for 3,200 SKUs across 850+ stores at SKU×store×week granularity.' },
+  { title: 'Promotional Uplift Modelling', status: 'Active', detail: 'Promo uplift model quantifies incremental volume for trade promotions (TPR, displays, coupons) within 8% accuracy.' },
+  { title: 'Stockout Risk Scoring', status: 'Active', detail: 'Risk engine scores each SKU-store daily, surfacing top-20 at-risk items to planners for proactive replenishment action.' },
+  { title: 'New SKU Cold Start via Analogous SKU', status: 'Active', detail: 'Cosine similarity on product attributes finds the 3 most analogous SKUs — Bayesian prior set for launch forecast.' },
+  { title: 'Drift Detection & Auto-Retraining', status: 'Planned', detail: 'PSI monitoring triggers automatic model retraining when feature drift exceeds 0.2 threshold — scheduled for Q3 2025.' },
+];
+
+const OBJECTIVES_DATA = [
+  {
+    title: 'Achieve <10% MAPE at SKU×store×week granularity by Q3 2025',
+    specific:    'Reduce Mean Absolute Percentage Error from the current 18–24% to below 10% measured at SKU × store × week resolution.',
+    measurable:  'MAPE tracked weekly in Grafana dashboard; alert fires if MAPE exceeds 10% for 2 consecutive weeks.',
+    achievable:  'Industry benchmark for ML-based demand forecasting is 8–12% MAPE; current infrastructure and data quality support this target.',
+    relevant:    'A 5% MAPE improvement translates to ~$2M reduction in working capital and 12% fewer stockouts — directly tied to CFO mandate.',
+    timeBound:   'Target reached by 30 September 2025 (Q3 2025); intermediate milestone of <14% MAPE by Q2 2025.',
+  },
+  {
+    title: 'Reduce forecast cycle time from 3 days to <4 hours by Q2 2025',
+    specific:    'Fully automate the weekly forecast generation cycle — data ingestion → feature computation → inference → ERP push — with zero manual steps.',
+    measurable:  'Cycle time logged in Airflow; P95 end-to-end time must be <4 hours measured over 8 consecutive weeks.',
+    achievable:  'Pipeline prototype completed; primary bottleneck (ERP batch pull) resolved with OData streaming API.',
+    relevant:    'Planner time freed from forecast generation can be redirected to exception management and scenario planning.',
+    timeBound:   'Full automation deployed to production by 30 June 2025.',
+  },
+  {
+    title: 'Reach 85% planner adoption rate by Q2 2025',
+    specific:    'At least 85% of weekly forecast cycles require zero manual override by planners (i.e., planner approves forecast without editing).',
+    measurable:  'Override rate tracked per planner per cycle; aggregate override rate reported monthly to VP Operations.',
+    achievable:  'Current override rate 12%; target 8%; prior pilot showed override reduced to 6% after 4 weeks of model exposure.',
+    relevant:    'High override rate signals low model trust — reducing it unlocks the full automation value and validates model quality.',
+    timeBound:   'Sustained <8% override rate for 6 consecutive weeks by 30 June 2025.',
+  },
+  {
+    title: 'Protect $3.5M in annual revenue by reducing high-velocity SKU stockouts to <2% by Q4 2025',
+    specific:    'Reduce stockout rate on top-500 high-velocity SKUs from 4.3% to <2% — measured as percentage of SKU-store-weeks where on-shelf availability <95%.',
+    measurable:  'Stockout rate computed weekly from WMS + POS data; tracked in KPI dashboard with drill-down by region and category.',
+    achievable:  'Stockout risk scoring model now active; 6-month pilot showed 2.1pp reduction in stockout rate for pilot stores.',
+    relevant:    'High-velocity SKU stockouts cause immediate lost revenue and long-term customer loyalty damage at retail.',
+    timeBound:   'Target stockout rate <2% sustained for 8 weeks by 31 December 2025.',
+  },
+];
+
+const PROPOSED_SOLUTION = {
+  overview: 'The proposed solution is an end-to-end AI-powered demand intelligence platform that replaces the manual Excel-based forecasting process with a fully automated ML pipeline. The platform ingests data from SAP, Oracle, POS systems, and external signals (weather, promotions, social trends), engineers features in a centralised feature store, trains a stacking ensemble of XGBoost, LightGBM, and Prophet models, and delivers SKU-level forecasts with explainability via a planner-facing dashboard and ERP API push.',
+  components: [
+    { component: 'Data Ingestion Layer',     tech: 'Kafka + Airflow',      purpose: 'Stream ERP/POS events; schedule batch pulls from WMS and reference data', priority: 'P0' },
+    { component: 'Feature Store',            tech: 'Feast + Redis + PG',   purpose: 'Centralised feature registry with online (Redis) and offline (PG) serving', priority: 'P0' },
+    { component: 'Forecast Engine',          tech: 'XGBoost + LightGBM + Prophet', purpose: 'Stacking ensemble for demand forecasting at SKU×store×week granularity', priority: 'P0' },
+    { component: 'Explainability Layer',     tech: 'SHAP',                 purpose: 'Feature importance per SKU — planner-readable "why" for every forecast', priority: 'P0' },
+    { component: 'MLOps Platform',           tech: 'MLflow + Prometheus',  purpose: 'Experiment tracking, model registry, drift detection, auto-retraining', priority: 'P1' },
+    { component: 'Planner Dashboard',        tech: 'React + Recharts',     purpose: 'Exception management UI, override workflow, scenario planner', priority: 'P1' },
+    { component: 'ERP Integration API',      tech: 'FastAPI + OData',      purpose: 'Push approved forecasts to SAP S/4HANA Planning module automatically', priority: 'P1' },
+    { component: 'Audit & Compliance Layer', tech: 'PostgreSQL + dbt',     purpose: 'Full lineage, override log, model decision record for governance', priority: 'P2' },
+  ],
+  architecture: 'Source systems (SAP, Oracle, POS, WMS) publish events to Kafka and Airflow triggers hourly batch pulls. dbt transforms raw data into analytics-ready tables in PostgreSQL, where Great Expectations validates quality at each stage. Feast materialises features from PostgreSQL into Redis for low-latency online serving. The training pipeline retrieves historical features from the offline store and trains the XGBoost + LightGBM + Prophet stacking ensemble weekly. MLflow registers model versions and manages staging → production promotion. The FastAPI serving layer exposes /forecast, /score, and /explain endpoints; approved forecasts are pushed to SAP via OData API. Planners interact with the React dashboard for exception review, what-if scenarios, and override decisions. All overrides are logged to the audit table for governance review.',
+  outcomes: [
+    'MAPE reduced from 18–24% to <10% at SKU×store×week granularity — exceeding industry benchmark',
+    'Forecast cycle time cut from 3 days to <4 hours — 18x productivity improvement',
+    '$3.2M in annual revenue protected through stockout prevention on high-velocity SKUs',
+    '$1.8M in working capital released through 20% reduction in excess inventory write-offs',
+    'Full explainability via SHAP — planners understand and trust AI outputs, driving 85%+ adoption',
+  ],
+};
+
+const MULTI_DATA = {
+  overview: 'Demand forecasting is not a single-model problem. A single SKU may be affected by structured sales data (CSV), images of store shelf conditions (CV), text from promotional descriptions (NLP), sensor data from smart shelf systems (time series), and semi-structured product attributes (JSON). Each data type requires a different model type; their outputs are then combined via an ensemble strategy.',
+  models: [
+    { dataType: 'CSV (Structured)',      format: 'Tabular rows',    modelType: 'Gradient Boosting', algorithm: 'XGBoost / LightGBM',     purpose: 'Core demand forecasting from sales history, pricing, and promo features' },
+    { dataType: 'Images (CV)',           format: 'JPEG/PNG',        modelType: 'Convolutional Net', algorithm: 'ResNet-50 / YOLOv8',     purpose: 'Shelf compliance detection — out-of-stock identification from store cameras' },
+    { dataType: 'Text / Logs (NLP)',     format: 'Plain text',      modelType: 'Transformer (NER)', algorithm: 'BERT / spaCy NER',        purpose: 'Extract promo description features; parse ERP change logs for supply alerts' },
+    { dataType: 'Sensor (Time Series)', format: 'IoT JSON stream',  modelType: 'Recurrent Net',     algorithm: 'LSTM / TCN',              purpose: 'Smart shelf weight sensors → real-time on-shelf availability signal' },
+    { dataType: 'JSON (Semi-structured)',format: 'Nested JSON',     modelType: 'Rule Engine + ML',  algorithm: 'JSONPath + XGBoost',      purpose: 'Product attribute validation; new SKU attribute extraction for cold start' },
+  ],
+  integration: 'Each model runs in its own pipeline and outputs a feature vector or probability score. These are aggregated into a shared decision context: (1) XGBoost base forecast, (2) adjusted upward if CV model detects full shelf compliance, (3) adjusted downward if NLP detects supply risk keywords in ERP logs, (4) LSTM provides a real-time demand signal that overrides the weekly forecast during flash events, (5) JSON rule engine validates all attribute inputs and flags anomalies before they enter the feature store.',
+  ensemble: [
+    { strategy: 'Stacking',          desc: 'XGBoost base forecast + Prophet seasonal adjustment combined via a meta-learner (Ridge Regression) trained on holdout data.' },
+    { strategy: 'Weighted Average',  desc: 'CV model shelf compliance score weighted at 0.15 into the final forecast adjustment factor; weight learned from historical correlation.' },
+    { strategy: 'Override / Gating', desc: 'LSTM real-time signal gates the weekly forecast during flash sales — if LSTM detects 3σ demand spike, it overrides the batch forecast.' },
+    { strategy: 'Sequential (NLP)',  desc: 'NLP supply risk score applied as a multiplicative constraint: forecast × (1 − risk_score). Applied post-ensemble before ERP push.' },
+  ],
+};
+
+/* ── NEW SECTION COMPONENTS ── */
+
+function WhatNotDoing({ items }) {
+  return (
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 'var(--spacing-md)' }}>
+      {items.map((item, i) => (
+        <div key={i} style={{ padding: 'var(--spacing-md)', borderRadius: 'var(--border-radius-lg)', background: 'rgba(239,68,68,0.05)', border: '1px solid rgba(239,68,68,0.25)' }}>
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginBottom: 8 }}>
+            <span style={{ fontSize: '1.1rem', flexShrink: 0, marginTop: 1 }}>🚫</span>
+            <span style={{ fontWeight: 700, fontSize: 13, color: 'var(--accent-danger)', lineHeight: 1.4 }}>{item.title}</span>
+          </div>
+          <div style={{ fontSize: 11, color: 'var(--text-secondary)', lineHeight: 1.6, paddingLeft: 28 }}>
+            <strong style={{ color: 'var(--accent-danger)' }}>Impact: </strong>{item.impact}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function WhatDoing({ items }) {
+  return (
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 'var(--spacing-md)' }}>
+      {items.map((item, i) => {
+        const isActive = item.status === 'Active';
+        return (
+          <div key={i} style={{ padding: 'var(--spacing-md)', borderRadius: 'var(--border-radius-lg)', background: isActive ? 'rgba(16,185,129,0.05)' : 'rgba(139,92,246,0.05)', border: `1px solid ${isActive ? 'rgba(16,185,129,0.25)' : 'rgba(139,92,246,0.25)'}` }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, flex: 1 }}>
+                <span style={{ fontSize: '1.1rem', flexShrink: 0, marginTop: 1 }}>{isActive ? '✅' : '🗓️'}</span>
+                <span style={{ fontWeight: 700, fontSize: 13, color: isActive ? 'var(--accent-success)' : 'var(--accent-purple)', lineHeight: 1.4 }}>{item.title}</span>
+              </div>
+              <span style={{ fontSize: 10, padding: '2px 8px', borderRadius: 10, background: isActive ? '#d1fae5' : '#ede9fe', color: isActive ? '#065f46' : '#5b21b6', fontWeight: 600, whiteSpace: 'nowrap', marginLeft: 8 }}>{item.status}</span>
+            </div>
+            <div style={{ fontSize: 11, color: 'var(--text-secondary)', lineHeight: 1.6, paddingLeft: 28 }}>{item.detail}</div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function ObjectivesSection({ objectives }) {
+  const [openIdx, setOpenIdx] = useState(null);
+  const colors = ['var(--accent-primary)', 'var(--accent-success)', 'var(--accent-warning)', 'var(--accent-purple)'];
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-md)' }}>
+      {objectives.map((obj, i) => {
+        const color = colors[i % colors.length];
+        const isOpen = openIdx === i;
+        return (
+          <div key={i} style={{ borderRadius: 'var(--border-radius-lg)', border: `1px solid ${color}30`, background: `${color}06`, overflow: 'hidden' }}>
+            <button
+              onClick={() => setOpenIdx(isOpen ? null : i)}
+              style={{ width: '100%', padding: '14px 18px', background: 'transparent', border: 'none', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', textAlign: 'left' }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <span style={{ fontWeight: 800, fontSize: 13, color, minWidth: 24 }}>O{i + 1}</span>
+                <span style={{ fontWeight: 700, fontSize: 13, color: 'var(--text-primary)', lineHeight: 1.4 }}>{obj.title}</span>
+              </div>
+              <span style={{ fontSize: 12, color, fontWeight: 700 }}>{isOpen ? '▲' : '▼'}</span>
+            </button>
+            {isOpen && (
+              <div style={{ borderTop: `1px solid ${color}20`, padding: '14px 18px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 10 }}>
+                  {[
+                    { key: 'S', label: 'Specific',    value: obj.specific,    color: '#3b82f6' },
+                    { key: 'M', label: 'Measurable',  value: obj.measurable,  color: '#10b981' },
+                    { key: 'A', label: 'Achievable',  value: obj.achievable,  color: '#f59e0b' },
+                    { key: 'R', label: 'Relevant',    value: obj.relevant,    color: '#8b5cf6' },
+                    { key: 'T', label: 'Time-bound',  value: obj.timeBound,   color: '#ef4444' },
+                  ].map((dim) => (
+                    <div key={dim.key} style={{ padding: '10px 12px', borderRadius: 'var(--border-radius)', background: `${dim.color}10`, border: `1px solid ${dim.color}25` }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
+                        <span style={{ width: 24, height: 24, borderRadius: '50%', background: dim.color, color: '#fff', fontSize: 11, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>{dim.key}</span>
+                        <span style={{ fontWeight: 700, fontSize: 11, color: dim.color }}>{dim.label}</span>
+                      </div>
+                      <p style={{ fontSize: 11, color: 'var(--text-secondary)', lineHeight: 1.6, margin: 0 }}>{dim.value}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function ProposedSolutionSection({ solution }) {
+  const priorityColor = (p) => {
+    if (p === 'P0') return { bg: '#fee2e2', color: '#991b1b' };
+    if (p === 'P1') return { bg: '#fef3c7', color: '#92400e' };
+    return { bg: '#dbeafe', color: '#1e40af' };
+  };
+
+  return (
+    <div>
+      {/* Overview */}
+      <div style={{ padding: 'var(--spacing-md)', borderRadius: 'var(--border-radius-lg)', background: 'rgba(59,130,246,0.05)', border: '1px solid rgba(59,130,246,0.2)', marginBottom: 'var(--spacing-md)' }}>
+        <div style={{ fontWeight: 700, fontSize: 13, color: 'var(--accent-primary)', marginBottom: 8 }}>Solution Overview</div>
+        <p style={{ fontSize: 12, color: 'var(--text-secondary)', lineHeight: 1.7, margin: 0 }}>{solution.overview}</p>
+      </div>
+
+      {/* Components table */}
+      <div style={{ overflowX: 'auto', borderRadius: 'var(--border-radius)', border: '1px solid var(--border-color)', marginBottom: 'var(--spacing-md)' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <thead>
+            <tr>
+              {['Component', 'Technology', 'Purpose', 'Priority'].map((h) => (
+                <th key={h} style={{ padding: '8px 12px', textAlign: 'left', background: 'var(--bg-hover)', borderBottom: '1px solid var(--border-color)', fontWeight: 600, fontSize: 11, color: 'var(--text-secondary)' }}>{h}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {solution.components.map((c, i) => {
+              const pc = priorityColor(c.priority);
+              return (
+                <tr key={i} style={{ background: i % 2 === 0 ? 'var(--bg-page)' : 'var(--bg-hover)' }}>
+                  <td style={{ padding: '8px 12px', borderBottom: '1px solid var(--border-color)', fontWeight: 600, fontSize: 12, color: 'var(--text-primary)' }}>{c.component}</td>
+                  <td style={{ padding: '8px 12px', borderBottom: '1px solid var(--border-color)', fontFamily: 'monospace', fontSize: 11, color: '#3b82f6' }}>{c.tech}</td>
+                  <td style={{ padding: '8px 12px', borderBottom: '1px solid var(--border-color)', fontSize: 12, color: 'var(--text-secondary)' }}>{c.purpose}</td>
+                  <td style={{ padding: '8px 12px', borderBottom: '1px solid var(--border-color)' }}><span style={{ fontSize: 10, padding: '2px 8px', borderRadius: 8, background: pc.bg, color: pc.color, fontWeight: 700 }}>{c.priority}</span></td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Architecture description */}
+      <div style={{ padding: 'var(--spacing-md)', borderRadius: 'var(--border-radius-lg)', background: 'rgba(16,185,129,0.04)', border: '1px solid rgba(16,185,129,0.2)', marginBottom: 'var(--spacing-md)' }}>
+        <div style={{ fontWeight: 700, fontSize: 13, color: 'var(--accent-success)', marginBottom: 8 }}>Solution Architecture</div>
+        <p style={{ fontSize: 12, color: 'var(--text-secondary)', lineHeight: 1.7, margin: 0 }}>{solution.architecture}</p>
+      </div>
+
+      {/* Expected outcomes */}
+      <div style={{ padding: 'var(--spacing-md)', borderRadius: 'var(--border-radius-lg)', background: 'rgba(139,92,246,0.04)', border: '1px solid rgba(139,92,246,0.2)' }}>
+        <div style={{ fontWeight: 700, fontSize: 13, color: 'var(--accent-purple)', marginBottom: 10 }}>Expected Outcomes</div>
+        <ul style={{ paddingLeft: 18, display: 'flex', flexDirection: 'column', gap: 8, margin: 0 }}>
+          {solution.outcomes.map((o, i) => (
+            <li key={i} style={{ fontSize: 12, color: 'var(--text-secondary)', lineHeight: 1.6 }}>{o}</li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}
+
+function MultiDataSection({ data }) {
+  return (
+    <div>
+      {/* Intro */}
+      <div style={{ padding: 'var(--spacing-md)', borderRadius: 'var(--border-radius-lg)', background: 'rgba(245,158,11,0.06)', border: '1px solid rgba(245,158,11,0.25)', marginBottom: 'var(--spacing-md)' }}>
+        <p style={{ fontSize: 12, color: 'var(--text-secondary)', lineHeight: 1.7, margin: 0 }}>{data.overview}</p>
+      </div>
+
+      {/* Models per data type */}
+      <div style={{ marginBottom: 'var(--spacing-md)' }}>
+        <div style={{ fontWeight: 700, fontSize: 13, color: 'var(--text-primary)', marginBottom: 10 }}>Models Required per Data Type</div>
+        <div style={{ overflowX: 'auto', borderRadius: 'var(--border-radius)', border: '1px solid var(--border-color)' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <thead>
+              <tr>
+                {['Data Type', 'Format', 'Model Type', 'Algorithm', 'Purpose'].map((h) => (
+                  <th key={h} style={{ padding: '8px 12px', textAlign: 'left', background: 'var(--bg-hover)', borderBottom: '1px solid var(--border-color)', fontWeight: 600, fontSize: 11, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {data.models.map((m, i) => {
+                const rowColors = ['#3b82f6', '#10b981', '#8b5cf6', '#f59e0b', '#ef4444'];
+                const col = rowColors[i % rowColors.length];
+                return (
+                  <tr key={i} style={{ background: i % 2 === 0 ? 'var(--bg-page)' : 'var(--bg-hover)' }}>
+                    <td style={{ padding: '10px 12px', borderBottom: '1px solid var(--border-color)' }}>
+                      <span style={{ fontWeight: 700, fontSize: 12, color: col }}>{m.dataType}</span>
+                    </td>
+                    <td style={{ padding: '10px 12px', borderBottom: '1px solid var(--border-color)', fontFamily: 'monospace', fontSize: 11, color: 'var(--text-muted)' }}>{m.format}</td>
+                    <td style={{ padding: '10px 12px', borderBottom: '1px solid var(--border-color)', fontSize: 12 }}>{m.modelType}</td>
+                    <td style={{ padding: '10px 12px', borderBottom: '1px solid var(--border-color)', fontFamily: 'monospace', fontSize: 11, color: '#3b82f6' }}>{m.algorithm}</td>
+                    <td style={{ padding: '10px 12px', borderBottom: '1px solid var(--border-color)', fontSize: 12, color: 'var(--text-secondary)' }}>{m.purpose}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Integration */}
+      <div style={{ padding: 'var(--spacing-md)', borderRadius: 'var(--border-radius-lg)', background: 'rgba(6,182,212,0.05)', border: '1px solid rgba(6,182,212,0.25)', marginBottom: 'var(--spacing-md)' }}>
+        <div style={{ fontWeight: 700, fontSize: 13, color: '#06b6d4', marginBottom: 8 }}>Integration Strategy — How Outputs Combine</div>
+        <p style={{ fontSize: 12, color: 'var(--text-secondary)', lineHeight: 1.7, margin: 0 }}>{data.integration}</p>
+      </div>
+
+      {/* Ensemble strategies */}
+      <div>
+        <div style={{ fontWeight: 700, fontSize: 13, color: 'var(--text-primary)', marginBottom: 10 }}>Ensemble Strategies</div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 'var(--spacing-md)' }}>
+          {data.ensemble.map((e, i) => {
+            const bgColors = ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6'];
+            const col = bgColors[i % bgColors.length];
+            return (
+              <div key={i} style={{ padding: 'var(--spacing-md)', borderRadius: 'var(--border-radius-lg)', background: `${col}08`, border: `1px solid ${col}30` }}>
+                <div style={{ fontWeight: 700, fontSize: 12, color: col, marginBottom: 6 }}>{e.strategy}</div>
+                <p style={{ fontSize: 11, color: 'var(--text-secondary)', lineHeight: 1.6, margin: 0 }}>{e.desc}</p>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* =========================================================
    MAIN EXPORT
    ========================================================= */
 
@@ -521,6 +834,18 @@ export default function ProcessProblemTab({ process }) {
         <ProblemStatement stmt={data.statement} />
       </div>
 
+      {/* NEW: What We Are NOT Doing */}
+      <div className="content-section">
+        <SectionHeader title="🚫 What We Are NOT Doing" subtitle="Current capability gaps and their business impact" />
+        <WhatNotDoing items={NOT_DOING_DATA} />
+      </div>
+
+      {/* NEW: What We ARE Doing */}
+      <div className="content-section">
+        <SectionHeader title="✅ What We ARE Doing" subtitle="Active capabilities and planned initiatives" />
+        <WhatDoing items={DOING_DATA} />
+      </div>
+
       {/* B. 5W Analysis */}
       <div className="content-section">
         <SectionHeader title="🔍 5W Analysis" subtitle="Who · What · When · Where · Why" />
@@ -531,6 +856,18 @@ export default function ProcessProblemTab({ process }) {
       <div className="content-section">
         <SectionHeader title="🔄 AS-IS vs TO-BE" subtitle="Current state vs. target AI-powered state across key dimensions" />
         <AsIsToBeTable rows={data.asisTobes} />
+      </div>
+
+      {/* NEW: Objectives (SMART) */}
+      <div className="content-section">
+        <SectionHeader title="🎯 Objectives" subtitle="SMART objectives — click to expand each dimension" />
+        <ObjectivesSection objectives={OBJECTIVES_DATA} />
+      </div>
+
+      {/* NEW: Proposed Solution */}
+      <div className="content-section">
+        <SectionHeader title="💡 Proposed Solution" subtitle="Solution overview, components, architecture, and expected outcomes" />
+        <ProposedSolutionSection solution={PROPOSED_SOLUTION} />
       </div>
 
       {/* D. Use Cases */}
@@ -549,6 +886,12 @@ export default function ProcessProblemTab({ process }) {
       <div className="content-section">
         <SectionHeader title="💎 Value Proposition" subtitle="Business, AI, and operational returns" />
         <ValueProposition value={data.value} />
+      </div>
+
+      {/* NEW: Multi-Data Type Challenge */}
+      <div className="content-section">
+        <SectionHeader title="🧩 Multi-Data Type Challenge" subtitle="One problem — multiple data types — multiple models — one ensemble decision" />
+        <MultiDataSection data={MULTI_DATA} />
       </div>
     </div>
   );
