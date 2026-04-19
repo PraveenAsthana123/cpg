@@ -8,7 +8,7 @@
   flex-direction: column;
 }
 
-/* Tab Bar — horizontally scrollable with visible thin scrollbar */
+/* Tab Bar — horizontally scrollable, no visible scrollbar */
 .tabs-bar {
   display: flex;
   align-items: center;
@@ -16,29 +16,15 @@
   border-bottom: 2px solid var(--border-color);
   overflow-x: auto;
   overflow-y: hidden;
-  scrollbar-width: thin;
-  scrollbar-color: var(--accent-primary) transparent;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   flex-shrink: 0;
   -webkit-overflow-scrolling: touch;
   scroll-behavior: smooth;
-  padding-bottom: 2px;
 }
 
 .tabs-bar::-webkit-scrollbar {
-  height: 4px;
-}
-
-.tabs-bar::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.tabs-bar::-webkit-scrollbar-thumb {
-  background: var(--accent-primary);
-  border-radius: 4px;
-}
-
-.tabs-bar::-webkit-scrollbar-thumb:hover {
-  background: #2563eb;
+  display: none;
 }
 
 /* Tab Item */
