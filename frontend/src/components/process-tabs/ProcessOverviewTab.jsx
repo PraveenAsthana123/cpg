@@ -308,6 +308,153 @@ const STEP_STATUS_STYLES = {
   upcoming: { color: 'var(--text-muted)', bg: 'var(--bg-hover)', dot: 'var(--border-color)', label: '○ Next' },
 };
 
+/* ---- Interactive Demo Scenario Runner ---- */
+function DemoScenarioRunner({ scenario }) {
+  const [doneStep, setDoneStep] = useState(0);
+  const [runningStep, setRunningStep] = useState(null);
+  const [runningAll, setRunningAll] = useState(false);
+
+  async function runStep(idx) {
+    setRunningStep(idx);
+    await new Promise((r) => setTimeout(r, 900 + Math.random() * 800));
+    setDoneStep(idx + 1);
+    setRunningStep(null);
+  }
+
+  async function runAllSteps() {
+    setRunningAll(true);
+    setDoneStep(0);
+    for (let i = 0; i < scenario.steps.length; i++) {
+      setRunningStep(i);
+      await new Promise((r) => setTimeout(r, 700 + Math.random() * 600));
+      setDoneStep(i + 1);
+      setRunningStep(null);
+    }
+    setRunningAll(false);
+  }
+
+  return (
+    <div className="content-section">
+      <div className="content-section-header">
+        <span className="content-section-title">🎬 Demo Scenario</span>
+        <span style={{ fontSize: 'var(--font-size-xs)', color: 'var(--text-muted)', fontStyle: 'italic' }}>
+          "{scenario.title}"
+        </span>
+      </div>
+
+      {/* Controls */}
+      <div style={{ display: 'flex', gap: 'var(--spacing-sm)', marginBottom: 'var(--spacing-md)' }}>
+        <button onClick={runAllSteps} disabled={runningAll}
+          style={{ padding: '6px 16px', border: 'none', borderRadius: 'var(--border-radius-sm)', background: 'var(--accent-primary)', color: '#fff', fontSize: 'var(--font-size-xs)', fontWeight: 600, cursor: 'pointer' }}>
+          {runningAll ? '⏳ Running All...' : '▶ Run All Steps'}
+        </button>
+        <button onClick={() => { setDoneStep(0); setRunningStep(null); }}
+          style={{ padding: '6px 16px', border: '1px solid var(--border-color)', borderRadius: 'var(--border-radius-sm)', background: 'var(--bg-card)', color: 'var(--text-secondary)', fontSize: 'var(--font-size-xs)', cursor: 'pointer' }}>
+          🔄 Reset
+        </button>
+        <span style={{ fontSize: 'var(--font-size-xs)', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', marginLeft: 'auto' }}>
+          {doneStep}/{scenario.steps.length} steps complete
+        </span>
+      </div>
+
+      {/* Progress bar */}
+      <div style={{ height: 4, background: 'var(--border-color)', borderRadius: 2, marginBottom: 'var(--spacing-md)', overflow: 'hidden' }}>
+        <div style={{ width: `${(doneStep / scenario.steps.length) * 100}%`, height: '100%', background: 'var(--accent-success)', borderRadius: 2, transition: 'width 0.3s' }} />
+      </div>
+
+      {/* Steps */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-sm)' }}>
+        {scenario.steps.map((step, idx) => {
+          const isComplete = idx < doneStep;
+          const isRunning = runningStep === idx;
+          const canRun = !runningAll && !isRunning && idx === doneStep;
+          return (
+            <div key={idx} style={{
+              borderRadius: 'var(--border-radius)',
+              background: isComplete ? 'rgba(16,185,129,0.07)' : isRunning ? 'rgba(59,130,246,0.08)' : 'var(--bg-hover)',
+              border: `1px solid ${isComplete ? 'rgba(16,185,129,0.25)' : isRunning ? 'rgba(59,130,246,0.3)' : 'var(--border-color)'}`,
+              overflow: 'hidden', transition: 'all 0.3s',
+            }}>
+              {/* Header */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-sm)', padding: '10px 14px' }}>
+                <div style={{
+                  width: 28, height: 28, borderRadius: '50%', flexShrink: 0,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  background: isComplete ? 'var(--accent-success)' : isRunning ? 'var(--accent-primary)' : 'var(--border-color)',
+                  color: isComplete || isRunning ? '#fff' : 'var(--text-muted)', fontWeight: 800, fontSize: 12,
+                }}>
+                  {isComplete ? '✓' : idx + 1}
+                </div>
+                <span style={{ fontSize: 18 }}>{step.icon}</span>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontWeight: 600, fontSize: 'var(--font-size-sm)', color: isComplete ? 'var(--accent-success)' : isRunning ? 'var(--accent-primary)' : 'var(--text-primary)' }}>
+                    {step.label}
+                  </div>
+                  <div style={{ fontSize: 'var(--font-size-xs)', color: 'var(--text-secondary)' }}>{step.desc}</div>
+                </div>
+                {canRun && (
+                  <button onClick={() => runStep(idx)} style={{
+                    padding: '5px 14px', border: 'none', borderRadius: 'var(--border-radius-sm)',
+                    background: 'var(--accent-primary)', color: '#fff', fontSize: 'var(--font-size-xs)', fontWeight: 600, cursor: 'pointer', flexShrink: 0,
+                  }}>▶ Run</button>
+                )}
+                {isRunning && <span style={{ fontSize: 'var(--font-size-xs)', color: 'var(--accent-primary)', fontWeight: 600 }}>⏳ Running...</span>}
+                {isComplete && <span style={{ fontSize: 'var(--font-size-xs)', color: 'var(--accent-success)', fontWeight: 600 }}>✓ Done</span>}
+                {!canRun && !isRunning && !isComplete && <span style={{ fontSize: 'var(--font-size-xs)', color: 'var(--text-muted)' }}>○ Pending</span>}
+              </div>
+
+              {/* Expanded output */}
+              {isComplete && (
+                <div style={{ padding: '0 14px 12px', display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8 }}>
+                  <div style={{ padding: '8px 10px', borderRadius: 4, background: 'rgba(59,130,246,0.08)', border: '1px solid rgba(59,130,246,0.15)' }}>
+                    <div style={{ fontSize: 9, fontWeight: 700, color: 'var(--accent-primary)', letterSpacing: '0.05em', marginBottom: 4 }}>📥 INPUT</div>
+                    <div style={{ fontSize: 11, color: 'var(--text-secondary)', lineHeight: 1.5 }}>
+                      {step.desc.split('—')[0] || 'Process input data'}
+                    </div>
+                  </div>
+                  <div style={{ padding: '8px 10px', borderRadius: 4, background: 'rgba(139,92,246,0.08)', border: '1px solid rgba(139,92,246,0.15)' }}>
+                    <div style={{ fontSize: 9, fontWeight: 700, color: '#8b5cf6', letterSpacing: '0.05em', marginBottom: 4 }}>⚙️ PROCESS</div>
+                    <div style={{ fontSize: 11, color: 'var(--text-secondary)', lineHeight: 1.5 }}>{step.desc}</div>
+                    <div style={{ fontSize: 10, color: 'var(--text-muted)', marginTop: 4 }}>Duration: {(0.5 + Math.random() * 3).toFixed(1)}s</div>
+                  </div>
+                  <div style={{ padding: '8px 10px', borderRadius: 4, background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.15)' }}>
+                    <div style={{ fontSize: 9, fontWeight: 700, color: 'var(--accent-success)', letterSpacing: '0.05em', marginBottom: 4 }}>📤 OUTPUT</div>
+                    <div style={{ fontSize: 11, color: 'var(--text-secondary)', lineHeight: 1.5 }}>
+                      {step.desc.split('—')[1] || 'Step completed successfully'}
+                    </div>
+                    <div style={{ fontSize: 10, color: 'var(--accent-success)', marginTop: 4 }}>Status: ✓ Complete</div>
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Report generation */}
+      {doneStep === scenario.steps.length && (
+        <div style={{ marginTop: 'var(--spacing-md)', padding: 'var(--spacing-md)', background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.2)', borderRadius: 'var(--border-radius)' }}>
+          <div style={{ fontWeight: 700, color: 'var(--accent-success)', marginBottom: 6 }}>🎉 Demo Complete — All {scenario.steps.length} steps passed</div>
+          <div style={{ fontSize: 'var(--font-size-xs)', color: 'var(--text-secondary)', marginBottom: 8 }}>
+            Full pipeline executed successfully. Report ready for download.
+          </div>
+          <div style={{ display: 'flex', gap: 8 }}>
+            <button style={{ padding: '5px 14px', border: 'none', borderRadius: 4, background: 'var(--accent-success)', color: '#fff', fontSize: 'var(--font-size-xs)', fontWeight: 600, cursor: 'pointer' }}>
+              📄 Download Report (PDF)
+            </button>
+            <button style={{ padding: '5px 14px', border: 'none', borderRadius: 4, background: 'var(--accent-primary)', color: '#fff', fontSize: 'var(--font-size-xs)', fontWeight: 600, cursor: 'pointer' }}>
+              📊 Export Metrics (CSV)
+            </button>
+            <button style={{ padding: '5px 14px', border: '1px solid var(--border-color)', borderRadius: 4, background: 'var(--bg-card)', color: 'var(--text-secondary)', fontSize: 'var(--font-size-xs)', cursor: 'pointer' }}>
+              🔗 Share Results
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function ProcessOverviewTab({ process, dept }) {
   const [stepStates, setStepStates] = useState(() => Object.fromEntries(PIPELINE_STEPS.map((s) => [s.id, 'pending'])));
   const [expandedStep, setExpandedStep] = useState(null);
@@ -456,63 +603,8 @@ export default function ProcessOverviewTab({ process, dept }) {
         </div>
       </div>
 
-      {/* ---- DEMO SCENARIO ---- */}
-      <div className="content-section">
-        <div className="content-section-header">
-          <span className="content-section-title">🎬 Demo Scenario</span>
-          <span style={{ fontSize: 'var(--font-size-xs)', color: 'var(--text-muted)', fontStyle: 'italic' }}>
-            "{demoScenario.title}"
-          </span>
-        </div>
-        <div style={{ position: 'relative', paddingLeft: 32 }}>
-          {/* Vertical connector line */}
-          <div style={{
-            position: 'absolute', left: 15, top: 18, bottom: 18,
-            width: 2, background: 'var(--border-color)', borderRadius: 1,
-          }} />
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-sm)' }}>
-            {demoScenario.steps.map((step, idx) => {
-              const sStyle = STEP_STATUS_STYLES[step.status] || STEP_STATUS_STYLES.upcoming;
-              return (
-                <div key={idx} style={{ display: 'flex', gap: 'var(--spacing-md)', alignItems: 'flex-start', position: 'relative' }}>
-                  {/* Step dot on timeline */}
-                  <div style={{
-                    position: 'absolute', left: -24, top: 10,
-                    width: 12, height: 12, borderRadius: '50%',
-                    background: sStyle.dot, border: '2px solid var(--bg-card)',
-                    boxShadow: `0 0 0 2px ${sStyle.dot}`,
-                    zIndex: 1,
-                  }} />
-                  {/* Step number */}
-                  <div style={{
-                    width: 22, height: 22, borderRadius: '50%',
-                    background: sStyle.bg, color: sStyle.color,
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: 10, fontWeight: 800, flexShrink: 0, marginTop: 2,
-                  }}>
-                    {idx + 1}
-                  </div>
-                  {/* Content */}
-                  <div style={{
-                    flex: 1, padding: '8px 12px', borderRadius: 'var(--border-radius)',
-                    background: sStyle.bg, border: `1px solid ${step.status === 'current' ? 'var(--accent-primary)' : 'transparent'}`,
-                  }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 2 }}>
-                      <span>{step.icon}</span>
-                      <span style={{ fontWeight: 700, fontSize: 'var(--font-size-xs)', color: sStyle.color }}>{step.label}</span>
-                      <span style={{
-                        marginLeft: 'auto', fontSize: 9, fontWeight: 700, padding: '1px 6px', borderRadius: 4,
-                        background: 'rgba(255,255,255,0.5)', color: sStyle.color,
-                      }}>{sStyle.label}</span>
-                    </div>
-                    <div style={{ fontSize: 10, color: 'var(--text-secondary)', lineHeight: 1.5 }}>{step.desc}</div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </div>
+      {/* ---- DEMO SCENARIO (Interactive) ---- */}
+      <DemoScenarioRunner scenario={demoScenario} />
 
       {/* Manual Pipeline Runner */}
       <div className="content-section">
