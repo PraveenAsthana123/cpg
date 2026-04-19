@@ -66,7 +66,7 @@ def create_app() -> FastAPI:
     from routers.processes import router as process_router
     from routers.datasets import router as dataset_router
     from routers.models import router as model_router
-    from routers.jobs import router as job_router
+    from routers.jobs import router as job_router, schedule_router
 
     app.include_router(health_router)
     app.include_router(dept_router)
@@ -74,6 +74,7 @@ def create_app() -> FastAPI:
     app.include_router(dataset_router)
     app.include_router(model_router)
     app.include_router(job_router)
+    app.include_router(schedule_router)
 
     return app
 
