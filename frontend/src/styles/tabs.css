@@ -8,20 +8,37 @@
   flex-direction: column;
 }
 
-/* Tab Bar */
+/* Tab Bar — horizontally scrollable with visible thin scrollbar */
 .tabs-bar {
   display: flex;
   align-items: center;
   gap: 0;
   border-bottom: 2px solid var(--border-color);
   overflow-x: auto;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+  overflow-y: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent-primary) transparent;
   flex-shrink: 0;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  padding-bottom: 2px;
 }
 
 .tabs-bar::-webkit-scrollbar {
-  display: none;
+  height: 4px;
+}
+
+.tabs-bar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.tabs-bar::-webkit-scrollbar-thumb {
+  background: var(--accent-primary);
+  border-radius: 4px;
+}
+
+.tabs-bar::-webkit-scrollbar-thumb:hover {
+  background: #2563eb;
 }
 
 /* Tab Item */

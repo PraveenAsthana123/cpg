@@ -1,5 +1,7 @@
 import { useState, useRef } from 'react';
 import '../../styles/workbench.css';
+import SequenceDiagram from '../charts/SequenceDiagram';
+import { processSequenceDiagrams } from '../../data/sequenceDiagrams';
 
 const PIPELINE_STEPS = [
   {
@@ -510,6 +512,11 @@ export default function ProcessOverviewTab({ process, dept }) {
   const userStories = USER_STORIES[process.id] || USER_STORIES['__default__'];
   const demoScenario = DEMO_SCENARIOS[process.id] || DEMO_SCENARIOS['__default__'];
 
+  // Sequence diagram (first/primary for this process)
+  const seqDiagrams = processSequenceDiagrams[process.id] || processSequenceDiagrams['__default__'];
+  const primaryDiagram = seqDiagrams[0];
+  const [seqExpanded, setSeqExpanded] = useState(false);
+
   return (
     <div>
       {/* Process description */}
@@ -800,6 +807,72 @@ export default function ProcessOverviewTab({ process, dept }) {
             </ul>
           </div>
         </div>
+      </div>
+
+      {/* ---- SEQUENCE DIAGRAM (collapsible) ---- */}
+      <div className="content-section">
+        {/* Clickable header */}
+        <button
+          onClick={() => setSeqExpanded((v) => !v)}
+          style={{
+            width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            background: 'none', border: 'none', cursor: 'pointer', padding: 0,
+          }}
+        >
+          <span className="content-section-title">↔️ View Sequence Diagram</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span style={{ fontSize: 'var(--font-size-xs)', color: 'var(--text-muted)' }}>
+              {primaryDiagram.title}
+            </span>
+            <span style={{
+              fontSize: 12, color: 'var(--accent-primary)',
+              transform: seqExpanded ? 'rotate(180deg)' : 'none',
+              transition: 'transform 0.2s',
+              display: 'inline-block',
+            }}>▼</span>
+          </div>
+        </button>
+
+        {seqExpanded && (
+          <div style={{ marginTop: 'var(--spacing-md)' }}>
+            <div style={{
+              padding: 'var(--spacing-md)',
+              background: 'var(--bg-hover)',
+              borderRadius: 'var(--border-radius-lg)',
+              border: '1px solid var(--border-color)',
+            }}>
+              <SequenceDiagram
+                title={primaryDiagram.title}
+                actors={primaryDiagram.actors}
+                messages={primaryDiagram.messages}
+              />
+            </div>
+
+            {/* Actor colour legend */}
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 10 }}>
+              {primaryDiagram.actors.map((actor) => (
+                <div key={actor.id} style={{
+                  display: 'flex', alignItems: 'center', gap: 5,
+                  fontSize: 10, color: 'var(--text-secondary)',
+                }}>
+                  <div style={{
+                    width: 10, height: 10, borderRadius: 2,
+                    background: `${actor.color}22`,
+                    border: `1.5px solid ${actor.color}`,
+                    flexShrink: 0,
+                  }} />
+                  {actor.label}
+                </div>
+              ))}
+            </div>
+
+            {seqDiagrams.length > 1 && (
+              <p style={{ fontSize: 'var(--font-size-xs)', color: 'var(--text-muted)', marginTop: 10 }}>
+                {seqDiagrams.length - 1} more diagram{seqDiagrams.length > 2 ? 's' : ''} available in the Documentation tab → Sequence Diagrams.
+              </p>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

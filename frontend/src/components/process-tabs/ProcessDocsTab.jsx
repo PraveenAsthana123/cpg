@@ -1,18 +1,21 @@
 import { useState } from 'react';
+import SequenceDiagram from '../charts/SequenceDiagram';
+import { processSequenceDiagrams } from '../../data/sequenceDiagrams';
 
 /* =========================================================
    DOC SUB-TAB CONTENT
    ========================================================= */
 
 const DOC_SUB_TABS = [
-  { id: 'hld', label: 'HLD', icon: '📐' },
-  { id: 'lld', label: 'LLD', icon: '📋' },
-  { id: 'brd', label: 'BRD', icon: '📝' },
-  { id: 'adr', label: 'ADR', icon: '🏛️' },
-  { id: 'c4', label: 'C4 Model', icon: '🏗️' },
-  { id: 'modelcard', label: 'Model Card', icon: '🧠' },
-  { id: 'runbook', label: 'Runbook', icon: '⚙️' },
-  { id: 'datadict', label: 'Data Dictionary', icon: '📖' },
+  { id: 'hld',      label: 'HLD',              icon: '📐' },
+  { id: 'lld',      label: 'LLD',              icon: '📋' },
+  { id: 'brd',      label: 'BRD',              icon: '📝' },
+  { id: 'adr',      label: 'ADR',              icon: '🏛️' },
+  { id: 'c4',       label: 'C4 Model',         icon: '🏗️' },
+  { id: 'modelcard',label: 'Model Card',       icon: '🧠' },
+  { id: 'runbook',  label: 'Runbook',          icon: '⚙️' },
+  { id: 'datadict', label: 'Data Dictionary',  icon: '📖' },
+  { id: 'sequence', label: 'Sequence Diagrams',icon: '↔️' },
 ];
 
 function InfoRow({ label, value }) {
@@ -608,17 +611,103 @@ function DataDictContent() {
   );
 }
 
-function DocSubTabContent({ activeTab }) {
+function SequenceContent({ process }) {
+  const diagrams = processSequenceDiagrams[process?.id] || processSequenceDiagrams['__default__'];
+  const [activeDiagramIdx, setActiveDiagramIdx] = useState(0);
+  const diagram = diagrams[activeDiagramIdx];
+
+  return (
+    <div>
+      <p style={{ fontSize: 'var(--font-size-xs)', color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: 'var(--spacing-md)' }}>
+        Sequence diagrams illustrate the runtime interactions between actors and system components
+        for this process. Arrows show message flow, activation, and return values.
+      </p>
+
+      {/* Diagram selector (when multiple diagrams exist) */}
+      {diagrams.length > 1 && (
+        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 'var(--spacing-md)' }}>
+          {diagrams.map((d, i) => (
+            <button
+              key={d.id}
+              onClick={() => setActiveDiagramIdx(i)}
+              style={{
+                padding: '5px 14px',
+                border: `1.5px solid ${i === activeDiagramIdx ? 'var(--accent-primary)' : 'var(--border-color)'}`,
+                borderRadius: 'var(--border-radius-sm)',
+                background: i === activeDiagramIdx ? 'rgba(59,130,246,0.1)' : 'var(--bg-hover)',
+                color: i === activeDiagramIdx ? 'var(--accent-primary)' : 'var(--text-secondary)',
+                fontSize: 'var(--font-size-xs)',
+                fontWeight: i === activeDiagramIdx ? 700 : 400,
+                cursor: 'pointer',
+                transition: 'all 0.15s',
+              }}
+            >
+              {d.title}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Diagram title */}
+      <div style={{
+        fontWeight: 700,
+        fontSize: 'var(--font-size-sm)',
+        color: 'var(--accent-primary)',
+        marginBottom: 'var(--spacing-md)',
+        display: 'flex',
+        alignItems: 'center',
+        gap: 6,
+      }}>
+        <span>↔️</span> {diagram.title}
+      </div>
+
+      {/* Render the diagram */}
+      <div style={{
+        padding: 'var(--spacing-md)',
+        background: 'var(--bg-hover)',
+        borderRadius: 'var(--border-radius-lg)',
+        border: '1px solid var(--border-color)',
+      }}>
+        <SequenceDiagram
+          title={diagram.title}
+          actors={diagram.actors}
+          messages={diagram.messages}
+        />
+      </div>
+
+      {/* Actor legend */}
+      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 'var(--spacing-md)' }}>
+        {diagram.actors.map((actor) => (
+          <div key={actor.id} style={{
+            display: 'flex', alignItems: 'center', gap: 5,
+            fontSize: 10, color: 'var(--text-secondary)',
+          }}>
+            <div style={{
+              width: 10, height: 10, borderRadius: 2,
+              background: `${actor.color}22`,
+              border: `1.5px solid ${actor.color}`,
+              flexShrink: 0,
+            }} />
+            {actor.label}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function DocSubTabContent({ activeTab, process }) {
   switch (activeTab) {
-    case 'hld': return <HLDContent />;
-    case 'lld': return <LLDContent />;
-    case 'brd': return <BRDContent />;
-    case 'adr': return <ADRContent />;
-    case 'c4': return <C4Content />;
-    case 'modelcard': return <ModelCardContent />;
-    case 'runbook': return <RunbookContent />;
+    case 'hld':      return <HLDContent />;
+    case 'lld':      return <LLDContent />;
+    case 'brd':      return <BRDContent />;
+    case 'adr':      return <ADRContent />;
+    case 'c4':       return <C4Content />;
+    case 'modelcard':return <ModelCardContent />;
+    case 'runbook':  return <RunbookContent />;
     case 'datadict': return <DataDictContent />;
-    default: return null;
+    case 'sequence': return <SequenceContent process={process} />;
+    default:         return null;
   }
 }
 
@@ -638,8 +727,6 @@ const DOC_TYPES = [
 ];
 
 const COMING_SOON = [
-  { label: 'Sequence Diagrams', eta: 'Q2 2025' },
-  { label: 'Data Dictionary', eta: 'Q2 2025' },
   { label: 'Test Evidence Report', eta: 'Q3 2025' },
   { label: 'Compliance Certificate', eta: 'Q3 2025' },
 ];
@@ -934,7 +1021,7 @@ export default function ProcessDocsTab({ process, dept }) {
         </div>
 
         {/* Sub-tab content */}
-        <DocSubTabContent activeTab={activeDocTab} />
+        <DocSubTabContent activeTab={activeDocTab} process={process} />
       </div>
 
       <div className="content-section">
