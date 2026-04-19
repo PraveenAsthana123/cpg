@@ -1,10 +1,24 @@
-import { NavLink } from 'react-router-dom';
+import { useState } from 'react';
+import { NavLink, useLocation } from 'react-router-dom';
 import { departments } from '../data/departments';
+import { departmentProcesses } from '../data/processes';
 import '../styles/sidebar.css';
 
 export default function Sidebar() {
+  const location = useLocation();
+  const [expanded, setExpanded] = useState({});
+
+  const toggleExpand = (deptId, e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setExpanded((prev) => ({ ...prev, [deptId]: !prev[deptId] }));
+  };
+
+  // Auto-expand if current path matches a department
+  const currentDeptId = location.pathname.split('/')[1] || '';
+
   return (
-    <aside className="sidebar">
+    <aside className="sidebar" aria-label="Main navigation">
       <div className="sidebar-header">
         <div className="sidebar-logo">CPG</div>
         <div>
@@ -14,20 +28,64 @@ export default function Sidebar() {
       </div>
 
       <nav className="sidebar-nav">
-        {departments.map((dept) => (
-          <NavLink
-            key={dept.id}
-            to={dept.route}
-            end={dept.route === '/'}
-            className={({ isActive }) => 'nav-item' + (isActive ? ' active' : '')}
-          >
-            <span className="nav-item-icon">{dept.icon}</span>
-            <span className="nav-item-label">{dept.name}</span>
-            {dept.processCount > 0 && (
-              <span className="nav-item-badge">{dept.processCount}</span>
-            )}
-          </NavLink>
-        ))}
+        {departments.map((dept) => {
+          const processes = dept.id !== 'dashboard' ? (departmentProcesses[dept.id] || []) : [];
+          const hasProcesses = processes.length > 0;
+          const isExpanded = expanded[dept.id] || currentDeptId === dept.id;
+          const isDeptActive = location.pathname === dept.route || location.pathname.startsWith(`/${dept.id}/`);
+
+          if (dept.id === 'dashboard') {
+            return (
+              <NavLink
+                key={dept.id}
+                to={dept.route}
+                end
+                className={({ isActive }) => 'nav-item' + (isActive ? ' active' : '')}
+              >
+                <span className="nav-item-icon">{dept.icon}</span>
+                <span className="nav-item-label">{dept.name}</span>
+              </NavLink>
+            );
+          }
+
+          return (
+            <div key={dept.id} className="nav-group">
+              <div
+                className={'nav-item nav-item-parent' + (isDeptActive ? ' active' : '')}
+                onClick={(e) => toggleExpand(dept.id, e)}
+              >
+                <span className="nav-item-icon">{dept.icon}</span>
+                <NavLink
+                  to={dept.route}
+                  className="nav-item-label"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {dept.name}
+                </NavLink>
+                {hasProcesses && (
+                  <span className={'nav-expand-arrow' + (isExpanded ? ' expanded' : '')}>
+                    &#9662;
+                  </span>
+                )}
+              </div>
+
+              {hasProcesses && isExpanded && (
+                <div className="nav-subitems">
+                  {processes.map((proc) => (
+                    <NavLink
+                      key={proc.id}
+                      to={`/${dept.id}/${proc.id}`}
+                      className={({ isActive }) => 'nav-subitem' + (isActive ? ' active' : '')}
+                    >
+                      <span className="nav-subitem-dot"></span>
+                      <span className="nav-subitem-label">{proc.name}</span>
+                    </NavLink>
+                  ))}
+                </div>
+              )}
+            </div>
+          );
+        })}
       </nav>
 
       <div className="sidebar-footer">
