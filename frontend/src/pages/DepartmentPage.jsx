@@ -7,6 +7,7 @@ import AIStackTab from '../components/dept-tabs/AIStackTab';
 import DataTab from '../components/dept-tabs/DataTab';
 import ModelsTab from '../components/dept-tabs/ModelsTab';
 import ROITab from '../components/dept-tabs/ROITab';
+import DepartmentChatbot from '../components/DepartmentChatbot';
 
 const TABS = [
   { id: 'overview', label: 'Overview', icon: '📊' },
@@ -15,6 +16,7 @@ const TABS = [
   { id: 'data', label: 'Data', icon: '🗂️' },
   { id: 'models', label: 'Models', icon: '🧠' },
   { id: 'roi', label: 'ROI', icon: '💰' },
+  { id: 'chatbot', label: 'Chatbot', icon: '💬' },
 ];
 
 export default function DepartmentPage() {
@@ -81,6 +83,9 @@ export default function DepartmentPage() {
           </div>
           <div className={`tab-panel${activeTab === 'roi' ? ' active has-padding' : ''}`}>
             <ROITab dept={dept} />
+          </div>
+          <div className={`tab-panel${activeTab === 'chatbot' ? ' active has-padding' : ''}`}>
+            <DepartmentChatbot dept={dept} />
           </div>
         </div>
       </div>
