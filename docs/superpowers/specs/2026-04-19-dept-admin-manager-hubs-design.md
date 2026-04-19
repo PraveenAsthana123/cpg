@@ -173,8 +173,12 @@ export const dataFlowEdges = [
 ## Components (NEW)
 
 ### `frontend/src/pages/AdminPage.jsx`
-Renders page header + tab bar with 8 tabs. Phase 1 tab panels are stubs showing "Coming in Phase 2–5".
-Tabs: Users & Roles · Permissions · Data Sources · Model Registry · AI Use Cases & Automations · Scheduled Jobs · Audit Log · Settings
+Renders page header + tab bar with **9 tabs**. Phase 1 tab panels are stubs showing "Coming in Phase 2–5".
+Tabs: Users & Roles · Permissions · **Integrations & Data Sources** · **MCP Servers** · Model Registry · AI Use Cases & Automations · Scheduled Jobs · Audit Log · Settings
+
+**Integrations & Data Sources** tab (Phase 2+) covers: REST/GraphQL APIs · databases (Postgres, Snowflake, etc.) · Kaggle datasets · SaaS connectors (Salesforce, SAP, Shopify) · ETL pipeline schedules · field mappings · sync health.
+
+**MCP Servers** tab (Phase 2+) covers Model Context Protocol server registrations the dept's AI features consume: server URL · transport (stdio/HTTP/SSE) · auth · advertised tools & resources · health check · rate limits.
 
 ### `frontend/src/pages/ManagerPage.jsx`
 Same structure, 7 tabs:
@@ -205,7 +209,7 @@ Inside each expanded department group, inject two fixed sub-links above the proc
 
 - [ ] Sidebar shows "⚙️ Admin" and "📊 Manager" sub-links under every department (13 depts total incl. new Contact Center + Marketing).
 - [ ] Clicking a link navigates to `/:deptId/admin` or `/:deptId/manager`.
-- [ ] Admin page renders header + tab bar with 8 tabs (panels stubbed).
+- [ ] Admin page renders header + tab bar with 9 tabs (panels stubbed).
 - [ ] Manager page renders header + tab bar with 7 tabs (panels stubbed).
 - [ ] Data files (`roles.js`, `reports.js`, `aiUseCases.js`, `dataFlow.js`) exist, import cleanly, validate Phase-1 seed data for at least 3 depts.
 - [ ] `departments.js` now lists 13 departments; Dashboard tile grid renders all 13 without layout break.
@@ -233,7 +237,7 @@ Inside each expanded department group, inject two fixed sub-links above the proc
 | Risk | Mitigation |
 |---|---|
 | Sidebar becomes too tall with 13 × (Admin + Manager + processes) | Collapsed by default (existing behavior); divider between Admin/Manager and processes for visual separation. |
-| Tab proliferation on Admin/Manager pages (8 + 7 = 15 tabs) | Existing `.tabs-bar` already supports horizontal scroll (used in ProcessPage). Reuse the same CSS. |
+| Tab proliferation on Admin/Manager pages (9 + 7 = 16 tabs) | Existing `.tabs-bar` already supports horizontal scroll (used in ProcessPage). Reuse the same CSS. |
 | New departments break Dashboard tile grid | Dashboard already uses CSS grid `auto-fill` — should flow. Verify in Phase 1. |
 | Data file seed inconsistency across 13 depts | Phase 1 fully seeds only 3 depts; others have skeleton + `TODO:` comments. Phase 2 completes them. |
 
