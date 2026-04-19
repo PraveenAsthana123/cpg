@@ -11,17 +11,21 @@ import ProcessDocsTab from '../components/process-tabs/ProcessDocsTab';
 import ProcessAutomationTab from '../components/process-tabs/ProcessAutomationTab';
 import ProcessProblemTab from '../components/process-tabs/ProcessProblemTab';
 import ProcessDemoTab from '../components/process-tabs/ProcessDemoTab';
+import ProcessAccuracyTab from '../components/process-tabs/ProcessAccuracyTab';
+import ProcessChatbotTab from '../components/process-tabs/ProcessChatbotTab';
 
 const TABS = [
-  { id: 'overview', label: 'Overview', icon: '📋' },
-  { id: 'problem', label: 'Problem & Use Case', icon: '🎯' },
-  { id: 'data', label: 'Data', icon: '🗂️' },
-  { id: 'models', label: 'Models', icon: '🧠' },
-  { id: 'testing', label: 'Testing', icon: '🧪' },
-  { id: 'governance', label: 'AI Governance', icon: '🏛️' },
-  { id: 'docs', label: 'Documentation', icon: '📚' },
-  { id: 'demos', label: 'Demo Scenarios', icon: '🎬' },
-  { id: 'automation', label: 'Automation', icon: '⚡' },
+  { id: 'overview',    label: 'Overview',          icon: '📋' },
+  { id: 'problem',     label: 'Problem & Use Case', icon: '🎯' },
+  { id: 'data',        label: 'Data',               icon: '🗂️' },
+  { id: 'models',      label: 'Models',             icon: '🧠' },
+  { id: 'accuracy',    label: 'Accuracy',           icon: '🎯' },
+  { id: 'testing',     label: 'Testing',            icon: '🧪' },
+  { id: 'governance',  label: 'AI Governance',      icon: '🏛️' },
+  { id: 'docs',        label: 'Documentation',      icon: '📚' },
+  { id: 'demos',       label: 'Demo Scenarios',     icon: '🎬' },
+  { id: 'automation',  label: 'Automation',         icon: '⚡' },
+  { id: 'chatbot',     label: 'Chatbot',            icon: '🤖' },
 ];
 
 export default function ProcessPage() {
@@ -104,6 +108,12 @@ export default function ProcessPage() {
           </div>
           <div className={`tab-panel${activeTab === 'automation' ? ' active has-padding' : ''}`}>
             <ProcessAutomationTab process={process} dept={dept} />
+          </div>
+          <div className={`tab-panel${activeTab === 'accuracy' ? ' active has-padding' : ''}`}>
+            <ProcessAccuracyTab process={process} dept={dept} />
+          </div>
+          <div className={`tab-panel${activeTab === 'chatbot' ? ' active has-padding' : ''}`}>
+            <ProcessChatbotTab process={process} dept={dept} />
           </div>
         </div>
       </div>
