@@ -9,9 +9,11 @@ import ProcessTestingTab from '../components/process-tabs/ProcessTestingTab';
 import ProcessGovernanceTab from '../components/process-tabs/ProcessGovernanceTab';
 import ProcessDocsTab from '../components/process-tabs/ProcessDocsTab';
 import ProcessAutomationTab from '../components/process-tabs/ProcessAutomationTab';
+import ProcessProblemTab from '../components/process-tabs/ProcessProblemTab';
 
 const TABS = [
   { id: 'overview', label: 'Overview', icon: '📋' },
+  { id: 'problem', label: 'Problem & Use Case', icon: '🎯' },
   { id: 'data', label: 'Data', icon: '🗂️' },
   { id: 'models', label: 'Models', icon: '🧠' },
   { id: 'testing', label: 'Testing', icon: '🧪' },
@@ -76,6 +78,9 @@ export default function ProcessPage() {
         <div className="tab-content">
           <div className={`tab-panel${activeTab === 'overview' ? ' active has-padding' : ''}`}>
             <ProcessOverviewTab process={process} dept={dept} />
+          </div>
+          <div className={`tab-panel${activeTab === 'problem' ? ' active has-padding' : ''}`}>
+            <ProcessProblemTab process={process} dept={dept} />
           </div>
           <div className={`tab-panel${activeTab === 'data' ? ' active has-padding' : ''}`}>
             <ProcessDataTab process={process} dept={dept} />
