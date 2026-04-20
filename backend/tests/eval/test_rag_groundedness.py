@@ -37,11 +37,13 @@ def _ollama_judge_groundedness(response: str, sources: str) -> float:
         "0 = makes unsupported claims). Reply ONLY with the number.\n\n"
         f"SOURCES:\n{sources}\n\nRESPONSE:\n{response}\n\nScore (0-1):"
     )
+    # 60s (was 30s) — qwen2.5 judge calls occasionally hit 30-40s when Ollama
+    # is warming / under load; reduced flakiness without changing semantics.
     r = requests.post(
         f"{OLLAMA_BASE}/api/generate",
         json={"model": MODEL, "prompt": prompt, "stream": False,
               "options": {"num_predict": 10, "temperature": 0.0}},
-        timeout=30,
+        timeout=60,
     )
     r.raise_for_status()
     text = r.json().get("response", "").strip()

@@ -49,6 +49,13 @@ data/processed/
 kaggle.json
 .kaggle/
 
+# --- Stray browser-tool artifacts (screenshots taken into repo root by external MCPs) ---
+# Real committed screenshots live under docs/screenshots/.
+cpg-*.png
+.playwright-mcp/
+frontend/test-results/
+frontend/playwright-report/
+
 # --- IDE ---
 .vscode/
 .idea/
