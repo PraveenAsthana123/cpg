@@ -25,9 +25,23 @@ if [[ -z "${KAGGLE_USERNAME:-}" || -z "${KAGGLE_KEY:-}" ]]; then
   fi
 fi
 
-echo "[download_rossmann] downloading rossmann-store-sales to $DEST"
-kaggle competitions download -c rossmann-store-sales -p "$DEST"
+echo "[download_rossmann] trying Kaggle competition (requires rule-acceptance)..."
+if kaggle competitions download -c rossmann-store-sales -p "$DEST" 2>/dev/null; then
+  echo "[download_rossmann] competition download OK"
+else
+  echo "[download_rossmann] competition download failed (likely rules not accepted —"
+  echo "  see https://www.kaggle.com/competitions/rossmann-store-sales/rules )"
+  echo "[download_rossmann] falling back to public dataset mirror: shahpranshu27/rossman-store-sales"
+  rm -f "$DEST"/*.zip 2>/dev/null || true
+  kaggle datasets download -d shahpranshu27/rossman-store-sales -p "$DEST" --unzip
+  # The dataset extracts to a nested directory — flatten it.
+  if [[ -d "$DEST/rossmann-store-sales" ]]; then
+    mv "$DEST/rossmann-store-sales/"*.csv "$DEST/" 2>/dev/null || true
+    rmdir "$DEST/rossmann-store-sales" 2>/dev/null || true
+  fi
+fi
 
+# Unzip any remaining archives.
 cd "$DEST"
 if ls *.zip >/dev/null 2>&1; then
   for z in *.zip; do

@@ -41,8 +41,13 @@ frontend/build/
 data/kaggle/*.csv
 data/kaggle/*.zip
 data/kaggle/images/
+data/kaggle/rossmann/
 data/raw/
 data/processed/
+
+# --- Kaggle credentials (defensive — should be in ~/.kaggle/, never in repo) ---
+kaggle.json
+.kaggle/
 
 # --- IDE ---
 .vscode/
