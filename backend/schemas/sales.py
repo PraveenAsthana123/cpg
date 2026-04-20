@@ -43,3 +43,30 @@ class ForecastResponse(BaseModel):
     mape: float = Field(description="Backtest MAPE on held-out tail, 0.0–1.0")
     fit_time_ms: int
     predict_time_ms: int
+
+
+class SimulationRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    store_id: int = Field(ge=1)
+    discount_pct: float = Field(ge=0, le=50, description="0–50%")
+    duration_days: int = Field(ge=1, le=30)
+
+
+class WaterfallStep(BaseModel):
+    label: str
+    delta: float                 # positive or negative dollars vs previous step
+    cumulative: float            # running total after this step
+
+
+class SimulationResponse(BaseModel):
+    store_id: int
+    discount_pct: float
+    duration_days: int
+    baseline_revenue: float
+    promo_revenue: float
+    uplift_units: float
+    margin_hit: float
+    net_impact: float
+    waterfall: list[WaterfallStep]   # 4 steps: Baseline, Promo uplift, Margin hit, Net
+    elasticity_used: float
+    margin_factor_used: float
