@@ -11,6 +11,9 @@ import RolesResponsibilitiesTab from '../components/manager-tabs/RolesResponsibi
 import SalesForecastTab from '../components/manager-tabs/sales/ForecastTab';
 import SalesRevenueDrillDownTab from '../components/manager-tabs/sales/RevenueDrillDownTab';
 import SalesSimulationTab from '../components/manager-tabs/sales/SimulationTab';
+import SupplyChainStockoutRiskTab from '../components/manager-tabs/supply-chain/StockoutRiskTab';
+import SupplyChainSupplierScorecardTab from '../components/manager-tabs/supply-chain/SupplierScorecardTab';
+import SupplyChainNetworkSimTab from '../components/manager-tabs/supply-chain/NetworkSimTab';
 
 const BASE_TABS = [
   { id: 'kpi-dashboard',          label: 'KPI Dashboard',            icon: '📊', Component: KPIDashboardTab          },
@@ -28,8 +31,15 @@ const SALES_EXTRA_TABS = [
   { id: 'sales-simulation',     label: 'Simulation',      icon: '🎯', Component: SalesSimulationTab        },
 ];
 
+const SUPPLY_CHAIN_EXTRA_TABS = [
+  { id: 'sc-stockout-risk',     label: 'Stockout Risk',       icon: '⚠️', Component: SupplyChainStockoutRiskTab      },
+  { id: 'sc-supplier-scorecard', label: 'Supplier Scorecard', icon: '🏭', Component: SupplyChainSupplierScorecardTab },
+  { id: 'sc-network-sim',       label: 'Network Sim',         icon: '🕸️', Component: SupplyChainNetworkSimTab        },
+];
+
 function tabsForDept(deptId) {
   if (deptId === 'sales') return [...BASE_TABS, ...SALES_EXTRA_TABS];
+  if (deptId === 'supply-chain') return [...BASE_TABS, ...SUPPLY_CHAIN_EXTRA_TABS];
   return BASE_TABS;
 }
 

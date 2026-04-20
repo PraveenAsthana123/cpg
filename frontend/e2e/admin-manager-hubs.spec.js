@@ -61,10 +61,22 @@ test.describe('Sales flagship — Phase ε', () => {
     await expect(page.getByText('Simulation', { exact: false }).first()).toBeVisible();
   });
 
-  test('Non-sales Manager page still has 7 tabs', async ({ page }) => {
-    await page.goto('/supply-chain/manager');
+  test('Non-flagship Manager page still has 7 tabs', async ({ page }) => {
+    // Phase ε adds 3 supply-chain-specific tabs (Stockout Risk, Supplier
+    // Scorecard, Network Sim), so /supply-chain/manager now has 10 tabs like
+    // Sales. Use Logistics as the non-flagship baseline for the 7-tab check.
+    await page.goto('/logistics/manager');
     const tabs = page.locator('.tab-item');
     await expect(tabs).toHaveCount(7);
+  });
+
+  test('Supply Chain Manager page shows 10 tabs (7 base + 3 SC-specific)', async ({ page }) => {
+    await page.goto('/supply-chain/manager');
+    const tabs = page.locator('.tab-item');
+    await expect(tabs).toHaveCount(10);
+    await expect(page.getByText('Stockout Risk', { exact: false }).first()).toBeVisible();
+    await expect(page.getByText('Supplier Scorecard', { exact: false }).first()).toBeVisible();
+    await expect(page.getByText('Network Sim', { exact: false }).first()).toBeVisible();
   });
 
   test('Sales overview fetches store count', async ({ page }) => {
