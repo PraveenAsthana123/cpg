@@ -73,10 +73,18 @@ test.describe('Sales flagship — Phase ε', () => {
     await expect(page.getByText('Active stores').first()).toBeVisible({ timeout: 10_000 });
   });
 
-  test('Simulation tab has disabled submit with delta messaging', async ({ page }) => {
+  test('Simulation tab renders live form with enabled Run button', async ({ page }) => {
+    // Phase δ replaced the placeholder with a live form that POSTs to /api/v1/sales/simulate.
+    // Assert structural UI — NOT the backend response (which requires a Prophet fit and
+    // is covered by capture-screenshots.spec.js test 06).
     await page.goto('/sales/manager');
-    await page.getByRole('button', { name: /Simulation/ }).click();
-    // Use the h4 heading to avoid strict-mode match against 4 elements that mention δ
-    await expect(page.getByRole('heading', { name: /Coming in Phase δ/ })).toBeVisible();
+    await page.locator('.tab-item').filter({ hasText: /Simulation/ }).first().click();
+    const runBtn = page.getByRole('button', { name: /Run scenario/ });
+    await expect(runBtn).toBeVisible();
+    await expect(runBtn).toBeEnabled();
+    // Sanity check: the three input fields are in the DOM.
+    await expect(page.getByText(/Store ID/).first()).toBeVisible();
+    await expect(page.getByText(/Discount %/).first()).toBeVisible();
+    await expect(page.getByText(/Duration/).first()).toBeVisible();
   });
 });
