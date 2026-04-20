@@ -1,6 +1,7 @@
 import { useParams, useLocation } from 'react-router-dom';
 import { departments } from '../data/departments';
 import { departmentProcesses } from '../data/processes';
+import RoleSelector from './RoleSelector';
 import '../styles/topbar.css';
 
 export default function Topbar() {
@@ -44,6 +45,8 @@ export default function Topbar() {
           <span className="dept-chip">120+ Processes</span>
           <span className="dept-chip">8 AI Types</span>
         </div>
+        <div className="topbar-divider" />
+        <RoleSelector />
         <div className="topbar-divider" />
         <span className="topbar-badge badge-success">
           <span className="status-dot" />
