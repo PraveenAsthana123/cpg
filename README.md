@@ -18,7 +18,7 @@ AI-driven explanations via Ollama/RAG.
 │              FastAPI Backend  (port 8000)                    │
 │  Routers → Services → Repositories → PostgreSQL             │
 │  Celery Workers (Redis broker) for async ML jobs            │
-│  MLflow (port 5000) for experiment tracking & model registry│
+│  MLflow (host port 5001 → container 5000) for experiments   │
 │  Ollama (port 11434) for RAG / AI natural-language answers  │
 └─────────────────────────────────────────────────────────────┘
 ```
@@ -78,17 +78,18 @@ docker compose up -d
 docker compose exec backend python -m backend.database
 
 # 5. Open the dashboard
-open http://localhost:5173
+open http://localhost:3000
 ```
 
 ### Service URLs
 
 | Service | URL |
 |---------|-----|
-| Frontend | http://localhost:5173 |
+| Frontend (Docker) | http://localhost:3000 |
+| Frontend (local Vite dev) | http://localhost:5173 |
 | Backend API | http://localhost:8000 |
 | API Docs (Swagger) | http://localhost:8000/docs |
-| MLflow UI | http://localhost:5000 |
+| MLflow UI | http://localhost:5001 |
 | Flower (Celery monitor) | http://localhost:5555 |
 
 ---
