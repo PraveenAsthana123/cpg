@@ -130,6 +130,64 @@ test.describe('Sales flagship — demo screenshots', () => {
     });
   });
 
+  test('10d supply-chain flagship — overview (live tiles)', async ({ page }) => {
+    const SC_OUT = path.resolve(__dirname, '../../docs/screenshots/supply-chain');
+    await page.goto('/supply-chain');
+    // Wait for one of the new Supply Chain tiles to mount.
+    await expect(page.getByText('SKUs tracked').first()).toBeVisible({ timeout: 10_000 });
+    // Give the live fetch a moment to populate values.
+    await page.waitForTimeout(1500);
+    await page.screenshot({ path: `${SC_OUT}/11-supply-chain-overview.png`, fullPage: true });
+  });
+
+  test('10e supply-chain stockout risk tab — run for SKU0', async ({ page }) => {
+    const SC_OUT = path.resolve(__dirname, '../../docs/screenshots/supply-chain');
+    await page.goto('/supply-chain/manager');
+    await page.locator('.tab-item').filter({ hasText: /Stockout Risk/ }).first().click();
+    await expect(page.getByRole('button', { name: /^Assess risk$/ })).toBeVisible();
+    // Default SKU dropdown value is SKU0 — just click Assess.
+    await page.getByRole('button', { name: /^Assess risk$/ }).click();
+    await expect(page.getByText(/Risk band/i).first()).toBeVisible({ timeout: 15_000 });
+    await page.waitForTimeout(500);
+    await page.screenshot({
+      path: `${SC_OUT}/12-supply-chain-stockout-risk.png`,
+      fullPage: true,
+    });
+  });
+
+  test('10f supply-chain supplier scorecard tab', async ({ page }) => {
+    const SC_OUT = path.resolve(__dirname, '../../docs/screenshots/supply-chain');
+    await page.goto('/supply-chain/manager');
+    await page.locator('.tab-item').filter({ hasText: /Supplier Scorecard/ }).first().click();
+    // Wait for at least one supplier row to render.
+    await expect(page.locator('table tbody tr').first()).toBeVisible({ timeout: 10_000 });
+    await page.waitForTimeout(500);
+    await page.screenshot({
+      path: `${SC_OUT}/13-supply-chain-supplier-scorecard.png`,
+      fullPage: true,
+    });
+  });
+
+  test('10g supply-chain network-sim tab — run scenario', async ({ page }) => {
+    const SC_OUT = path.resolve(__dirname, '../../docs/screenshots/supply-chain');
+    // Guarantee manager role so the Run button is enabled.
+    await page.goto('/');
+    await page.evaluate(() => localStorage.removeItem('cpg.role'));
+    await page.goto('/supply-chain/manager');
+    await page.locator('.tab-item').filter({ hasText: /Network Sim/ }).first().click();
+    const runBtn = page.getByRole('button', { name: /Run scenario/ });
+    await expect(runBtn).toBeVisible();
+    await expect(runBtn).toBeEnabled();
+    await runBtn.click();
+    // Wait for the result-stat tiles.
+    await expect(page.getByText(/Revenue at risk/).first()).toBeVisible({ timeout: 15_000 });
+    await page.waitForTimeout(500);
+    await page.screenshot({
+      path: `${SC_OUT}/14-supply-chain-network-sim.png`,
+      fullPage: true,
+    });
+  });
+
   test('10c role selector switching visible in topbar (Phase η)', async ({ page }) => {
     // Start from a clean role = manager default.
     await page.goto('/');
