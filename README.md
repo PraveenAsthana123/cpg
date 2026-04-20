@@ -154,3 +154,38 @@ All PRs must pass:
 - `pytest --cov=backend --cov-fail-under=80`
 - `npm run validate` (frontend lint + format + unit tests)
 - GitHub Actions CI pipeline
+
+---
+
+## Screenshots
+
+The Sales flagship deep-dive ships with 16 captured screenshots demonstrating
+live end-to-end behavior — dashboard → department overview → manager hub →
+forecast → explain drawer → revenue tree → simulation waterfall → admin
+workflows → data-flow graph → role selector. A second gallery covers the
+other departments (marketing, supply chain, contact center, telehealth).
+
+- [docs/screenshots/sales/](docs/screenshots/sales/) — 14 Sales flagship captures (dashboard, overview, 10-tab manager hub, forecast empty + generated, explain drawer, revenue drilldown, simulation empty + waterfall, admin workflows, data flow, sidebar expanded, admin AI use cases, role selectors for manager + team-member)
+- [docs/screenshots/depts/](docs/screenshots/depts/) — cross-dept overview captures (marketing, supply chain, contact center, telehealth)
+
+### Flagship demo walkthrough
+
+For a narrated 3-scenario walkthrough of the Sales flagship (revenue-drop
+investigation, 8-week forecast + confidence, promo ROI simulation with RBAC
+gating) see [docs/demo/sales-walkthrough.md](docs/demo/sales-walkthrough.md).
+
+### Architecture diagrams
+
+Mermaid diagrams covering the full Sales flow (rendered inline on GitHub):
+
+- [docs/diagrams/sales-architecture.md](docs/diagrams/sales-architecture.md) — C4-lite container view
+- [docs/diagrams/sales-forecast-sequence.md](docs/diagrams/sales-forecast-sequence.md) — Prophet fit + predict sequence
+- [docs/diagrams/sales-rag-sequence.md](docs/diagrams/sales-rag-sequence.md) — AI Explain RAG hybrid retrieval sequence
+- [docs/diagrams/sales-rbac-flow.md](docs/diagrams/sales-rbac-flow.md) — Demo-mode RBAC enforcement sequence
+
+### Implementation status
+
+A living "Implemented vs Planned" snapshot is maintained at
+[docs/STATUS.md](docs/STATUS.md). After Sales Phases α–θ, the Sales flagship
+is end-to-end complete (data, forecast, simulation, frontend, RAG,
+observability, RBAC, docs); Supply Chain is next.
