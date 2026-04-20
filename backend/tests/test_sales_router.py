@@ -64,3 +64,35 @@ def test_forecast_bounds(client: TestClient) -> None:
 
     r = client.post("/api/v1/sales/forecast", json={"store_id": 1, "horizon_days": 1000})
     assert r.status_code == 422  # horizon_days le=180
+
+
+def test_simulate_happy_path(client: TestClient) -> None:
+    r = client.post(
+        "/api/v1/sales/simulate",
+        json={"store_id": 1, "discount_pct": 15, "duration_days": 7},
+    )
+    assert r.status_code == 200, r.text
+    body = r.json()
+    assert body["store_id"] == 1
+    assert body["discount_pct"] == 15.0
+    assert body["duration_days"] == 7
+    assert body["baseline_revenue"] > 0
+    assert len(body["waterfall"]) == 4
+    assert body["elasticity_used"] == -2.0
+    assert body["margin_factor_used"] == 0.3
+
+
+def test_simulate_bad_discount_returns_422(client: TestClient) -> None:
+    r = client.post(
+        "/api/v1/sales/simulate",
+        json={"store_id": 1, "discount_pct": 75, "duration_days": 7},
+    )
+    assert r.status_code == 422  # ge=0, le=50
+
+
+def test_simulate_unknown_field_returns_422(client: TestClient) -> None:
+    r = client.post(
+        "/api/v1/sales/simulate",
+        json={"store_id": 1, "discount_pct": 15, "duration_days": 7, "extra": 1},
+    )
+    assert r.status_code == 422  # extra='forbid'
