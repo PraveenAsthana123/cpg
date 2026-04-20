@@ -14,6 +14,9 @@ import SalesSimulationTab from '../components/manager-tabs/sales/SimulationTab';
 import SupplyChainStockoutRiskTab from '../components/manager-tabs/supply-chain/StockoutRiskTab';
 import SupplyChainSupplierScorecardTab from '../components/manager-tabs/supply-chain/SupplierScorecardTab';
 import SupplyChainNetworkSimTab from '../components/manager-tabs/supply-chain/NetworkSimTab';
+import MarketingCampaignROITab from '../components/manager-tabs/marketing/CampaignROITab';
+import CustomerChurnRiskTab from '../components/manager-tabs/customer/ChurnRiskTab';
+import FinanceBudgetVarianceTab from '../components/manager-tabs/finance/BudgetVarianceTab';
 
 const BASE_TABS = [
   { id: 'kpi-dashboard',          label: 'KPI Dashboard',            icon: '📊', Component: KPIDashboardTab          },
@@ -37,9 +40,24 @@ const SUPPLY_CHAIN_EXTRA_TABS = [
   { id: 'sc-network-sim',       label: 'Network Sim',         icon: '🕸️', Component: SupplyChainNetworkSimTab        },
 ];
 
+const MARKETING_EXTRA_TABS = [
+  { id: 'mkt-campaign-roi',     label: 'Campaign ROI',        icon: '📣', Component: MarketingCampaignROITab         },
+];
+
+const CUSTOMER_EXTRA_TABS = [
+  { id: 'cust-churn-risk',      label: 'Churn Risk',          icon: '⚡', Component: CustomerChurnRiskTab            },
+];
+
+const FINANCE_EXTRA_TABS = [
+  { id: 'fin-budget-variance',  label: 'Budget Variance',     icon: '💰', Component: FinanceBudgetVarianceTab        },
+];
+
 function tabsForDept(deptId) {
   if (deptId === 'sales') return [...BASE_TABS, ...SALES_EXTRA_TABS];
   if (deptId === 'supply-chain') return [...BASE_TABS, ...SUPPLY_CHAIN_EXTRA_TABS];
+  if (deptId === 'marketing') return [...BASE_TABS, ...MARKETING_EXTRA_TABS];
+  if (deptId === 'customer') return [...BASE_TABS, ...CUSTOMER_EXTRA_TABS];
+  if (deptId === 'finance') return [...BASE_TABS, ...FINANCE_EXTRA_TABS];
   return BASE_TABS;
 }
 
