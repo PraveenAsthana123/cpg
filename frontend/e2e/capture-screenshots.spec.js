@@ -62,11 +62,17 @@ test.describe('Sales flagship — demo screenshots', () => {
     await page.screenshot({ path: `${OUT}/05-revenue-drilldown.png`, fullPage: true });
   });
 
-  test('06 simulation placeholder tab', async ({ page }) => {
+  test('06 simulation — live waterfall', async ({ page }) => {
+    test.setTimeout(90_000);  // First-run Prophet fit can take ~30–60s
     await page.goto('/sales/manager');
-    await page.getByRole('button', { name: /Simulation/ }).click();
-    await expect(page.getByRole('heading', { name: /Coming in Phase δ/ })).toBeVisible();
-    await page.screenshot({ path: `${OUT}/06-simulation-placeholder.png`, fullPage: true });
+    await page.locator('.tab-item').filter({ hasText: /Simulation/ }).first().click();
+    await expect(page.getByRole('button', { name: /Run scenario/ })).toBeVisible();
+    await page.screenshot({ path: `${OUT}/06a-simulation-empty.png`, fullPage: true });
+
+    await page.getByRole('button', { name: /Run scenario/ }).click();
+    await expect(page.getByText(/Baseline revenue/)).toBeVisible({ timeout: 75_000 });
+    await page.waitForTimeout(1200);
+    await page.screenshot({ path: `${OUT}/06b-simulation-waterfall.png`, fullPage: true });
   });
 
   test('07 admin workflows tab (enhancement workflows)', async ({ page }) => {
