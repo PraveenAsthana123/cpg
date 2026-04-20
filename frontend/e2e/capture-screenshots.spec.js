@@ -129,4 +129,29 @@ test.describe('Sales flagship — demo screenshots', () => {
       fullPage: true,
     });
   });
+
+  test('10c role selector switching visible in topbar (Phase η)', async ({ page }) => {
+    // Start from a clean role = manager default.
+    await page.goto('/');
+    await page.evaluate(() => localStorage.removeItem('cpg.role'));
+    await page.goto('/sales/manager');
+    await page.locator('.tab-item').filter({ hasText: /Simulation/ }).first().click();
+    await page.waitForTimeout(500);
+    await page.screenshot({
+      path: `${OUT}/10-role-selector-manager.png`,
+      fullPage: false,
+    });
+
+    // Switch to team-member — the Run button should now show "Manager role required"
+    // and a yellow banner should appear.
+    await page.getByLabel('Demo role selector').selectOption('team-member');
+    await page.waitForTimeout(600);
+    await page.screenshot({
+      path: `${OUT}/10-role-selector-team-member.png`,
+      fullPage: false,
+    });
+
+    // Reset for any downstream re-runs.
+    await page.getByLabel('Demo role selector').selectOption('manager');
+  });
 });
