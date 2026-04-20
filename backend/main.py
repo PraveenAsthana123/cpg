@@ -12,6 +12,7 @@ from core.config import get_settings
 from core.error_handlers import register_error_handlers
 from core.logging_config import setup_logging
 from core.middleware import CorrelationIdMiddleware, RateLimitMiddleware, SecurityHeadersMiddleware
+from core.rbac_middleware import RBACMiddleware
 from database import run_migrations
 
 logger = logging.getLogger(__name__)
@@ -55,6 +56,10 @@ def create_app() -> FastAPI:
     )
     app.add_middleware(RateLimitMiddleware, requests_per_minute=settings.rate_limit_api)
     app.add_middleware(SecurityHeadersMiddleware)
+    # RBAC runs INSIDE CorrelationId so request.state.correlation_id is set
+    # before RBAC returns 403/400. add_middleware stacks in reverse: last-added
+    # is outermost. CorrelationId (added last) wraps RBAC (added just before).
+    app.add_middleware(RBACMiddleware)
     app.add_middleware(CorrelationIdMiddleware)
 
     # ── Error handlers ─────────────────────────────────────────────────────────
