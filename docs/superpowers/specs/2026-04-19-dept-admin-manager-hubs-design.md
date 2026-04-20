@@ -282,6 +282,24 @@ Inside each expanded department group, inject two fixed sub-links above the proc
 - Phase 4: Cross-dept data-flow visualization (per-dept + global).
 - Phase 5: Remaining tabs (Monitoring, Scheduled Jobs, Model Registry, KPI Dashboard with charts).
 
+### Phase 2+ content direction — Enterprise AI Reference Architecture
+
+User-approved direction: Phase 2 tab content folds in a 9-layer Enterprise AI Reference Architecture:
+
+| Architecture Layer | Hosts in |
+|---|---|
+| Experience (multi-channel apps) | Manager → KPI Dashboard; Dashboard tiles |
+| Prompt (governance, versioning) | Admin → Model Registry |
+| Agent (multi-agent orchestration) | Admin → AI Use Cases (AI Agent category) |
+| Orchestration (event pipelines) | Admin → Workflows, Scheduled Jobs |
+| LLM (multi-model routing) | Admin → Model Registry, MCP Servers |
+| Retrieval (hybrid + reranker) | Admin → Integrations (Vector DB, Search); Manager → Status & Health (retrieval latency) |
+| Data (lakehouse) | Admin → Integrations (Databricks/Snowflake/Kafka); Manager → Cross-Dept Data Flow |
+| Governance (RBAC, PII, audit) | Admin → Users & Roles, Permissions, Audit Log |
+| Observability (LLMOps) | Manager → Monitoring & Alerts, Status & Health |
+
+This mapping is Phase 2+ implementation guidance and does **not** expand Phase 1 scope.
+
 ---
 
 ## Decisions (locked this session)
