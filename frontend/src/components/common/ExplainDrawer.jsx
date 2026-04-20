@@ -233,5 +233,16 @@ function defaultQuestionFor(context) {
   if (context?.screen === 'RevenueDrillDownTab') {
     return `Why does store type ${context.store_type} perform the way it does?`;
   }
+  if (context?.screen === 'StockoutRiskTab') {
+    return `Why is SKU ${context.sku_id} in the ${context.risk_band ?? ''} stockout risk band?`;
+  }
+  if (context?.screen === 'SupplierScorecardTab') {
+    return `Why does supplier ${context.supplier_name ?? context.supplier_id} have a score of ${
+      typeof context.score === 'number' ? context.score.toFixed(1) : context.score
+    }?`;
+  }
+  if (context?.screen === 'NetworkSimTab') {
+    return `What drives the revenue-at-risk if supplier ${context.supplier_id} is delayed ${context.delay_days} days?`;
+  }
   return 'What does this mean?';
 }
