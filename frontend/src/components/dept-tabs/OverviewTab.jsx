@@ -2,6 +2,10 @@ import { useEffect, useState } from 'react';
 import { departmentROI } from '../../data/roi';
 import { departmentAIStack } from '../../data/aiStack';
 import { listStores } from '../../services/salesApi';
+import { getWorkflowsForDept } from '../../data/workflows';
+import { getUseCasesForDept } from '../../data/aiUseCases';
+import { rolesByDept } from '../../data/roles';
+import { getInboundEdges, getOutboundEdges } from '../../data/dataFlow';
 
 export default function OverviewTab({ dept }) {
   const roi = departmentROI[dept.id] || [];
@@ -10,6 +14,7 @@ export default function OverviewTab({ dept }) {
   return (
     <div>
       {dept.id === 'sales' && <SalesOverviewSection />}
+      {dept.id !== 'dashboard' && <DataSnapshotSection dept={dept} />}
       <div className="content-section">
         <h3 className="content-section-title">Department Overview</h3>
         <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--text-secondary)', lineHeight: 1.7 }}>
@@ -154,6 +159,53 @@ function Tile({ label, value, note }) {
       <div style={{ fontSize: 11, color: '#64748b', textTransform: 'uppercase' }}>{label}</div>
       <div style={{ fontSize: 22, fontWeight: 700, margin: '4px 0' }}>{value}</div>
       <div style={{ fontSize: 11, color: '#94a3b8' }}>{note}</div>
+    </div>
+  );
+}
+
+function DataSnapshotSection({ dept }) {
+  const workflows = getWorkflowsForDept(dept.id);
+  const useCases = getUseCasesForDept(dept.id);
+  const inbound = getInboundEdges(dept.id);
+  const outbound = getOutboundEdges(dept.id);
+
+  const deptRoles = rolesByDept[dept.id] || {};
+  const seededRoleCount = Object.values(deptRoles).filter(
+    (r) => r && typeof r === 'object' && typeof r.title === 'string' && r.title.length > 0
+  ).length;
+
+  const categoryCount = new Set(useCases.map((u) => u.category)).size;
+
+  const workflowNote =
+    workflows.length > 0 ? '4 roles × process lifecycle' : 'awaiting Phase 2 seed';
+  const useCaseNote =
+    useCases.length > 0 ? `${categoryCount} categor${categoryCount === 1 ? 'y' : 'ies'}` : 'catalog pending';
+  const rolesNote =
+    seededRoleCount > 0 ? `${seededRoleCount} of 4 canonical roles` : 'awaiting Phase 2 seed';
+  const flowsNote =
+    inbound.length + outbound.length > 0 ? 'cross-dept dependencies' : 'no cross-dept edges yet';
+
+  return (
+    <div style={{ marginBottom: 24 }}>
+      <h3 style={{ fontSize: 15, marginBottom: 12 }}>
+        Data snapshot (static — Phase 1 seed)
+      </h3>
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+          gap: 12,
+        }}
+      >
+        <Tile label="Enhancement workflows" value={workflows.length} note={workflowNote} />
+        <Tile label="AI use cases seeded" value={useCases.length} note={useCaseNote} />
+        <Tile label="Roles seeded" value={seededRoleCount} note={rolesNote} />
+        <Tile
+          label="Data flows in / out"
+          value={`${inbound.length} in / ${outbound.length} out`}
+          note={flowsNote}
+        />
+      </div>
     </div>
   );
 }
