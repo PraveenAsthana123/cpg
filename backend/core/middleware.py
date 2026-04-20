@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import time
-import uuid
 from collections import defaultdict, deque
 from typing import Callable
 
@@ -10,16 +9,53 @@ from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.types import ASGIApp
 
+from core.structured_logger import correlation_id_var, emit_event, new_correlation_id
+
 
 class CorrelationIdMiddleware(BaseHTTPMiddleware):
-    """Attaches a correlation ID to every request for end-to-end tracing."""
+    """Attaches a correlation ID to every request for end-to-end tracing.
+
+    - Honors incoming ``X-Correlation-ID`` header; otherwise mints a new 16-char hex id.
+    - Stores the id in ``request.state`` and in the ``correlation_id_var`` contextvar
+      so structured log events from deeper code paths pick it up automatically.
+    - Emits a JSON ``http.request`` (or ``http.request.failed``) event with
+      ``{path, method, status, latency_ms}`` at the end of each request.
+    """
 
     async def dispatch(self, request: Request, call_next: Callable) -> Response:
-        correlation_id = request.headers.get("X-Correlation-ID") or str(uuid.uuid4())
+        # Accept case-insensitive header; fall back to new id.
+        correlation_id = (
+            request.headers.get("X-Correlation-ID")
+            or request.headers.get("x-correlation-id")
+            or new_correlation_id()
+        )
         request.state.correlation_id = correlation_id
+        token = correlation_id_var.set(correlation_id)
 
-        response = await call_next(request)
+        t0 = time.perf_counter()
+        try:
+            response = await call_next(request)
+        except Exception:
+            latency_ms = int((time.perf_counter() - t0) * 1000)
+            emit_event(
+                "http.request.failed",
+                path=str(request.url.path),
+                method=request.method,
+                latency_ms=latency_ms,
+            )
+            correlation_id_var.reset(token)
+            raise
+
+        latency_ms = int((time.perf_counter() - t0) * 1000)
         response.headers["X-Correlation-ID"] = correlation_id
+        emit_event(
+            "http.request",
+            path=str(request.url.path),
+            method=request.method,
+            status=response.status_code,
+            latency_ms=latency_ms,
+        )
+        correlation_id_var.reset(token)
         return response
 
 
