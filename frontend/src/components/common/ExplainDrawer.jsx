@@ -27,7 +27,7 @@ export default function ExplainDrawer({ open, onClose, context }) {
     setError(null);
     setResult(null);
     try {
-      const r = await explain({ question, context });
+      const r = await explain({ question, context, corpus: corpusFor(context) });
       setResult(r);
     } catch (e) {
       setError(e.message);
@@ -224,6 +224,22 @@ export default function ExplainDrawer({ open, onClose, context }) {
       </div>
     </div>
   );
+}
+
+// Supply-chain screens route to the supply-chain corpus; everything else falls
+// back to sales. Kept explicit (not derived from the URL) so sub-components can
+// override if they open the drawer from a different context in future.
+const SUPPLY_CHAIN_SCREENS = new Set([
+  'StockoutRiskTab',
+  'SupplierScorecardTab',
+  'NetworkSimTab',
+]);
+
+function corpusFor(context) {
+  if (context?.screen && SUPPLY_CHAIN_SCREENS.has(context.screen)) {
+    return 'supply-chain';
+  }
+  return 'sales';
 }
 
 function defaultQuestionFor(context) {
