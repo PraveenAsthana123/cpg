@@ -77,6 +77,10 @@ test.describe('Sales flagship — Phase ε', () => {
     // Phase δ replaced the placeholder with a live form that POSTs to /api/v1/sales/simulate.
     // Assert structural UI — NOT the backend response (which requires a Prophet fit and
     // is covered by capture-screenshots.spec.js test 06).
+    // Phase η: default role is 'manager' so Run button is enabled unless the
+    // previous test switched roles. Clear localStorage to guarantee default.
+    await page.goto('/');
+    await page.evaluate(() => localStorage.removeItem('cpg.role'));
     await page.goto('/sales/manager');
     await page.locator('.tab-item').filter({ hasText: /Simulation/ }).first().click();
     const runBtn = page.getByRole('button', { name: /Run scenario/ });
@@ -86,5 +90,42 @@ test.describe('Sales flagship — Phase ε', () => {
     await expect(page.getByText(/Store ID/).first()).toBeVisible();
     await expect(page.getByText(/Discount %/).first()).toBeVisible();
     await expect(page.getByText(/Duration/).first()).toBeVisible();
+  });
+});
+
+test.describe('Demo-mode RBAC — Phase η', () => {
+  test.beforeEach(async ({ page }) => {
+    // Ensure each RBAC test starts from a clean role = 'manager' default.
+    await page.goto('/');
+    await page.evaluate(() => localStorage.removeItem('cpg.role'));
+  });
+
+  test('Topbar has role selector with 4 options', async ({ page }) => {
+    await page.goto('/');
+    const selector = page.getByLabel('Demo role selector');
+    await expect(selector).toBeVisible();
+    const options = await selector.locator('option').allTextContents();
+    expect(options).toEqual([
+      'Manager',
+      'Team Member',
+      'Compliance',
+      'Reporting & Monitoring',
+    ]);
+  });
+
+  test('SimulationTab disables Run when role is team-member', async ({ page }) => {
+    await page.goto('/');
+    // Switch to team-member via the selector BEFORE navigating.
+    await page.getByLabel('Demo role selector').selectOption('team-member');
+    await page.goto('/sales/manager');
+    await page.locator('.tab-item').filter({ hasText: /Simulation/ }).first().click();
+    const runBtn = page.getByRole('button', {
+      name: /Manager role required|Run scenario/,
+    });
+    await expect(runBtn).toBeDisabled();
+    await expect(page.getByText(/Current role:/)).toBeVisible();
+    await expect(page.getByText(/team-member/).first()).toBeVisible();
+    // Reset for downstream tests (they also clear in beforeEach but be explicit).
+    await page.getByLabel('Demo role selector').selectOption('manager');
   });
 });
