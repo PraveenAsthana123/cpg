@@ -34,6 +34,7 @@ test.describe('Sales flagship — demo screenshots', () => {
   });
 
   test('04 forecast tab — store picker + generated Prophet chart', async ({ page }) => {
+    test.setTimeout(120_000); // First RAG call can take 15-40s (index build + embed)
     await page.goto('/sales/manager');
     // "Forecast" tab button uniquely — use last() since the word may appear elsewhere
     await page.locator('.tab-item').filter({ hasText: /Forecast/ }).first().click();
@@ -50,7 +51,12 @@ test.describe('Sales flagship — demo screenshots', () => {
     // Open ExplainDrawer
     await page.getByRole('button', { name: /Ask AI why/ }).click();
     await expect(page.getByRole('dialog', { name: /AI Explanation/ })).toBeVisible();
-    await page.waitForTimeout(400);
+    // Drawer now has an input + Ask button + returns live RAG content.
+    // Question is pre-seeded from context — just submit.
+    await page.getByRole('button', { name: /^Ask$/ }).click();
+    // Wait for the Citations section — first RAG call can take ~15-40s on cold cache.
+    await expect(page.locator('text=/Citations \\(/')).toBeVisible({ timeout: 90_000 });
+    await page.waitForTimeout(1200);
     await page.screenshot({ path: `${OUT}/04c-explain-drawer.png`, fullPage: true });
   });
 
