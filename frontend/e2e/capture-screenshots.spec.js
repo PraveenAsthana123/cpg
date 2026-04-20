@@ -1,0 +1,95 @@
+// capture-screenshots.spec.js — one-shot capture of key pages for demo assets.
+// Run: npm run test:e2e -- capture-screenshots.spec.js --project=chromium
+// Produces PNGs in docs/screenshots/sales/
+
+import { test, expect } from '@playwright/test';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const OUT = path.resolve(__dirname, '../../docs/screenshots/sales');
+
+test.use({ viewport: { width: 1440, height: 900 } });
+
+test.describe('Sales flagship — demo screenshots', () => {
+  test('01 dashboard', async ({ page }) => {
+    await page.goto('/');
+    await page.waitForLoadState('networkidle');
+    await page.screenshot({ path: `${OUT}/01-dashboard.png`, fullPage: true });
+  });
+
+  test('02 sales overview (live KPI tiles)', async ({ page }) => {
+    await page.goto('/sales');
+    // Wait for sales-specific tile to mount (label renders on skeleton too)
+    await expect(page.getByText('Active stores').first()).toBeVisible({ timeout: 10_000 });
+    // Give a moment for the live fetch to populate values
+    await page.waitForTimeout(1500);
+    await page.screenshot({ path: `${OUT}/02-sales-overview.png`, fullPage: true });
+  });
+
+  test('03 sales manager (10 tabs)', async ({ page }) => {
+    await page.goto('/sales/manager');
+    await page.waitForLoadState('networkidle');
+    await page.screenshot({ path: `${OUT}/03-sales-manager-10-tabs.png`, fullPage: true });
+  });
+
+  test('04 forecast tab — store picker + generated Prophet chart', async ({ page }) => {
+    await page.goto('/sales/manager');
+    // "Forecast" tab button uniquely — use last() since the word may appear elsewhere
+    await page.locator('.tab-item').filter({ hasText: /Forecast/ }).first().click();
+    await expect(page.getByRole('button', { name: /^Generate forecast$/ })).toBeVisible();
+    await page.screenshot({ path: `${OUT}/04a-forecast-empty.png`, fullPage: true });
+
+    // Run the forecast (click Generate forecast — first Prophet fit ~3–8s)
+    await page.getByRole('button', { name: /^Generate forecast$/ }).click();
+    // Wait for MAPE text which only appears after a successful response
+    await expect(page.getByText(/Backtest MAPE/)).toBeVisible({ timeout: 60_000 });
+    await page.waitForTimeout(1500);
+    await page.screenshot({ path: `${OUT}/04b-forecast-generated.png`, fullPage: true });
+
+    // Open ExplainDrawer
+    await page.getByRole('button', { name: /Ask AI why/ }).click();
+    await expect(page.getByRole('dialog', { name: /AI Explanation/ })).toBeVisible();
+    await page.waitForTimeout(400);
+    await page.screenshot({ path: `${OUT}/04c-explain-drawer.png`, fullPage: true });
+  });
+
+  test('05 revenue drill-down tab', async ({ page }) => {
+    await page.goto('/sales/manager');
+    await page.locator('.tab-item').filter({ hasText: /Revenue Tree/ }).first().click();
+    await expect(page.getByText(/Sales hierarchy/)).toBeVisible({ timeout: 30_000 });
+    await page.waitForTimeout(1000);
+    await page.screenshot({ path: `${OUT}/05-revenue-drilldown.png`, fullPage: true });
+  });
+
+  test('06 simulation placeholder tab', async ({ page }) => {
+    await page.goto('/sales/manager');
+    await page.getByRole('button', { name: /Simulation/ }).click();
+    await expect(page.getByRole('heading', { name: /Coming in Phase δ/ })).toBeVisible();
+    await page.screenshot({ path: `${OUT}/06-simulation-placeholder.png`, fullPage: true });
+  });
+
+  test('07 admin workflows tab (enhancement workflows)', async ({ page }) => {
+    await page.goto('/sales/admin');
+    await page.getByRole('button', { name: /Workflows/ }).click();
+    // WorkflowsTab renders "N workflows" in the stats bar — wait for it.
+    await expect(page.locator('text=/\\d+\\s+workflows/').first()).toBeVisible({ timeout: 5000 });
+    await page.waitForTimeout(500);
+    await page.screenshot({ path: `${OUT}/07-admin-workflows.png`, fullPage: true });
+  });
+
+  test('08 data-flow page', async ({ page }) => {
+    await page.goto('/data-flow');
+    await page.waitForLoadState('networkidle');
+    await page.screenshot({ path: `${OUT}/08-data-flow.png`, fullPage: true });
+  });
+
+  test('09 sidebar expanded showing Admin + Manager sub-links', async ({ page }) => {
+    await page.goto('/');
+    // Expand Sales & Demand by clicking its parent row
+    await page.getByText('Sales & Demand').first().click();
+    await expect(page.getByRole('link', { name: /Admin/ }).first()).toBeVisible();
+    await page.waitForTimeout(400);
+    await page.screenshot({ path: `${OUT}/09-sidebar-sales-expanded.png`, fullPage: false });
+  });
+});
