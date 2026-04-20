@@ -4,6 +4,7 @@ import {
   Cell, ResponsiveContainer,
 } from 'recharts';
 import { simulate } from '../../../services/salesApi';
+import { useRole } from '../../../hooks/useRole';
 
 export default function SimulationTab() {
   const [storeId, setStoreId] = useState(1);
@@ -12,6 +13,8 @@ export default function SimulationTab() {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [role] = useRole();
+  const canSimulate = role === 'manager';
 
   const run = async () => {
     setLoading(true);
@@ -43,17 +46,35 @@ export default function SimulationTab() {
         <Field label="Duration (days)" value={duration} onChange={setDuration} min={1} max={30} />
       </div>
 
+      {!canSimulate && (
+        <div
+          style={{
+            padding: 8, marginBottom: 8,
+            background: '#fef3c7', color: '#92400e',
+            border: '1px solid #fde68a', borderRadius: 4, fontSize: 12,
+            maxWidth: 640,
+          }}
+        >
+          Current role: <strong>{role}</strong>. Switch to Manager in the top-bar
+          role selector to run simulations.
+        </div>
+      )}
+
       <button
         onClick={run}
-        disabled={loading}
+        disabled={loading || !canSimulate}
+        title={canSimulate ? 'Run simulation' : 'Manager role required'}
         style={{
           padding: '10px 20px',
-          background: loading ? '#cbd5e1' : '#3b82f6',
+          background: (loading || !canSimulate) ? '#cbd5e1' : '#3b82f6',
           color: '#fff', border: 'none', borderRadius: 6,
-          cursor: loading ? 'wait' : 'pointer', fontWeight: 600,
+          cursor: (loading || !canSimulate) ? 'not-allowed' : 'pointer',
+          fontWeight: 600,
         }}
       >
-        {loading ? 'Running…' : '▶ Run scenario'}
+        {!canSimulate
+          ? '🔒 Manager role required'
+          : (loading ? 'Running…' : '▶ Run scenario')}
       </button>
 
       {error && (
