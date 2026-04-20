@@ -1,24 +1,11 @@
-const API_BASE = '';
+// aiExplainApi.js — thin client for /api/v1/ai/explain.
+// Uses the shared apiFetch wrapper so every call carries X-Demo-Role
+// (Phase η demo-mode RBAC).
 
-async function fetchJson(url, init) {
-  const r = await fetch(API_BASE + url, {
-    headers: { 'Content-Type': 'application/json' },
-    ...init,
-  });
-  if (!r.ok) {
-    let detail = r.statusText;
-    try {
-      detail = (await r.json())?.detail || detail;
-    } catch {
-      /* ignore */
-    }
-    throw new Error(`${r.status} ${detail}`);
-  }
-  return r.json();
-}
+import { apiFetch } from './apiFetch';
 
 export async function explain({ question, context }) {
-  return fetchJson('/api/v1/ai/explain', {
+  return apiFetch('/api/v1/ai/explain', {
     method: 'POST',
     body: JSON.stringify({ question, context }),
   });

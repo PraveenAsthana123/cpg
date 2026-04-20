@@ -1,34 +1,22 @@
 // salesApi.js — thin fetch client for /api/v1/sales/*
-// Uses VITE_API_BASE_URL if set, else same-origin /api path (proxied by Vite dev server).
+// Uses the shared apiFetch wrapper so every call carries X-Demo-Role
+// (Phase η demo-mode RBAC).
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || '';
-
-async function fetchJson(url, init) {
-  const r = await fetch(API_BASE + url, {
-    headers: { 'Content-Type': 'application/json' },
-    ...init,
-  });
-  if (!r.ok) {
-    let detail = r.statusText;
-    try { detail = (await r.json())?.detail || detail; } catch { /* ignore */ }
-    throw new Error(`${r.status} ${detail}`);
-  }
-  return r.json();
-}
+import { apiFetch } from './apiFetch';
 
 export async function listStores() {
-  return fetchJson('/api/v1/sales/stores');
+  return apiFetch('/api/v1/sales/stores');
 }
 
 export async function getForecast(storeId, horizonDays = 56) {
-  return fetchJson('/api/v1/sales/forecast', {
+  return apiFetch('/api/v1/sales/forecast', {
     method: 'POST',
     body: JSON.stringify({ store_id: storeId, horizon_days: horizonDays }),
   });
 }
 
 export async function simulate({ storeId, discountPct, durationDays }) {
-  return fetchJson('/api/v1/sales/simulate', {
+  return apiFetch('/api/v1/sales/simulate', {
     method: 'POST',
     body: JSON.stringify({
       store_id: storeId,
