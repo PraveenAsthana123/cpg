@@ -16,8 +16,10 @@ test.describe('Admin & Manager hubs — Phase 1 scaffolding', () => {
     await expect(tabs).toHaveCount(10);
   });
 
-  test('Manager page renders 7 tabs for Sales', async ({ page }) => {
-    await page.goto('/sales/manager');
+  test('Manager page renders 7 tabs for Logistics', async ({ page }) => {
+    // Sales manager now has 10 tabs (Phase ε adds 3 sales-specific tabs);
+    // use Logistics here as the baseline 7-tab check for non-sales depts.
+    await page.goto('/logistics/manager');
     await expect(page.locator('.page-title')).toContainText('Manager');
     const tabs = page.locator('.tab-item');
     await expect(tabs).toHaveCount(7);
@@ -47,5 +49,34 @@ test.describe('Admin & Manager hubs — Phase 1 scaffolding', () => {
     await page.goto('/does-not-exist/admin');
     // The redirect sends us to "/" which renders Dashboard
     await expect(page).toHaveURL(/\/$/);
+  });
+});
+
+test.describe('Sales flagship — Phase ε', () => {
+  test('Sales Manager page shows 10 tabs (7 base + 3 sales-specific)', async ({ page }) => {
+    await page.goto('/sales/manager');
+    const tabs = page.locator('.tab-item');
+    await expect(tabs).toHaveCount(10);
+    await expect(page.getByText('Forecast', { exact: false }).first()).toBeVisible();
+    await expect(page.getByText('Simulation', { exact: false }).first()).toBeVisible();
+  });
+
+  test('Non-sales Manager page still has 7 tabs', async ({ page }) => {
+    await page.goto('/supply-chain/manager');
+    const tabs = page.locator('.tab-item');
+    await expect(tabs).toHaveCount(7);
+  });
+
+  test('Sales overview fetches store count', async ({ page }) => {
+    await page.goto('/sales');
+    // The overview tab has the live tiles — "Active stores" label must render
+    await expect(page.getByText('Active stores').first()).toBeVisible({ timeout: 10_000 });
+  });
+
+  test('Simulation tab has disabled submit with delta messaging', async ({ page }) => {
+    await page.goto('/sales/manager');
+    await page.getByRole('button', { name: /Simulation/ }).click();
+    // Use the h4 heading to avoid strict-mode match against 4 elements that mention δ
+    await expect(page.getByRole('heading', { name: /Coming in Phase δ/ })).toBeVisible();
   });
 });
