@@ -8,8 +8,11 @@ import MonitoringAlertsTab from '../components/manager-tabs/MonitoringAlertsTab'
 import TeamPerformanceTab from '../components/manager-tabs/TeamPerformanceTab';
 import DataFlowTab from '../components/manager-tabs/DataFlowTab';
 import RolesResponsibilitiesTab from '../components/manager-tabs/RolesResponsibilitiesTab';
+import SalesForecastTab from '../components/manager-tabs/sales/ForecastTab';
+import SalesRevenueDrillDownTab from '../components/manager-tabs/sales/RevenueDrillDownTab';
+import SalesSimulationTab from '../components/manager-tabs/sales/SimulationTab';
 
-const TABS = [
+const BASE_TABS = [
   { id: 'kpi-dashboard',          label: 'KPI Dashboard',            icon: '📊', Component: KPIDashboardTab          },
   { id: 'status-health',          label: 'Status & Health',          icon: '🫀', Component: StatusHealthTab          },
   { id: 'reports',                label: 'Reports',                  icon: '📑', Component: ReportsTab               },
@@ -19,12 +22,24 @@ const TABS = [
   { id: 'roles-responsibilities', label: 'Roles & Responsibilities', icon: '🧩', Component: RolesResponsibilitiesTab },
 ];
 
+const SALES_EXTRA_TABS = [
+  { id: 'sales-forecast',       label: 'Forecast',        icon: '📈', Component: SalesForecastTab          },
+  { id: 'sales-revenue',        label: 'Revenue Tree',    icon: '🌲', Component: SalesRevenueDrillDownTab },
+  { id: 'sales-simulation',     label: 'Simulation',      icon: '🎯', Component: SalesSimulationTab        },
+];
+
+function tabsForDept(deptId) {
+  if (deptId === 'sales') return [...BASE_TABS, ...SALES_EXTRA_TABS];
+  return BASE_TABS;
+}
+
 export default function ManagerPage() {
   const { departmentId } = useParams();
   const [activeTab, setActiveTab] = useState('kpi-dashboard');
   const dept = departments.find((d) => d.id === departmentId);
   if (!dept || dept.id === 'dashboard') return <Navigate to="/" replace />;
 
+  const TABS = tabsForDept(dept.id);
   const Active = TABS.find((t) => t.id === activeTab).Component;
 
   return (
