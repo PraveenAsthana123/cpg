@@ -155,10 +155,10 @@ export const rolesByDept = {
   retail: {},
   customer: {},
   telehealth: {},
-  'demand-forecasting': {},
   finance: {},
+  procurement: {},
   quality: {},
-  hr: {},
+  governance: {},
 };
 
 export function getRolesForDept(deptId) {

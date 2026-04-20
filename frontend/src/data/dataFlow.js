@@ -19,9 +19,9 @@ export const dataFlowEdges = [
   { from: 'maintenance',     to: 'manufacturing',   entity: 'equipment health alerts',      schedule: 'real-time', sla: '< 1 min'     },
   { from: 'quality',         to: 'manufacturing',   entity: 'defect trends',                schedule: 'daily',     sla: '02:00 UTC'   },
   { from: 'telehealth',      to: 'customer',        entity: 'care encounter summaries',     schedule: 'real-time', sla: '< 5 min'     },
-  { from: 'hr',              to: 'contact-center',  entity: 'agent roster + skills',        schedule: 'daily',     sla: '03:00 UTC'   },
+  { from: 'governance',      to: 'contact-center',  entity: 'agent roster + skills',        schedule: 'daily',     sla: '03:00 UTC'   },
   { from: 'finance',         to: 'marketing',       entity: 'campaign budget actuals',      schedule: 'daily',     sla: '07:00 UTC'   },
-  { from: 'demand-forecasting', to: 'supply-chain', entity: 'SKU forecast',                 schedule: 'weekly',    sla: 'Mon 03:00'   },
+  { from: 'sales',           to: 'supply-chain',    entity: 'SKU demand forecast',          schedule: 'weekly',    sla: 'Mon 03:00'   },
 ];
 
 export function getInboundEdges(deptId) {
