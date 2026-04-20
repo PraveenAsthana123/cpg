@@ -3,6 +3,9 @@ import Layout from './components/Layout';
 import Dashboard from './pages/Dashboard';
 import DepartmentPage from './pages/DepartmentPage';
 import ProcessPage from './pages/ProcessPage';
+import AdminPage from './pages/AdminPage';
+import ManagerPage from './pages/ManagerPage';
+import DataFlowPage from './pages/DataFlowPage';
 import './styles/global.css';
 import './styles/sidebar.css';
 import './styles/topbar.css';
@@ -20,7 +23,10 @@ export default function App() {
       <Routes>
         <Route element={<Layout />}>
           <Route path="/" element={<Dashboard />} />
+          <Route path="/data-flow" element={<DataFlowPage />} />
           <Route path="/:departmentId" element={<DepartmentPage />} />
+          <Route path="/:departmentId/admin" element={<AdminPage />} />
+          <Route path="/:departmentId/manager" element={<ManagerPage />} />
           <Route path="/:departmentId/:processId" element={<ProcessPage />} />
         </Route>
       </Routes>
