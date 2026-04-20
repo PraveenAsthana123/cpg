@@ -16,8 +16,8 @@ from typing import Iterable
 import pandas as pd
 from prophet import Prophet
 
-from backend.repositories.sales_repo import SalesRepo
-from backend.schemas.sales import (
+from repositories.sales_repo import SalesRepo
+from schemas.sales import (
     ForecastComponents,
     ForecastPoint,
     ForecastResponse,
