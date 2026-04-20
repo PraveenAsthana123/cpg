@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { departmentROI } from '../../data/roi';
 import { departmentAIStack } from '../../data/aiStack';
 import { listStores } from '../../services/salesApi';
+import { listSkus, listSuppliers } from '../../services/supplyChainApi';
 import { getWorkflowsForDept } from '../../data/workflows';
 import { getUseCasesForDept } from '../../data/aiUseCases';
 import { rolesByDept } from '../../data/roles';
@@ -14,6 +15,7 @@ export default function OverviewTab({ dept }) {
   return (
     <div>
       {dept.id === 'sales' && <SalesOverviewSection />}
+      {dept.id === 'supply-chain' && <SupplyChainOverviewSection />}
       {dept.id !== 'dashboard' && <DataSnapshotSection dept={dept} />}
       <div className="content-section">
         <h3 className="content-section-title">Department Overview</h3>
@@ -159,6 +161,64 @@ function Tile({ label, value, note }) {
       <div style={{ fontSize: 11, color: '#64748b', textTransform: 'uppercase' }}>{label}</div>
       <div style={{ fontSize: 22, fontWeight: 700, margin: '4px 0' }}>{value}</div>
       <div style={{ fontSize: 11, color: '#94a3b8' }}>{note}</div>
+    </div>
+  );
+}
+
+function SupplyChainOverviewSection() {
+  const [skus, setSkus] = useState(null);
+  const [suppliers, setSuppliers] = useState(null);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    Promise.all([listSkus(), listSuppliers()])
+      .then(([sk, sp]) => {
+        if (!cancelled) {
+          setSkus(sk);
+          setSuppliers(sp);
+        }
+      })
+      .catch((e) => { if (!cancelled) setError(e.message); });
+    return () => { cancelled = true; };
+  }, []);
+
+  const topSupplier =
+    suppliers && suppliers.length > 0 ? suppliers[0] : null;
+
+  const backendOk = !error && skus !== null && suppliers !== null;
+  const loading = !error && skus === null && suppliers === null;
+
+  return (
+    <div style={{ marginBottom: 24 }}>
+      <h3 style={{ fontSize: 15, marginBottom: 12 }}>Supply Chain KPIs (live)</h3>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 12 }}>
+        <Tile
+          label="SKUs tracked"
+          value={skus ? skus.length : '—'}
+          note="from dim_sku"
+        />
+        <Tile
+          label="Suppliers"
+          value={suppliers ? suppliers.length : '—'}
+          note="from dim_supplier"
+        />
+        <Tile
+          label="Top supplier score"
+          value={topSupplier ? topSupplier.score.toFixed(1) : '—'}
+          note={topSupplier ? topSupplier.supplier_name || topSupplier.supplier_id : 'awaiting data'}
+        />
+        <Tile
+          label="Backend"
+          value={error ? '✗ error' : (backendOk ? '✓ Live' : (loading ? '…' : '…'))}
+          note="GET /api/v1/supply-chain/*"
+        />
+      </div>
+      {error && (
+        <div style={{ color: '#991b1b', marginTop: 12, fontSize: 12 }}>
+          API error: {error}
+        </div>
+      )}
     </div>
   );
 }
