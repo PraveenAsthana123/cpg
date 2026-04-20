@@ -1,6 +1,6 @@
 # CPG Platform — Implementation Status
 
-Updated 2026-04-19 after Sales Phases α–θ.
+Updated 2026-04-19 after Sales Phases α–θ and Supply Chain Waves 1–3 (β, δ, ε, γ, ζ, η, θ).
 
 ## What ships today (end-to-end working)
 
@@ -20,16 +20,23 @@ Updated 2026-04-19 after Sales Phases α–θ.
 - **η RBAC**: demo-mode with 4 roles, middleware enforces permission matrix, topbar role selector
 - **θ Docs**: demo walkthrough + Mermaid diagrams
 
+### Supply Chain flagship (full deep-dive)
+- **α Data**: Kaggle `harshsingh2209/supply-chain-analysis` ingestion; 100 SKUs, 5 suppliers, 3 route bands into `dim_sku` / `dim_supplier` / `fact_shipment`
+- **β Services**: heuristic stockout-risk, rule-based ETA (per-mode observed mean + stdev confidence), composite supplier score (40/30/30 weighting)
+- **δ Simulation**: supplier-delay impact → stockout-probability change, service-level delta, revenue-at-risk from `fact_shipment.revenue_generated`
+- **ε Frontend**: 3 new manager tabs (StockoutRiskTab, SupplierScorecardTab, NetworkSimTab) + 4 live overview tiles on `/supply-chain`
+- **γ RAG**: second corpus under `data/supply-chain-context/` (4 md files, 22 H2 chunks); per-corpus RAGService singleton; ExplainDrawer routes supply-chain screens to supply-chain corpus; corpus-selector schema + router wiring
+- **ζ Observability**: `emit_event` calls in stockout / eta / supplier-score / simulation services carry the request correlation_id
+- **η RBAC**: `PERMS_MATRIX` (renamed from `SALES_PERMS`, alias retained) extended with 5 supply-chain entries; `/simulate` manager-only, other four endpoints open to all roles
+- **θ Docs**: `docs/demo/supply-chain-walkthrough.md` (3 scenarios) + Mermaid stockout sequence diagram
+
 ### Cross-cutting
 - 77 AI use cases catalogued across all 14 depts (AIUseCasesTab)
 - 193 enhancement workflows × 4 roles (WorkflowsTab)
 - 20 data-flow edges (DataFlowPage)
 - 16 screenshots demonstrating live behavior
 
-## What's planned (Phase 2a-2 onwards)
-
-### Supply Chain flagship (next)
-Scope documented in `docs/specs/SUPPLY_CHAIN_SCENARIOS.md`. 6 screens, 7 AI use cases, 36-h effort, ~8 h saved via reuse from Sales.
+## What's planned (Phase 2b onwards)
 
 ### Executive Scorecard (third flagship)
 Rolls up KPIs across all depts, AI weekly narrative, strategy simulator. Spec not yet written.
@@ -49,8 +56,8 @@ Rolls up KPIs across all depts, AI weekly narrative, strategy simulator. Spec no
 
 ## Tests ship green
 
-- **45/45 backend** (40 prior + 5 RBAC), opt-in eval harness for RAG groundedness
-- **29/29 Playwright** — admin-manager-hubs (13), capture-screenshots (12), capture-all-depts (4), ai-use-cases tests
+- **75/75 backend** (45 Sales + 22 Supply Chain services/router/ingestion + 7 RBAC + 10 RAG; opt-in eval harness for RAG groundedness)
+- **29/29 Playwright** — admin-manager-hubs, capture-screenshots, capture-all-depts, ai-use-cases tests (Wave 2 added supply-chain-specific assertions)
 - **Vite build** clean
 
 ## How to run
