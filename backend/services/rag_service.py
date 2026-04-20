@@ -26,6 +26,7 @@ MODEL = "qwen2.5:latest"
 EMBED_MODEL = MODEL    # qwen2.5 also serves embeddings via /api/embeddings
 
 CONTEXT_DIR = Path(__file__).resolve().parents[2] / "data" / "sales-context"
+SUPPLY_CHAIN_CONTEXT_DIR = Path(__file__).resolve().parents[2] / "data" / "supply-chain-context"
 MAX_CONTEXT_TOKENS = 3000
 MAX_RESPONSE_TOKENS = 800
 TIMEOUT_SEC = 30
@@ -186,7 +187,7 @@ class RAGService:
             situation = f"\n\nSituation the user is viewing: {context.model_dump_json()}"
 
         return (
-            "You are an enterprise analytics assistant for the CPG Sales module. "
+            "You are an enterprise analytics assistant for the CPG platform. "
             "Answer concisely using ONLY the numbered source snippets below. "
             "End each factual claim with a [ref N] referencing the source number. "
             "If the snippets don't answer the question, say so explicitly.\n\n"
