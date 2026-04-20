@@ -460,8 +460,8 @@ MODIFY existing:
 - [ ] Every Sales endpoint emits structured logs with correlation_id (verified in test)
 - [ ] Every `/ai/explain` call emits a prompt log with token counts, citations, groundedness score
 - [ ] OTel spans propagate correlation_id across service boundaries (verified in integration test)
-- [ ] RBAC middleware returns 403 for unpermitted role+action pairs per the matrix in §10.8
-- [ ] Role selector in top bar visibly hides/shows admin-only UI
+- [x] RBAC middleware returns 403 for unpermitted role+action pairs per the matrix in §10.8 *(Phase η, 2026-04-19)*
+- [x] Role selector in top bar visibly hides/shows admin-only UI *(Phase η, 2026-04-19)*
 - [ ] PII in prompts is redacted before Ollama call (verified via test)
 - [ ] Every AI response has a citation attached per paragraph (guardrail enforced)
 
