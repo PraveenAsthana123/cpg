@@ -26,3 +26,14 @@ export async function getForecast(storeId, horizonDays = 56) {
     body: JSON.stringify({ store_id: storeId, horizon_days: horizonDays }),
   });
 }
+
+export async function simulate({ storeId, discountPct, durationDays }) {
+  return fetchJson('/api/v1/sales/simulate', {
+    method: 'POST',
+    body: JSON.stringify({
+      store_id: storeId,
+      discount_pct: discountPct,
+      duration_days: durationDays,
+    }),
+  });
+}
