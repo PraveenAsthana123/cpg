@@ -1,5 +1,7 @@
+import { useEffect, useState } from 'react';
 import { departmentROI } from '../../data/roi';
 import { departmentAIStack } from '../../data/aiStack';
+import { listStores } from '../../services/salesApi';
 
 export default function OverviewTab({ dept }) {
   const roi = departmentROI[dept.id] || [];
@@ -7,6 +9,7 @@ export default function OverviewTab({ dept }) {
 
   return (
     <div>
+      {dept.id === 'sales' && <SalesOverviewSection />}
       <div className="content-section">
         <h3 className="content-section-title">Department Overview</h3>
         <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--text-secondary)', lineHeight: 1.7 }}>
@@ -92,6 +95,65 @@ export default function OverviewTab({ dept }) {
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+function SalesOverviewSection() {
+  const [stores, setStores] = useState(null);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    listStores()
+      .then((s) => { if (!cancelled) setStores(s); })
+      .catch((e) => { if (!cancelled) setError(e.message); });
+    return () => { cancelled = true; };
+  }, []);
+
+  return (
+    <div style={{ marginBottom: 24 }}>
+      <h3 style={{ fontSize: 15, marginBottom: 12 }}>Sales KPIs (live)</h3>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 12 }}>
+        <Tile
+          label="Active stores"
+          value={stores ? stores.length : '—'}
+          note="from dim_store"
+        />
+        <Tile
+          label="Store types"
+          value={stores ? new Set(stores.map((s) => s.store_type)).size : '—'}
+          note="a / b / c / d"
+        />
+        <Tile
+          label="Backend"
+          value={error ? '✗ error' : stores ? '✓ Live' : '…'}
+          note="GET /api/v1/sales/stores"
+        />
+        <Tile
+          label="Forecast engine"
+          value="Prophet"
+          note="Phase β · MAPE 14.7% (store 1)"
+        />
+      </div>
+      {error && (
+        <div style={{ color: '#991b1b', marginTop: 12, fontSize: 12 }}>
+          API error: {error}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function Tile({ label, value, note }) {
+  return (
+    <div style={{
+      padding: 16, background: '#fff', border: '1px solid #e2e8f0',
+      borderRadius: 8,
+    }}>
+      <div style={{ fontSize: 11, color: '#64748b', textTransform: 'uppercase' }}>{label}</div>
+      <div style={{ fontSize: 22, fontWeight: 700, margin: '4px 0' }}>{value}</div>
+      <div style={{ fontSize: 11, color: '#94a3b8' }}>{note}</div>
     </div>
   );
 }
