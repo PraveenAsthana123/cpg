@@ -104,4 +104,29 @@ test.describe('Sales flagship — demo screenshots', () => {
     await page.waitForTimeout(400);
     await page.screenshot({ path: `${OUT}/09-sidebar-sales-expanded.png`, fullPage: false });
   });
+
+  test('10 admin AI Use Cases tab — sales', async ({ page }) => {
+    await page.goto('/sales/admin');
+    await page.getByRole('button', { name: /AI Use Cases/ }).click();
+    // Wait for the stats line "N use cases" to render
+    await expect(page.locator('text=/\\d+\\s+use cases/').first()).toBeVisible({
+      timeout: 5000,
+    });
+    await page.waitForTimeout(500);
+    await page.screenshot({ path: `${OUT}/10-admin-ai-use-cases.png`, fullPage: true });
+  });
+
+  test('10b admin AI Use Cases tab — supply-chain', async ({ page }) => {
+    const DEPT_OUT = path.resolve(__dirname, '../../docs/screenshots/depts');
+    await page.goto('/supply-chain/admin');
+    await page.getByRole('button', { name: /AI Use Cases/ }).click();
+    await expect(page.locator('text=/\\d+\\s+use cases/').first()).toBeVisible({
+      timeout: 5000,
+    });
+    await page.waitForTimeout(500);
+    await page.screenshot({
+      path: `${DEPT_OUT}/supply-chain-ai-use-cases.png`,
+      fullPage: true,
+    });
+  });
 });
