@@ -521,13 +521,13 @@ User paused this stream 2026-04-19 (see memory `project_phase2_pivot.md`). Roadm
 
 ---
 
-## Totals (final)
+## Totals (final — verified against extracted workflows.js, commit ff9b42d)
 
-- **66** Manager enhancement processes
-- **41** Team Member enhancement processes
-- **47** Compliance enhancement processes
-- **42** Reporting & Monitoring enhancement processes
+- **57** Manager enhancement processes
+- **46** Team Member enhancement processes
+- **46** Compliance enhancement processes
+- **44** Reporting & Monitoring enhancement processes
 
-**Grand total: 196 enhancement processes across 4 roles × 14 departments.**
+**Grand total: 193 enhancement processes across 4 roles × 14 departments.** (Earlier "196" estimate was my miscount while drafting — the source-of-truth is `frontend/src/data/workflows.js`.)
 
 Each entry carries `{name, description, trigger, KPI}` — ready to be extracted into a JS data file (`frontend/src/data/workflows.js`) when Phase 2 builds the Workflows tab.
