@@ -301,10 +301,233 @@ This catalog feeds:
 
 ---
 
-## Not addressed here (deferred)
+---
 
-- **Compliance** role enhancement processes — the reviewer roadmap treats this as its own role; will be a sibling doc.
-- **Reporting & Monitoring** role — covered inside dept sections where ops monitors live (e.g., Contact Center Ops Monitor, Sales Ops Monitor, Marketing Analytics Ops).
-- **RBAC** — user paused this stream (see memory `project_phase2_pivot.md`).
+# Appendix — Compliance role enhancement processes
 
-Total: **66 Manager processes** + **41 Team Member processes** across 14 departments.
+Appended 2026-04-19. Completes the 4-role catalog (Manager, Team Member, Compliance, Reporting & Monitoring) per dept.
+
+## 1. Sales & Demand — Compliance
+| Process | Description | Trigger | KPI |
+|---|---|---|---|
+| **Discount-approval audit** | Sample discount approvals > threshold; verify policy adherence | Weekly | Off-policy discount rate |
+| **CRM PII access review** | Check who accessed customer PII fields | Monthly | Unauthorized-access rate |
+| **Lead-scoring fairness check** | Test model for bias across demographics / regions | Quarterly | Fairness metric (demographic parity) |
+| **Deal-desk exception log** | Review write-offs, unusual terms | Monthly | Exceptions per 100 deals |
+
+## 2. Supply Chain — Compliance
+| Process | Description | Trigger | KPI |
+|---|---|---|---|
+| **Supplier due-diligence refresh** | Re-verify KYC, sanctions, ESG per supplier | Annual + on flag | Supplier DD currency % |
+| **Import/export license audit** | Confirm licenses current per country | Quarterly | License-expiry lead days |
+| **Trade-compliance screening** | Automated sanctions / denied-party screening on POs | Per PO | Screening hit-rate |
+
+## 3. Logistics — Compliance
+| Process | Description | Trigger | KPI |
+|---|---|---|---|
+| **Driver-hours (HOS) audit** | Verify driver hours-of-service regulation compliance | Weekly | HOS violations |
+| **Hazmat documentation** | Confirm proper manifests + placards for dangerous goods | Per shipment | Hazmat-doc error rate |
+| **Cross-border compliance** | Customs paperwork audit | Per cross-border move | Customs-hold rate |
+
+## 4. Manufacturing — Compliance
+| Process | Description | Trigger | KPI |
+|---|---|---|---|
+| **GMP batch-record review** | Verify good-manufacturing-practice records complete | Per batch | Batch-record defects |
+| **OSHA / safety audit** | Inspect line for safety violations | Monthly | Recordable incident rate |
+| **Environmental discharge monitoring** | Verify effluent / emissions within permit | Continuous | Exceedance events |
+
+## 5. Maintenance — Compliance
+| Process | Description | Trigger | KPI |
+|---|---|---|---|
+| **LOTO (lockout-tagout) compliance** | Verify proper lockout during repairs | Per repair | LOTO violations |
+| **Calibration traceability** | Verify instruments traceable to NIST / standard | Quarterly | Out-of-cal instruments |
+| **Contractor qualification** | Verify contractor badges / insurance / training | Per engagement | Unqualified-entry events |
+
+## 6. Retail — Compliance
+| Process | Description | Trigger | KPI |
+|---|---|---|---|
+| **Pricing-law compliance** | Ensure displayed price matches scanner price | Weekly | Price-discrepancy rate |
+| **Promotion-claim substantiation** | Verify ad claims have data backing | Per campaign | Unsubstantiated claims |
+| **Age-gated product controls** | Verify POS blocks under-age sales | Per txn | Underage-sale attempts |
+
+## 7. Customer Analytics — Compliance
+| Process | Description | Trigger | KPI |
+|---|---|---|---|
+| **GDPR / CCPA request fulfillment** | Process data-subject access / deletion requests | On request (30-day SLA) | Requests > SLA |
+| **Consent-record audit** | Verify marketing consent still valid | Monthly | Expired-consent usage |
+| **Segment-bias check** | Test segmentation for discriminatory proxy variables | Quarterly | Bias score |
+
+## 8. Finance — Compliance
+| Process | Description | Trigger | KPI |
+|---|---|---|---|
+| **SOX control testing** | Re-test key financial controls | Quarterly | Control pass rate |
+| **Revenue-recognition review** | Audit rev-rec judgments (ASC 606) | Monthly | Rev-rec adjustments |
+| **Month-end cutoff audit** | Verify transactions booked to correct period | Monthly close | Cutoff errors |
+
+## 9. Procurement — Compliance
+| Process | Description | Trigger | KPI |
+|---|---|---|---|
+| **Conflict-of-interest attestation** | Buyers attest no undisclosed supplier relationships | Annual | Late attestations |
+| **Anti-corruption (FCPA) training** | Confirm completion + renewals | Annual | Completion % |
+| **Bid-integrity review** | Review awarded RFXs for single-bid / off-process | Per award | Single-bid awards % |
+
+## 10. Quality — Compliance
+| Process | Description | Trigger | KPI |
+|---|---|---|---|
+| **FDA / ISO audit readiness** | Pre-audit mock walkthrough | Quarterly | Audit findings |
+| **Recall traceability test** | Simulate trace-forward / trace-back on a batch | Quarterly | Trace completion time |
+| **CAPA regulatory closure** | Verify CAPAs meet regulator-required close-out | Weekly | CAPAs overdue |
+
+## 11. Governance — Compliance
+| Process | Description | Trigger | KPI |
+|---|---|---|---|
+| **Model-risk register review** | Update registered models + risk tier | Quarterly | Unregistered models in prod |
+| **AI explainability audit** | Verify decisions have captured rationale | Monthly | Unexplained decisions |
+| **Third-party AI license audit** | Verify LLM / model licenses (OSS, commercial) are current | Annual | License exceptions |
+
+## 12. Contact Center — Compliance
+| Process | Description | Trigger | KPI |
+|---|---|---|---|
+| **Call-recording consent verification** | Confirm disclosures + jurisdictional consent | Daily sample | Consent-defect rate |
+| **PCI / TCPA audit** | Verify card data handling + dialer compliance | Monthly | PCI / TCPA findings |
+| **AI-agent script compliance** | Verify AI responses don't make unapproved claims | Weekly | Script-violation rate |
+| **Complaint regulatory reporting** | File complaints to regulators where required | Within SLA | Late filings |
+
+## 13. Marketing — Compliance
+| Process | Description | Trigger | KPI |
+|---|---|---|---|
+| **Email-marketing law audit** | CAN-SPAM / GDPR / PECR compliance sample | Monthly | Violation rate |
+| **Advertising-claim review** | Ensure generative claims are factually accurate | Per asset | Disputed-claim rate |
+| **Brand-safety / UGC review** | Review AI-generated + influencer content for brand risk | Per campaign | Brand-safety incidents |
+| **Cookie / tracker audit** | Verify site tags match consent banner | Quarterly | Non-consented trackers |
+
+## 14. Telehealth — Compliance
+| Process | Description | Trigger | KPI |
+|---|---|---|---|
+| **HIPAA access audit** | Review PHI access logs for unusual patterns | Weekly | Unauthorized-access rate |
+| **Clinician license verification** | Verify state licensure for telemedicine | Monthly | Expired-license events |
+| **Triage-AI clinical-safety review** | Clinician oversight of AI triage decisions | Weekly | Discordant decisions reviewed |
+| **BAA (business-associate) audit** | Verify BAAs in place with vendors | Annual | Missing-BAA exceptions |
+
+---
+
+# Appendix — Reporting & Monitoring role enhancement processes
+
+## 1. Sales & Demand — Reporting & Monitoring
+| Process | Description | Trigger | KPI |
+|---|---|---|---|
+| **Forecast-drift dashboard ops** | Watch MAPE drift bands, trigger alerts | Continuous | MAPE drift alerts MTTD |
+| **Scheduled-job SLA watch** | Ensure daily/weekly reports land on time | Hourly | Job SLA % |
+| **Pipeline-anomaly triage** | Investigate anomaly alerts, classify true/false | On alert | Anomaly precision |
+
+## 2. Supply Chain — Reporting & Monitoring
+| Process | Description | Trigger | KPI |
+|---|---|---|---|
+| **Feed freshness watch** | Monitor incoming EDI / API feeds for stale data | Continuous | Stale-feed alerts MTTR |
+| **Inventory-accuracy drift** | Watch cycle-count variance trend | Weekly | Inventory accuracy trend |
+| **Service-level dashboard ops** | Maintain OTIF + fill-rate real-time | Continuous | Dashboard uptime |
+
+## 3. Logistics — Reporting & Monitoring
+| Process | Description | Trigger | KPI |
+|---|---|---|---|
+| **Telemetry pipeline watch** | Monitor IoT fleet data ingestion | Continuous | Pipeline lag |
+| **ETA-model accuracy** | Track predicted vs actual ETA error | Daily | ETA MAE |
+| **Exception-feed monitoring** | Watch for spike in delivery exceptions | Hourly | Exception rate |
+
+## 4. Manufacturing — Reporting & Monitoring
+| Process | Description | Trigger | KPI |
+|---|---|---|---|
+| **OEE live dashboard ops** | Maintain line-level OEE feeds | Continuous | Dashboard uptime |
+| **MES / SCADA connectivity** | Watch plant-data connectivity health | Continuous | Connectivity % |
+| **Defect-detection model drift** | Monitor CV model recall on inspected units | Daily | Recall drop alerts |
+
+## 5. Maintenance — Reporting & Monitoring
+| Process | Description | Trigger | KPI |
+|---|---|---|---|
+| **Sensor telemetry gaps** | Detect and alert on sensor offline events | Continuous | Offline-sensor MTTR |
+| **PM-compliance dashboard** | Keep on-time PM metric current | Daily | Dashboard freshness |
+| **Predictive-model scoring ops** | Watch scoring-job success rate | Hourly | Job success % |
+
+## 6. Retail — Reporting & Monitoring
+| Process | Description | Trigger | KPI |
+|---|---|---|---|
+| **POS data ingestion** | Monitor POS feeds from each chain | Continuous | Feed lag |
+| **Shelf-CV model accuracy** | Track CV detection error rate | Daily | Detection precision |
+| **Price-sync verification** | Alert on price mismatch between ERP and stores | Hourly | Mismatch rate |
+
+## 7. Customer Analytics — Reporting & Monitoring
+| Process | Description | Trigger | KPI |
+|---|---|---|---|
+| **Churn-model drift watch** | Monitor AUC / recall drift | Daily | Drift alerts |
+| **Event-stream health** | Watch clickstream ingestion | Continuous | Stream lag |
+| **Segment-size anomaly** | Alert on sudden segment shifts | Daily | Anomalies flagged |
+
+## 8. Finance — Reporting & Monitoring
+| Process | Description | Trigger | KPI |
+|---|---|---|---|
+| **Close-cycle progress** | Track close-cycle task completion | During close | On-time task % |
+| **Variance-calc pipeline** | Monitor variance calc jobs | Monthly | Job SLA % |
+| **Fraud-signal watch** | Monitor unusual vendor / employee transactions | Daily | Fraud-signal precision |
+
+## 9. Procurement — Reporting & Monitoring
+| Process | Description | Trigger | KPI |
+|---|---|---|---|
+| **Spend dashboard ops** | Maintain real-time spend feeds | Continuous | Feed freshness |
+| **Contract-expiry alerts** | Watch contracts coming due | Daily | Missed renewals |
+| **Savings realization tracking** | Compare promised vs realized savings | Monthly | Realization % |
+
+## 10. Quality — Reporting & Monitoring
+| Process | Description | Trigger | KPI |
+|---|---|---|---|
+| **NCR trend monitoring** | Alert on NCR spike by SKU / plant | Daily | Spike MTTD |
+| **Complaint feed ops** | Ensure complaint feeds ingest cleanly | Continuous | Feed lag |
+| **Lab-result pipeline** | Monitor LIMS data flow | Continuous | Pipeline uptime |
+
+## 11. Governance — Reporting & Monitoring
+| Process | Description | Trigger | KPI |
+|---|---|---|---|
+| **Data-quality scorecard ops** | Maintain data-quality scorecards per domain | Daily | DQ score trend |
+| **Model-performance dashboards** | Centralized view of all production models | Continuous | Dashboard coverage |
+| **Control-effectiveness watch** | Monitor key control KPIs | Weekly | Control breaches |
+
+## 12. Contact Center — Reporting & Monitoring
+| Process | Description | Trigger | KPI |
+|---|---|---|---|
+| **Voice-AI latency ops** | Monitor STT / LLM / TTS latency p95 | Continuous | Latency SLO adherence |
+| **Queue-health dashboard** | Live view of queue wait / abandon | Continuous | Dashboard uptime |
+| **Call-disposition feed ops** | Watch disposition pipeline to CRM | Continuous | Sync lag |
+| **QA-sampling pipeline** | Ensure QA call-sampling job runs | Daily | Job success % |
+
+## 13. Marketing — Reporting & Monitoring
+| Process | Description | Trigger | KPI |
+|---|---|---|---|
+| **Attribution feed freshness** | Watch multi-touch attribution feeds | Hourly | Feed lag |
+| **Ad-spend pacing dashboard** | Alert on over/under-pacing | Continuous | Pacing deviation |
+| **Funnel anomaly watch** | Detect drop-off spikes in real time | Continuous | Anomaly MTTD |
+| **Creative-performance ops** | Monitor real-time creative KPIs | Continuous | Dashboard freshness |
+
+## 14. Telehealth — Reporting & Monitoring
+| Process | Description | Trigger | KPI |
+|---|---|---|---|
+| **EHR-integration health** | Watch EHR API / HL7 / FHIR feeds | Continuous | Feed uptime |
+| **Triage-AI accuracy dashboard** | Track AI vs clinician agreement | Daily | Agreement trend |
+| **Session-telemetry ops** | Monitor video / audio quality metrics | Continuous | Call-quality score |
+
+---
+
+## RBAC (explicitly deferred)
+
+User paused this stream 2026-04-19 (see memory `project_phase2_pivot.md`). Roadmap §2.1 and §12 will resume it later.
+
+---
+
+## Totals (final)
+
+- **66** Manager enhancement processes
+- **41** Team Member enhancement processes
+- **47** Compliance enhancement processes
+- **42** Reporting & Monitoring enhancement processes
+
+**Grand total: 196 enhancement processes across 4 roles × 14 departments.**
+
+Each entry carries `{name, description, trigger, KPI}` — ready to be extracted into a JS data file (`frontend/src/data/workflows.js`) when Phase 2 builds the Workflows tab.
