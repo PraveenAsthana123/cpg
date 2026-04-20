@@ -16,6 +16,7 @@ import numpy as np
 import requests
 from rank_bm25 import BM25Okapi
 
+from core.structured_logger import emit_event
 from schemas.ai_explain import Citation, ExplainRequest, ExplainResponse
 
 logger = logging.getLogger(__name__)
@@ -92,6 +93,17 @@ class RAGService:
         # append a note rather than rejecting (soft-fail for Phase γ).
         if "[ref " not in response_md and citations:
             response_md = response_md.rstrip() + f"\n\n[ref 1] {citations[0].source}"
+
+        emit_event(
+            "ai.explain",
+            model=MODEL,
+            prompt_chars=len(prompt),
+            response_chars=len(response_md),
+            citation_count=len(citations),
+            retrieved_ids=[c.chunk_id for c in citations],
+            retrieval_time_ms=retrieval_ms,
+            generation_time_ms=generation_ms,
+        )
 
         return ExplainResponse(
             markdown=response_md,

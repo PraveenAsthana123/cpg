@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import logging
 
+from core.structured_logger import emit_event
 from schemas.sales import SimulationRequest, SimulationResponse, WaterfallStep
 from services.forecast_service import ForecastService
 
@@ -80,6 +81,18 @@ class SimulationService:
             "simulate store=%s discount=%.1f%% dur=%d baseline=$%.0f net=$%.0f",
             req.store_id, req.discount_pct, req.duration_days,
             baseline_revenue, net_impact,
+        )
+
+        emit_event(
+            "sales.simulate",
+            store_id=req.store_id,
+            discount_pct=req.discount_pct,
+            duration_days=req.duration_days,
+            baseline_revenue=baseline_revenue,
+            promo_revenue=promo_revenue,
+            net_impact=net_impact,
+            elasticity=DEFAULT_ELASTICITY,
+            margin_factor=DEFAULT_MARGIN_FACTOR,
         )
 
         return SimulationResponse(

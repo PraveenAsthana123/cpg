@@ -16,6 +16,7 @@ from typing import Iterable
 import pandas as pd
 from prophet import Prophet
 
+from core.structured_logger import emit_event
 from repositories.sales_repo import SalesRepo
 from schemas.sales import (
     ForecastComponents,
@@ -83,6 +84,15 @@ class ForecastService:
             yearly=_to_points(pred_future, "yearly") if "yearly" in pred_future.columns else [],
         )
 
+        emit_event(
+            "sales.forecast",
+            store_id=store_id,
+            horizon_days=horizon_days,
+            mape=fitted.mape,
+            fit_time_ms=fitted.fit_time_ms,
+            predict_time_ms=predict_ms,
+        )
+
         return ForecastResponse(
             store_id=store_id,
             horizon_days=horizon_days,
@@ -140,6 +150,13 @@ class ForecastService:
         logger.info(
             "fitted store=%s mape=%.3f fit_ms=%d history_rows=%d",
             store_id, mape, fit_ms, len(train),
+        )
+        emit_event(
+            "sales.forecast.fit",
+            store_id=store_id,
+            mape=mape,
+            fit_time_ms=fit_ms,
+            history_rows=len(train),
         )
         return fitted
 
