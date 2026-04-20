@@ -247,3 +247,31 @@
   color: var(--accent-success);
   margin-top: 2px;
 }
+
+/* Admin / Manager sidebar sub-links */
+.nav-subitem-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  margin-right: 6px;
+  font-size: 13px;
+}
+.nav-subitem.nav-subitem-admin,
+.nav-subitem.nav-subitem-manager {
+  font-weight: 600;
+  color: rgba(226, 232, 240, 0.88);
+}
+.nav-subitem.nav-subitem-admin.active {
+  background: rgba(59, 130, 246, 0.22);
+  color: #bfdbfe;
+}
+.nav-subitem.nav-subitem-manager.active {
+  background: rgba(16, 185, 129, 0.22);
+  color: #a7f3d0;
+}
+.nav-subitem-divider {
+  height: 1px;
+  margin: 6px 16px;
+  background: rgba(226, 232, 240, 0.08);
+}

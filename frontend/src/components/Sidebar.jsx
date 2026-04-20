@@ -62,15 +62,28 @@ export default function Sidebar() {
                 >
                   {dept.name}
                 </NavLink>
-                {hasProcesses && (
-                  <span className={'nav-expand-arrow' + (isExpanded ? ' expanded' : '')}>
-                    &#9662;
-                  </span>
-                )}
+                <span className={'nav-expand-arrow' + (isExpanded ? ' expanded' : '')}>
+                  &#9662;
+                </span>
               </div>
 
-              {hasProcesses && isExpanded && (
+              {isExpanded && (
                 <div className="nav-subitems">
+                  <NavLink
+                    to={`/${dept.id}/admin`}
+                    className={({ isActive }) => 'nav-subitem nav-subitem-admin' + (isActive ? ' active' : '')}
+                  >
+                    <span className="nav-subitem-icon">⚙️</span>
+                    <span className="nav-subitem-label">Admin</span>
+                  </NavLink>
+                  <NavLink
+                    to={`/${dept.id}/manager`}
+                    className={({ isActive }) => 'nav-subitem nav-subitem-manager' + (isActive ? ' active' : '')}
+                  >
+                    <span className="nav-subitem-icon">📊</span>
+                    <span className="nav-subitem-label">Manager</span>
+                  </NavLink>
+                  {hasProcesses && <div className="nav-subitem-divider" />}
                   {processes.map((proc) => (
                     <NavLink
                       key={proc.id}
