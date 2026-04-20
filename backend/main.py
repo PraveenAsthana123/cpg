@@ -73,6 +73,7 @@ def create_app() -> FastAPI:
     from routers.models import router as model_router
     from routers.jobs import router as job_router, schedule_router
     from routers.sales import router as sales_router
+    from routers.supply_chain import router as supply_chain_router
     from routers.ai_explain import router as ai_explain_router
 
     app.include_router(health_router)
@@ -83,6 +84,7 @@ def create_app() -> FastAPI:
     app.include_router(job_router)
     app.include_router(schedule_router)
     app.include_router(sales_router)
+    app.include_router(supply_chain_router)
     app.include_router(ai_explain_router)
 
     return app
