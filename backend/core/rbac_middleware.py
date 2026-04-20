@@ -22,11 +22,12 @@ from starlette.responses import JSONResponse, Response
 
 logger = logging.getLogger(__name__)
 
-# ----- Permission matrix for Sales + AI endpoints -----
+# ----- Permission matrix for Sales + Supply Chain + AI endpoints -----
 # Each entry: (method, path-regex) -> set of roles allowed.
 # If no entry matches, request is ALLOWED (so /health, /docs, etc. stay open).
 
-SALES_PERMS: list[tuple[str, re.Pattern, set[str]]] = [
+PERMS_MATRIX: list[tuple[str, re.Pattern, set[str]]] = [
+    # -------- Sales --------
     ("GET",  re.compile(r"^/api/v1/sales/stores$"),
      {"manager", "team-member", "compliance", "reporting-monitoring"}),
     ("POST", re.compile(r"^/api/v1/sales/forecast$"),
@@ -36,14 +37,30 @@ SALES_PERMS: list[tuple[str, re.Pattern, set[str]]] = [
      {"manager"}),
     ("POST", re.compile(r"^/api/v1/ai/explain$"),
      {"manager", "team-member", "compliance", "reporting-monitoring"}),
+
+    # -------- Supply Chain (Wave 3 η) --------
+    ("GET",  re.compile(r"^/api/v1/supply-chain/skus$"),
+     {"manager", "team-member", "compliance", "reporting-monitoring"}),
+    ("GET",  re.compile(r"^/api/v1/supply-chain/suppliers$"),
+     {"manager", "team-member", "compliance", "reporting-monitoring"}),
+    ("POST", re.compile(r"^/api/v1/supply-chain/stockout-risk$"),
+     {"manager", "team-member", "compliance", "reporting-monitoring"}),
+    ("POST", re.compile(r"^/api/v1/supply-chain/eta$"),
+     {"manager", "team-member", "compliance", "reporting-monitoring"}),
+    # Network simulation is manager-only (same pattern as Sales simulate).
+    ("POST", re.compile(r"^/api/v1/supply-chain/simulate$"),
+     {"manager"}),
 ]
+
+# Backwards-compatible alias — earlier commits referenced SALES_PERMS.
+SALES_PERMS = PERMS_MATRIX
 
 VALID_ROLES = {"manager", "team-member", "compliance", "reporting-monitoring"}
 DEFAULT_ROLE = "manager"
 
 
 class RBACMiddleware(BaseHTTPMiddleware):
-    """Enforces the SALES_PERMS matrix against the X-Demo-Role header."""
+    """Enforces the PERMS_MATRIX against the X-Demo-Role header."""
 
     async def dispatch(self, request: Request, call_next: Callable) -> Response:
         method = request.method
@@ -52,7 +69,7 @@ class RBACMiddleware(BaseHTTPMiddleware):
         match = next(
             (
                 (m, rx, roles)
-                for (m, rx, roles) in SALES_PERMS
+                for (m, rx, roles) in PERMS_MATRIX
                 if m == method and rx.match(path)
             ),
             None,
