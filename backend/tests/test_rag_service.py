@@ -98,3 +98,57 @@ def test_explain_soft_fails_when_response_missing_ref(corpus_tmp):
         out = svc.explain(ExplainRequest(question="test"))
     # Guardrail appends a [ref 1] if missing.
     assert "[ref 1]" in out.markdown
+
+
+def test_default_corpus_dir_points_at_sales_context():
+    """Constructing RAGService with no args reads from data/sales-context."""
+    from backend.services.rag_service import CONTEXT_DIR, SUPPLY_CHAIN_CONTEXT_DIR
+
+    svc = RAGService()
+    assert svc._corpus_dir == CONTEXT_DIR
+    assert CONTEXT_DIR.name == "sales-context"
+    assert SUPPLY_CHAIN_CONTEXT_DIR.name == "supply-chain-context"
+
+
+def test_corpus_dir_override_reads_from_specified_dir(tmp_path):
+    """Passing corpus_dir= reads chunks from that dir, not the default."""
+    d = tmp_path / "custom-corpus"
+    d.mkdir()
+    (d / "only-doc.md").write_text("# T\n\n## Unique heading\nCustom corpus body.\n")
+
+    svc = RAGService(corpus_dir=d)
+    chunks = list(svc._read_chunks(svc._corpus_dir))
+    assert len(chunks) == 1
+    assert chunks[0].source == "only-doc.md"
+    assert chunks[0].heading == "Unique heading"
+
+
+def test_router_per_corpus_cache_returns_distinct_services():
+    """ai_explain._rag_for caches one RAGService per corpus key."""
+    from backend.routers.ai_explain import _rag_for
+    from backend.services.rag_service import CONTEXT_DIR, SUPPLY_CHAIN_CONTEXT_DIR
+
+    _rag_for.cache_clear()
+    sales_svc = _rag_for("sales")
+    sc_svc = _rag_for("supply-chain")
+
+    assert sales_svc is not sc_svc
+    assert sales_svc._corpus_dir == CONTEXT_DIR
+    assert sc_svc._corpus_dir == SUPPLY_CHAIN_CONTEXT_DIR
+
+    # Same key → same instance (cached).
+    assert _rag_for("sales") is sales_svc
+    assert _rag_for("supply-chain") is sc_svc
+
+
+def test_explain_request_accepts_corpus_field():
+    """ExplainRequest validates the new corpus literal."""
+    req = ExplainRequest(question="test question", corpus="supply-chain")
+    assert req.corpus == "supply-chain"
+
+    req2 = ExplainRequest(question="test question")
+    assert req2.corpus is None
+
+    # Invalid value rejected.
+    with pytest.raises(Exception):
+        ExplainRequest(question="test question", corpus="marketing")
