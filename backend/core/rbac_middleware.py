@@ -50,6 +50,15 @@ PERMS_MATRIX: list[tuple[str, re.Pattern, set[str]]] = [
     # Network simulation is manager-only (same pattern as Sales simulate).
     ("POST", re.compile(r"^/api/v1/supply-chain/simulate$"),
      {"manager"}),
+
+    # -------- Customer (Wave 4 depth-pilot) --------
+    # Read-focused analytics — all four roles can view churn predictions.
+    ("POST", re.compile(r"^/api/v1/customer/churn-predict$"),
+     {"manager", "team-member", "compliance", "reporting-monitoring"}),
+    ("GET",  re.compile(r"^/api/v1/customer/churn-top$"),
+     {"manager", "team-member", "compliance", "reporting-monitoring"}),
+    ("GET",  re.compile(r"^/api/v1/customer/churn-metrics$"),
+     {"manager", "team-member", "compliance", "reporting-monitoring"}),
 ]
 
 # Backwards-compatible alias — earlier commits referenced SALES_PERMS.
