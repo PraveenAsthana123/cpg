@@ -3,12 +3,17 @@
 
 import { useEffect, useState } from 'react';
 import { explain } from '../../services/aiExplainApi';
+import { submitFeedback } from '../../services/aiFeedbackApi';
 
 export default function ExplainDrawer({ open, onClose, context }) {
   const [question, setQuestion] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [result, setResult] = useState(null);
+  // null = not yet rated, then 'positive' | 'negative' after a click.
+  // Reset each time a fresh response arrives.
+  const [feedback, setFeedback] = useState(null);
+  const [feedbackError, setFeedbackError] = useState(null);
 
   useEffect(() => {
     if (!open) return;
@@ -26,6 +31,8 @@ export default function ExplainDrawer({ open, onClose, context }) {
     setLoading(true);
     setError(null);
     setResult(null);
+    setFeedback(null);
+    setFeedbackError(null);
     try {
       const r = await explain({ question, context, corpus: corpusFor(context) });
       setResult(r);
@@ -33,6 +40,24 @@ export default function ExplainDrawer({ open, onClose, context }) {
       setError(e.message);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const rate = async (rating) => {
+    if (!result || feedback) return;
+    // Optimistic: lock the buttons immediately.
+    setFeedback(rating);
+    setFeedbackError(null);
+    try {
+      await submitFeedback({
+        correlationId: result.correlation_id || 'unknown',
+        rating,
+        excerpt: result.markdown ? result.markdown.slice(0, 500) : null,
+      });
+    } catch (e) {
+      // Feedback is best-effort telemetry — surface a small note but keep
+      // the thank-you state so the user isn't encouraged to retry-spam.
+      setFeedbackError(e.message);
     }
   };
 
@@ -213,10 +238,81 @@ export default function ExplainDrawer({ open, onClose, context }) {
               </ul>
 
               <div
+                aria-label="Rate this explanation"
+                style={{
+                  marginTop: 16,
+                  padding: '10px 12px',
+                  border: '1px solid #e2e8f0',
+                  borderRadius: 6,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 10,
+                  background: '#f8fafc',
+                }}
+              >
+                <span style={{ fontSize: 12, color: '#64748b' }}>
+                  Was this helpful?
+                </span>
+                <button
+                  type="button"
+                  onClick={() => rate('positive')}
+                  disabled={feedback !== null}
+                  aria-pressed={feedback === 'positive'}
+                  aria-label="Thumbs up"
+                  style={{
+                    padding: '4px 10px',
+                    fontSize: 14,
+                    borderRadius: 6,
+                    border: '1px solid',
+                    borderColor: feedback === 'positive' ? '#059669' : '#cbd5e1',
+                    background: feedback === 'positive' ? '#d1fae5' : '#fff',
+                    color: feedback === 'positive' ? '#065f46' : '#334155',
+                    cursor: feedback ? 'default' : 'pointer',
+                    opacity: feedback && feedback !== 'positive' ? 0.5 : 1,
+                  }}
+                >
+                  👍
+                </button>
+                <button
+                  type="button"
+                  onClick={() => rate('negative')}
+                  disabled={feedback !== null}
+                  aria-pressed={feedback === 'negative'}
+                  aria-label="Thumbs down"
+                  style={{
+                    padding: '4px 10px',
+                    fontSize: 14,
+                    borderRadius: 6,
+                    border: '1px solid',
+                    borderColor: feedback === 'negative' ? '#b91c1c' : '#cbd5e1',
+                    background: feedback === 'negative' ? '#fee2e2' : '#fff',
+                    color: feedback === 'negative' ? '#7f1d1d' : '#334155',
+                    cursor: feedback ? 'default' : 'pointer',
+                    opacity: feedback && feedback !== 'negative' ? 0.5 : 1,
+                  }}
+                >
+                  👎
+                </button>
+                {feedback && !feedbackError && (
+                  <span style={{ fontSize: 11, color: '#059669' }}>
+                    Thanks — feedback recorded.
+                  </span>
+                )}
+                {feedbackError && (
+                  <span style={{ fontSize: 11, color: '#b91c1c' }}>
+                    Feedback failed ({feedbackError}).
+                  </span>
+                )}
+              </div>
+
+              <div
                 style={{ fontSize: 10, color: '#94a3b8', marginTop: 12 }}
               >
                 {result.model} · retrieval {result.retrieval_time_ms}ms ·
                 generation {result.generation_time_ms}ms
+                {result.correlation_id && (
+                  <> · cid <code>{result.correlation_id}</code></>
+                )}
               </div>
             </>
           )}

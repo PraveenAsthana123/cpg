@@ -49,6 +49,9 @@ export async function apiFetch(url, init = {}) {
     err.status = r.status;
     throw err;
   }
+  // 204 No Content — no body to parse. Return null so callers don't crash
+  // attempting to read response.json(). (Currently only /api/v1/ai/feedback.)
+  if (r.status === 204) return null;
   return r.json();
 }
 
