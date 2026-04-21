@@ -44,6 +44,9 @@ data/kaggle/images/
 data/kaggle/rossmann/
 data/raw/
 data/processed/
+# Customer analytics pilot — Telco Churn dataset (~170KB, re-downloadable via kaggle CLI)
+data/customer-analytics/*.csv
+data/customer-analytics/*.zip
 
 # --- Kaggle credentials (defensive — should be in ~/.kaggle/, never in repo) ---
 kaggle.json
