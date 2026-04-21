@@ -83,6 +83,15 @@ export default function Sidebar() {
                     <span className="nav-subitem-icon">📊</span>
                     <span className="nav-subitem-label">Manager</span>
                   </NavLink>
+                  {dept.id === 'sales' && (
+                    <NavLink
+                      to={`/${dept.id}/dossier`}
+                      className={({ isActive }) => 'nav-subitem nav-subitem-dossier' + (isActive ? ' active' : '')}
+                    >
+                      <span className="nav-subitem-icon">⭐</span>
+                      <span className="nav-subitem-label">Dossier</span>
+                    </NavLink>
+                  )}
                   {hasProcesses && <div className="nav-subitem-divider" />}
                   {processes.map((proc) => (
                     <NavLink
