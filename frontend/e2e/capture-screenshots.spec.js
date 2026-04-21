@@ -244,6 +244,26 @@ test.describe('Sales flagship — demo screenshots', () => {
     });
   });
 
+  test('14 sales dossier — full single-pane view', async ({ page }) => {
+    const DOSSIER_OUT = path.resolve(__dirname, '../../docs/screenshots/dossier');
+    await page.goto('/sales/dossier');
+    // Header banner — dept name must render.
+    await expect(page.getByRole('heading', { name: /Sales & Demand/ })).toBeVisible({
+      timeout: 10_000,
+    });
+    // Every section card must render its header; spot-check a few spread through the page.
+    await expect(page.getByRole('heading', { name: /Headline KPIs/ })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /AI Use Cases/ })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /Data flows/ })).toBeVisible();
+    // Wait a moment for the live /api/v1/sales/stores probe to populate the
+    // green status pill + live Active-stores KPI tile.
+    await page.waitForTimeout(1500);
+    await page.screenshot({
+      path: `${DOSSIER_OUT}/sales-dossier-full.png`,
+      fullPage: true,
+    });
+  });
+
   test('10c role selector switching visible in topbar (Phase η)', async ({ page }) => {
     // Start from a clean role = manager default.
     await page.goto('/');
