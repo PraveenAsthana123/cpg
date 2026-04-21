@@ -12,6 +12,7 @@ import ScheduledJobsTab from '../components/admin-tabs/ScheduledJobsTab';
 import AuditLogTab from '../components/admin-tabs/AuditLogTab';
 import SettingsTab from '../components/admin-tabs/SettingsTab';
 import OverrideAnalyticsTab from '../components/admin-tabs/OverrideAnalyticsTab';
+import LifecyclesTab from '../components/admin-tabs/LifecyclesTab';
 
 const TABS = [
   { id: 'users-roles',        label: 'Users & Roles',       icon: '👥',  Component: UsersRolesTab        },
@@ -25,6 +26,7 @@ const TABS = [
   { id: 'audit-log',          label: 'Audit Log',           icon: '📜',  Component: AuditLogTab          },
   { id: 'settings',           label: 'Settings',            icon: '⚙️',  Component: SettingsTab          },
   { id: 'override-analytics', label: 'Override Analytics',  icon: '⚖️',  Component: OverrideAnalyticsTab },
+  { id: 'lifecycles',         label: 'Lifecycles',          icon: '🔄',  Component: LifecyclesTab        },
 ];
 
 export default function AdminPage() {
