@@ -188,6 +188,62 @@ test.describe('Sales flagship — demo screenshots', () => {
     });
   });
 
+  test('11 admin override-analytics tab', async ({ page }) => {
+    await page.goto('/sales/admin');
+    await page.getByRole('button', { name: /Override Analytics/ }).click();
+    // Wait for the "N events total" stats line to render.
+    await expect(page.locator('text=/\\d+\\s+events total/').first()).toBeVisible({
+      timeout: 5000,
+    });
+    await page.waitForTimeout(500);
+    await page.screenshot({
+      path: `${OUT}/11-admin-override-analytics.png`,
+      fullPage: true,
+    });
+  });
+
+  test('12 admin lifecycles tab', async ({ page }) => {
+    await page.goto('/sales/admin');
+    await page.getByRole('button', { name: /Lifecycles/ }).click();
+    // Each lifecycle renders an <h3> with the entity name — wait for Task (first).
+    await expect(page.getByRole('heading', { name: 'Task' })).toBeVisible({
+      timeout: 5000,
+    });
+    await page.waitForTimeout(400);
+    await page.screenshot({
+      path: `${OUT}/12-admin-lifecycles.png`,
+      fullPage: true,
+    });
+  });
+
+  test('13 feedback drawer — thumbs-up submit', async ({ page }) => {
+    test.setTimeout(150_000); // First RAG call can take 15-40s + submit round-trip.
+    await page.goto('/sales/manager');
+    await page.locator('.tab-item').filter({ hasText: /Forecast/ }).first().click();
+    await expect(page.getByRole('button', { name: /^Generate forecast$/ })).toBeVisible();
+    await page.getByRole('button', { name: /^Generate forecast$/ }).click();
+    await expect(page.getByText(/Backtest MAPE/)).toBeVisible({ timeout: 60_000 });
+
+    // Open the drawer + submit the seeded question.
+    await page.getByRole('button', { name: /Ask AI why/ }).click();
+    await expect(page.getByRole('dialog', { name: /AI Explanation/ })).toBeVisible();
+    await page.getByRole('button', { name: /^Ask$/ }).click();
+    // Wait for the feedback prompt which only renders after result arrives.
+    await expect(page.getByText(/Was this helpful\?/)).toBeVisible({ timeout: 90_000 });
+
+    // Click thumbs-up.
+    await page.getByRole('button', { name: 'Thumbs up' }).click();
+    // Thank-you text should appear; if the endpoint errored it'd say "Feedback failed".
+    await expect(page.getByText(/Thanks — feedback recorded/)).toBeVisible({
+      timeout: 5000,
+    });
+    await page.waitForTimeout(400);
+    await page.screenshot({
+      path: `${OUT}/13-feedback-drawer.png`,
+      fullPage: true,
+    });
+  });
+
   test('10c role selector switching visible in topbar (Phase η)', async ({ page }) => {
     // Start from a clean role = manager default.
     await page.goto('/');
