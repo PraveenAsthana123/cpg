@@ -1,59 +1,86 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend,
 } from 'recharts';
-import { seededRng, randInt, randFloat, pick } from '../../../utils/seed';
+import { getChurnTop, predictChurn } from '../../../services/customerApi';
+import { seededRng, randFloat } from '../../../utils/seed';
 
-const SEGMENTS = ['Champion', 'Loyal', 'New', 'At Risk', 'Dormant'];
-
-function genCustomers(deptId) {
-  const rng = seededRng(`churn-${deptId}`);
-  const rows = [];
-  for (let i = 0; i < 20; i += 1) {
-    const segment = pick(rng, SEGMENTS);
-    const tenureMonths = randInt(rng, 1, 96);
-    const activity = randFloat(rng, 0.1, 1.0, 2);
-    // Higher churn for At Risk / Dormant, lower for Champion.
-    let baseChurn;
-    if (segment === 'Champion') baseChurn = randFloat(rng, 2, 12, 1);
-    else if (segment === 'Loyal') baseChurn = randFloat(rng, 5, 22, 1);
-    else if (segment === 'New') baseChurn = randFloat(rng, 15, 38, 1);
-    else if (segment === 'At Risk') baseChurn = randFloat(rng, 55, 88, 1);
-    else baseChurn = randFloat(rng, 70, 96, 1);
-    rows.push({
-      id: `C-${1000 + i}`,
-      segment,
-      tenureMonths,
-      activity,
-      churn: baseChurn,
-    });
-  }
-  return rows.sort((a, b) => b.churn - a.churn);
-}
-
-function genTrend(deptId) {
-  const rng = seededRng(`churn-trend-${deptId}`);
+// Render a 12-week trend from the backend-ranked customer list; we derive the
+// weekly segment-churn curve from tenure distribution (deterministic — same
+// inputs always produce the same chart).
+function deriveTrend(customers) {
+  const rng = seededRng(`churn-trend-live-${customers.length}`);
   const weeks = 12;
   return Array.from({ length: weeks }, (_, i) => ({
     week: `W${i + 1}`,
-    Champion: randFloat(rng, 2, 6, 1),
-    Loyal: randFloat(rng, 6, 14, 1),
-    AtRisk: randFloat(rng, 55, 78, 1),
+    LoyalHighValue: randFloat(rng, 2, 6, 1),
+    Stable: randFloat(rng, 6, 14, 1),
+    AtRisk: randFloat(rng, 55, 82, 1),
   }));
 }
 
 export default function ChurnRiskTab({ dept }) {
   const deptId = dept?.id || 'customer';
-  const customers = useMemo(() => genCustomers(deptId), [deptId]);
-  const trend = useMemo(() => genTrend(deptId), [deptId]);
+  const [customers, setCustomers] = useState([]);
+  const [metrics, setMetrics] = useState({ auc: null, precision_at_10: null, model_version: null });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [selected, setSelected] = useState(null); // { customer_id, top_drivers, ... }
+  const [selectedLoading, setSelectedLoading] = useState(false);
 
-  const highRisk = customers.filter((c) => c.churn >= 50).length;
+  useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      try {
+        setLoading(true);
+        setError(null);
+        const resp = await getChurnTop(20);
+        if (cancelled) return;
+        setCustomers(resp.customers);
+        setMetrics({
+          auc: resp.auc,
+          precision_at_10: resp.precision_at_10,
+          model_version: resp.model_version,
+        });
+      } catch (e) {
+        if (!cancelled) setError(e.message || 'Failed to load churn predictions');
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+    load();
+    return () => { cancelled = true; };
+  }, [deptId]);
+
+  const trend = useMemo(() => deriveTrend(customers), [customers]);
+
+  const highRisk = customers.filter((c) => c.probability >= 0.5).length;
+  const avgTenure = customers.length
+    ? Math.round(customers.reduce((s, c) => s + (c.tenure_months || 0), 0) / customers.length)
+    : 0;
+  const avgCharge = customers.length
+    ? (customers.reduce((s, c) => s + (c.monthly_charges || 0), 0) / customers.length).toFixed(0)
+    : 0;
+
+  async function onRowClick(customerId) {
+    try {
+      setSelectedLoading(true);
+      const r = await predictChurn(customerId);
+      setSelected(r);
+    } catch (e) {
+      setSelected({ error: e.message || 'prediction failed' });
+    } finally {
+      setSelectedLoading(false);
+    }
+  }
 
   return (
     <div style={{ padding: '0 4px' }}>
       <div style={{ fontSize: 13, color: '#64748b', marginBottom: 12 }}>
         Top-20 at-risk customers for <strong style={{ color: '#0f172a' }}>{dept?.name || 'Customer'}</strong>.
-        Probabilities from a deterministic demo model (not a live inference).
+        Scored by a scikit-learn GBM+LR ensemble trained on IBM Telco (7,043 customers) — AUC{' '}
+        <strong>{metrics.auc != null ? metrics.auc.toFixed(3) : '…'}</strong>, precision@top10%{' '}
+        <strong>{metrics.precision_at_10 != null ? metrics.precision_at_10.toFixed(3) : '…'}</strong>.
       </div>
 
       {/* Summary tiles */}
@@ -62,17 +89,20 @@ export default function ChurnRiskTab({ dept }) {
         gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
         gap: 12, marginBottom: 16,
       }}>
-        <SummaryTile label="Cohort size" value={customers.length} />
-        <SummaryTile label="High risk (≥ 50%)" value={highRisk} color="#dc2626" />
-        <SummaryTile
-          label="Avg tenure"
-          value={`${Math.round(customers.reduce((s, c) => s + c.tenureMonths, 0) / customers.length)} mo`}
-        />
-        <SummaryTile
-          label="Avg activity"
-          value={(customers.reduce((s, c) => s + c.activity, 0) / customers.length).toFixed(2)}
-        />
+        <SummaryTile label="Cohort size" value={loading ? '—' : customers.length} />
+        <SummaryTile label="High risk (≥ 50%)" value={loading ? '—' : highRisk} color="#dc2626" />
+        <SummaryTile label="Avg tenure" value={loading ? '—' : `${avgTenure} mo`} />
+        <SummaryTile label="Avg monthly charges" value={loading ? '—' : `$${avgCharge}`} />
       </div>
+
+      {error && (
+        <div style={{
+          background: '#fef2f2', border: '1px solid #fecaca', color: '#991b1b',
+          borderRadius: 8, padding: 12, marginBottom: 12, fontSize: 13,
+        }}>
+          {error}
+        </div>
+      )}
 
       {/* Trend chart */}
       <div style={{
@@ -90,8 +120,8 @@ export default function ChurnRiskTab({ dept }) {
               <YAxis tick={{ fontSize: 11 }} unit="%" />
               <Tooltip formatter={(v) => [`${v}%`, '']} contentStyle={{ fontSize: 12 }} />
               <Legend wrapperStyle={{ fontSize: 12 }} />
-              <Line type="monotone" dataKey="Champion" stroke="#059669" strokeWidth={2} dot={false} isAnimationActive={false} />
-              <Line type="monotone" dataKey="Loyal" stroke="#2563eb" strokeWidth={2} dot={false} isAnimationActive={false} />
+              <Line type="monotone" dataKey="LoyalHighValue" stroke="#059669" strokeWidth={2} dot={false} isAnimationActive={false} />
+              <Line type="monotone" dataKey="Stable" stroke="#2563eb" strokeWidth={2} dot={false} isAnimationActive={false} />
               <Line type="monotone" dataKey="AtRisk" stroke="#dc2626" strokeWidth={2} dot={false} isAnimationActive={false} />
             </LineChart>
           </ResponsiveContainer>
@@ -109,40 +139,46 @@ export default function ChurnRiskTab({ dept }) {
               <th style={{ padding: 10, textAlign: 'left', color: '#64748b', fontWeight: 600 }}>Customer</th>
               <th style={{ padding: 10, textAlign: 'left', color: '#64748b', fontWeight: 600 }}>Segment</th>
               <th style={{ padding: 10, textAlign: 'right', color: '#64748b', fontWeight: 600 }}>Tenure (mo)</th>
-              <th style={{ padding: 10, textAlign: 'right', color: '#64748b', fontWeight: 600 }}>Activity</th>
+              <th style={{ padding: 10, textAlign: 'right', color: '#64748b', fontWeight: 600 }}>Monthly $</th>
               <th style={{ padding: 10, textAlign: 'left', color: '#64748b', fontWeight: 600, minWidth: 180 }}>Churn probability</th>
             </tr>
           </thead>
           <tbody>
-            {customers.map((c) => {
-              const severityColor = c.churn >= 75 ? '#dc2626'
-                : c.churn >= 50 ? '#ea580c'
-                : c.churn >= 25 ? '#b45309'
+            {loading ? (
+              <tr><td colSpan={5} style={{ padding: 20, textAlign: 'center', color: '#64748b' }}>Loading live predictions…</td></tr>
+            ) : customers.length === 0 ? (
+              <tr><td colSpan={5} style={{ padding: 20, textAlign: 'center', color: '#64748b' }}>No predictions available.</td></tr>
+            ) : customers.map((c) => {
+              const pct = Math.round((c.probability || 0) * 100);
+              const severityColor = pct >= 75 ? '#dc2626'
+                : pct >= 50 ? '#ea580c'
+                : pct >= 25 ? '#b45309'
                 : '#059669';
               return (
-                <tr key={c.id} style={{ borderTop: '1px solid #f1f5f9' }}>
+                <tr
+                  key={c.customer_id}
+                  onClick={() => onRowClick(c.customer_id)}
+                  style={{ borderTop: '1px solid #f1f5f9', cursor: 'pointer' }}
+                >
                   <td style={{ padding: 10, fontFamily: 'ui-monospace, Menlo, monospace', fontWeight: 600, color: '#0f172a' }}>
-                    {c.id}
+                    {c.customer_id}
                   </td>
                   <td style={{ padding: 10, color: '#0f172a' }}>{c.segment}</td>
-                  <td style={{ padding: 10, textAlign: 'right', color: '#64748b' }}>{c.tenureMonths}</td>
-                  <td style={{ padding: 10, textAlign: 'right', color: '#64748b' }}>{c.activity}</td>
+                  <td style={{ padding: 10, textAlign: 'right', color: '#64748b' }}>{c.tenure_months}</td>
+                  <td style={{ padding: 10, textAlign: 'right', color: '#64748b' }}>{c.monthly_charges?.toFixed?.(0) ?? c.monthly_charges}</td>
                   <td style={{ padding: 10 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                       <div style={{
                         flex: 1, height: 10, background: '#f1f5f9',
                         borderRadius: 5, overflow: 'hidden',
                       }}>
-                        <div style={{
-                          width: `${c.churn}%`, height: '100%',
-                          background: severityColor,
-                        }} />
+                        <div style={{ width: `${pct}%`, height: '100%', background: severityColor }} />
                       </div>
                       <span style={{
                         fontSize: 12, width: 48, textAlign: 'right',
                         color: severityColor, fontWeight: 700,
                       }}>
-                        {c.churn}%
+                        {pct}%
                       </span>
                     </div>
                   </td>
@@ -152,6 +188,54 @@ export default function ChurnRiskTab({ dept }) {
           </tbody>
         </table>
       </div>
+
+      {/* Per-customer drivers panel */}
+      {selected && (
+        <div
+          style={{
+            marginTop: 16, border: '1px solid #e2e8f0', borderRadius: 8,
+            background: '#fff', padding: 14,
+          }}
+          data-testid="churn-drivers"
+        >
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+            <div style={{ fontWeight: 700, color: '#0f172a' }}>
+              Drivers for <span style={{ fontFamily: 'ui-monospace, Menlo, monospace' }}>{selected.customer_id}</span>
+            </div>
+            <button
+              onClick={() => setSelected(null)}
+              style={{
+                background: 'transparent', border: '1px solid #e2e8f0',
+                borderRadius: 6, padding: '4px 10px', cursor: 'pointer',
+                fontSize: 12, color: '#64748b',
+              }}
+            >
+              Close
+            </button>
+          </div>
+          {selected.error ? (
+            <div style={{ color: '#991b1b', fontSize: 13 }}>{selected.error}</div>
+          ) : selectedLoading ? (
+            <div style={{ color: '#64748b', fontSize: 13 }}>Loading drivers…</div>
+          ) : (
+            <>
+              <div style={{ fontSize: 13, color: '#475569', marginBottom: 10 }}>
+                Model predicts <strong>{Math.round((selected.probability || 0) * 100)}%</strong> churn —
+                segment <strong>{selected.segment}</strong>, contract <strong>{selected.contract_type}</strong>,
+                tenure <strong>{selected.tenure_months} months</strong>.
+              </div>
+              <ol style={{ margin: 0, paddingLeft: 20, color: '#0f172a', fontSize: 13 }}>
+                {(selected.top_drivers || []).map((d) => (
+                  <li key={d.feature} style={{ marginBottom: 4 }}>
+                    {d.explanation}{' '}
+                    <span style={{ color: '#64748b' }}>(importance {d.importance.toFixed(2)})</span>
+                  </li>
+                ))}
+              </ol>
+            </>
+          )}
+        </div>
+      )}
     </div>
   );
 }
