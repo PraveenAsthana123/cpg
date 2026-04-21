@@ -36,3 +36,17 @@ class ExplainResponse(BaseModel):
     generation_time_ms: int
     model: str                             # "qwen2.5:latest"
     groundedness: float | None = None      # filled by eval harness, not live endpoint
+    correlation_id: str | None = None      # set by router from ContextVar; lets UI tie feedback back to the call
+
+
+class FeedbackRequest(BaseModel):
+    """UI-submitted thumbs-up/down feedback on an AI explanation.
+
+    The ``correlation_id`` ties back to the original ExplainResponse so the
+    structured log stream can correlate feedback with the call that produced it.
+    """
+    model_config = ConfigDict(extra="forbid")
+    correlation_id: str = Field(min_length=1, max_length=64)
+    rating: Literal["positive", "negative"]
+    response_excerpt: str | None = Field(default=None, max_length=500)
+    comment: str | None = Field(default=None, max_length=1000)

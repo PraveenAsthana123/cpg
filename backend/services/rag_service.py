@@ -16,7 +16,7 @@ import numpy as np
 import requests
 from rank_bm25 import BM25Okapi
 
-from core.structured_logger import emit_event
+from core.structured_logger import emit_event, get_correlation_id
 from schemas.ai_explain import Citation, ExplainRequest, ExplainResponse
 
 logger = logging.getLogger(__name__)
@@ -113,6 +113,7 @@ class RAGService:
             retrieval_time_ms=retrieval_ms,
             generation_time_ms=generation_ms,
             model=MODEL,
+            correlation_id=get_correlation_id(),
         )
 
     # ----- indexing -----
