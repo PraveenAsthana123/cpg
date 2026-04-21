@@ -27,6 +27,7 @@ EMBED_MODEL = MODEL    # qwen2.5 also serves embeddings via /api/embeddings
 
 CONTEXT_DIR = Path(__file__).resolve().parents[2] / "data" / "sales-context"
 SUPPLY_CHAIN_CONTEXT_DIR = Path(__file__).resolve().parents[2] / "data" / "supply-chain-context"
+CUSTOMER_CONTEXT_DIR = Path(__file__).resolve().parents[2] / "data" / "customer-context"
 MAX_CONTEXT_TOKENS = 3000
 MAX_RESPONSE_TOKENS = 800
 TIMEOUT_SEC = 30

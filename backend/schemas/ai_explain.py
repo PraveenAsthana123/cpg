@@ -19,7 +19,7 @@ class ExplainRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
     question: str = Field(min_length=3, max_length=500)
     context: ExplainContext | None = None
-    corpus: Literal["sales", "supply-chain"] | None = None  # None → 'sales' default.
+    corpus: Literal["sales", "supply-chain", "customer"] | None = None  # None → 'sales' default.
 
 
 class Citation(BaseModel):

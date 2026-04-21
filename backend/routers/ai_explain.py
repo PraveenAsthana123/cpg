@@ -6,7 +6,12 @@ from functools import lru_cache
 from fastapi import APIRouter, Depends, HTTPException, status
 
 from schemas.ai_explain import ExplainRequest, ExplainResponse
-from services.rag_service import CONTEXT_DIR, SUPPLY_CHAIN_CONTEXT_DIR, RAGService
+from services.rag_service import (
+    CONTEXT_DIR,
+    CUSTOMER_CONTEXT_DIR,
+    SUPPLY_CHAIN_CONTEXT_DIR,
+    RAGService,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -18,6 +23,8 @@ def _rag_for(corpus: str) -> RAGService:
     """One RAGService singleton per corpus. Index builds lazily on first request."""
     if corpus == "supply-chain":
         return RAGService(corpus_dir=SUPPLY_CHAIN_CONTEXT_DIR, eager=False)
+    if corpus == "customer":
+        return RAGService(corpus_dir=CUSTOMER_CONTEXT_DIR, eager=False)
     # default = sales
     return RAGService(corpus_dir=CONTEXT_DIR, eager=False)
 
