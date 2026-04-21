@@ -3,9 +3,10 @@ from __future__ import annotations
 import logging
 from functools import lru_cache
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Response, status
 
-from schemas.ai_explain import ExplainRequest, ExplainResponse
+from core.structured_logger import emit_event
+from schemas.ai_explain import ExplainRequest, ExplainResponse, FeedbackRequest
 from services.rag_service import (
     CONTEXT_DIR,
     CUSTOMER_CONTEXT_DIR,
@@ -45,3 +46,20 @@ def explain(req: ExplainRequest) -> ExplainResponse:
             status.HTTP_503_SERVICE_UNAVAILABLE,
             detail=f"AI explanation temporarily unavailable: {e}",
         )
+
+
+@router.post("/feedback", status_code=status.HTTP_204_NO_CONTENT)
+def feedback(req: FeedbackRequest) -> Response:
+    """Record a thumbs-up/down rating against a previous explain call.
+
+    Emits a structured event (``ai.feedback.positive`` / ``ai.feedback.negative``)
+    tagged with the source correlation_id so the two log rows can be joined
+    downstream. No database write — stdout only in Phase γ. Returns 204.
+    """
+    emit_event(
+        f"ai.feedback.{req.rating}",
+        source_correlation_id=req.correlation_id,
+        response_excerpt=req.response_excerpt,
+        comment=req.comment,
+    )
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
