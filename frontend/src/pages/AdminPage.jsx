@@ -11,18 +11,20 @@ import WorkflowsTab from '../components/admin-tabs/WorkflowsTab';
 import ScheduledJobsTab from '../components/admin-tabs/ScheduledJobsTab';
 import AuditLogTab from '../components/admin-tabs/AuditLogTab';
 import SettingsTab from '../components/admin-tabs/SettingsTab';
+import OverrideAnalyticsTab from '../components/admin-tabs/OverrideAnalyticsTab';
 
 const TABS = [
-  { id: 'users-roles',    label: 'Users & Roles',  icon: '👥',  Component: UsersRolesTab    },
-  { id: 'permissions',    label: 'Permissions',    icon: '🔐',  Component: PermissionsTab   },
-  { id: 'integrations',   label: 'Integrations',   icon: '🔌',  Component: IntegrationsTab  },
-  { id: 'mcp-servers',    label: 'MCP Servers',    icon: '🧠',  Component: MCPServersTab    },
-  { id: 'model-registry', label: 'Model Registry', icon: '📦',  Component: ModelRegistryTab },
-  { id: 'ai-use-cases',   label: 'AI Use Cases',   icon: '🤖',  Component: AIUseCasesTab    },
-  { id: 'workflows',      label: 'Workflows',      icon: '🔁',  Component: WorkflowsTab     },
-  { id: 'scheduled-jobs', label: 'Scheduled Jobs', icon: '⏰',  Component: ScheduledJobsTab },
-  { id: 'audit-log',      label: 'Audit Log',      icon: '📜',  Component: AuditLogTab      },
-  { id: 'settings',       label: 'Settings',       icon: '⚙️',  Component: SettingsTab      },
+  { id: 'users-roles',        label: 'Users & Roles',       icon: '👥',  Component: UsersRolesTab        },
+  { id: 'permissions',        label: 'Permissions',         icon: '🔐',  Component: PermissionsTab       },
+  { id: 'integrations',       label: 'Integrations',        icon: '🔌',  Component: IntegrationsTab      },
+  { id: 'mcp-servers',        label: 'MCP Servers',         icon: '🧠',  Component: MCPServersTab        },
+  { id: 'model-registry',     label: 'Model Registry',      icon: '📦',  Component: ModelRegistryTab     },
+  { id: 'ai-use-cases',       label: 'AI Use Cases',        icon: '🤖',  Component: AIUseCasesTab        },
+  { id: 'workflows',          label: 'Workflows',           icon: '🔁',  Component: WorkflowsTab         },
+  { id: 'scheduled-jobs',     label: 'Scheduled Jobs',      icon: '⏰',  Component: ScheduledJobsTab     },
+  { id: 'audit-log',          label: 'Audit Log',           icon: '📜',  Component: AuditLogTab          },
+  { id: 'settings',           label: 'Settings',            icon: '⚙️',  Component: SettingsTab          },
+  { id: 'override-analytics', label: 'Override Analytics',  icon: '⚖️',  Component: OverrideAnalyticsTab },
 ];
 
 export default function AdminPage() {
