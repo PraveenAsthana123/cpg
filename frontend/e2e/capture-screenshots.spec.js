@@ -313,4 +313,11 @@ test.describe('Sales flagship — demo screenshots', () => {
     await page.waitForTimeout(500);
     await page.screenshot({ path: `${OUT}/15-sales-tester-overview.png`, fullPage: true });
   });
+
+  test('16 manager archetype page — agile for sales', async ({ page }) => {
+    await page.goto('/sales/manager/archetype/agile-manager');
+    await expect(page.getByText(/Agile Manager/i).first()).toBeVisible();
+    await page.waitForTimeout(500);
+    await page.screenshot({ path: `${OUT}/16-manager-archetype-agile.png`, fullPage: true });
+  });
 });

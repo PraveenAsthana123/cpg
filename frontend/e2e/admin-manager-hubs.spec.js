@@ -121,6 +121,20 @@ test.describe('Sales flagship — Phase ε', () => {
   });
 });
 
+test.describe('Manager Archetype pages — Phase θ', () => {
+  test('Manager Archetype page renders for Agile on Sales', async ({ page }) => {
+    await page.goto('/sales/manager/archetype/agile-manager');
+    await expect(page.locator('.page-title')).toContainText(/Agile/i);
+    await expect(page.getByText(/Responsibilities/i).first()).toBeVisible();
+    await expect(page.getByText(/KPI/i).first()).toBeVisible();
+  });
+
+  test('Invalid archetype redirects', async ({ page }) => {
+    await page.goto('/sales/manager/archetype/does-not-exist');
+    await expect(page).toHaveURL(/\/$/);
+  });
+});
+
 test.describe('Demo-mode RBAC — Phase η', () => {
   test.beforeEach(async ({ page }) => {
     // Ensure each RBAC test starts from a clean role = 'manager' default.
