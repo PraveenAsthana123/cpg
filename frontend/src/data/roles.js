@@ -66,6 +66,17 @@ export const rolesByDept = {
       kpis: ['System uptime %', 'Drift incidents', 'Jobs failed/recovered'],
       reports: ['system-health', 'model-drift', 'pipeline-status', 'anomaly-detection', 'scheduled-jobs'],
     },
+    tester: {
+      title: 'Sales QA Analyst',
+      responsibilities: [
+        'Design and execute test cases for forecast, simulation, and pipeline endpoints (positive/negative/edge)',
+        'Validate AI model outputs (Prophet, scoring) against known ground-truth fixtures',
+        'Run regression suites after prompt/model/feature changes — sign off on releases',
+        'Maintain RBAC boundary tests across all four demo roles',
+      ],
+      kpis: ['Defect escape rate', 'Test automation coverage %', 'Mean time to detect regression'],
+      reports: ['regression-test-coverage', 'defect-log', 'test-run-history', 'smoke-test-status'],
+    },
   },
   marketing: {
     manager: {
@@ -108,6 +119,17 @@ export const rolesByDept = {
       kpis: ['Data freshness', 'Anomalies flagged', 'Scheduled job success %'],
       reports: ['system-health', 'model-drift', 'pipeline-status', 'anomaly-detection', 'scheduled-jobs'],
     },
+    tester: {
+      title: 'Marketing Content QA Tester',
+      responsibilities: [
+        'Test generative creative outputs (ads, emails, landing pages) for brand voice and factual drift',
+        'Validate A/B test harness — randomization, exposure logging, winner calc',
+        'Run regression suites for attribution + funnel reporting after model changes',
+        'Automate e2e tests for campaign publish → track → attribute flow',
+      ],
+      kpis: ['Content defect escape rate', 'Automation coverage %', 'A/B test regression pass rate'],
+      reports: ['regression-test-coverage', 'defect-log', 'test-run-history', 'automation-coverage'],
+    },
   },
   'contact-center': {
     manager: {
@@ -149,6 +171,17 @@ export const rolesByDept = {
       ],
       kpis: ['Queue wait', 'Voice-AI latency', 'Uptime %'],
       reports: ['system-health', 'model-drift', 'pipeline-status', 'anomaly-detection', 'scheduled-jobs', 'api-latency'],
+    },
+    tester: {
+      title: 'Contact Center QA Specialist',
+      responsibilities: [
+        'Script test calls covering IVR, voice-AI whisper, and agent handoff scenarios',
+        'Validate voice-AI prompt versions against golden transcripts before rollout',
+        'Run regression suites for CSAT scoring and disposition classifier',
+        'File and triage defects on voice-AI latency and transcription accuracy',
+      ],
+      kpis: ['Voice-AI defect escape rate', 'Prompt regression pass rate', 'Mean time to detect regression'],
+      reports: ['regression-test-coverage', 'defect-log', 'test-run-history', 'smoke-test-status'],
     },
   },
 
@@ -195,6 +228,17 @@ export const rolesByDept = {
       kpis: ['Stale-feed alerts MTTR', 'Dashboard uptime', 'Feed lag'],
       reports: ['system-health', 'pipeline-status', 'anomaly-detection', 'scheduled-jobs'],
     },
+    tester: {
+      title: 'Supply Chain QA Engineer',
+      responsibilities: [
+        'Design test cases for stockout-risk, ETA, and network-simulation endpoints',
+        'Validate supplier ingestion against schema contracts + referential integrity',
+        'Run regression suites after any scoring model retrain',
+        'Automate e2e tests for supplier onboarding → screening → scorecard flow',
+      ],
+      kpis: ['Defect escape rate', 'Automation coverage %', 'Contract-test pass rate'],
+      reports: ['regression-test-coverage', 'defect-log', 'test-run-history', 'automation-coverage'],
+    },
   },
 
   logistics: {
@@ -238,6 +282,17 @@ export const rolesByDept = {
       ],
       kpis: ['Pipeline lag', 'ETA MAE', 'Exception rate'],
       reports: ['system-health', 'model-drift', 'pipeline-status', 'anomaly-detection'],
+    },
+    tester: {
+      title: 'Logistics QA Analyst',
+      responsibilities: [
+        'Execute test cases across route-plan, ETA, and dispatch exception scenarios',
+        'Validate IoT telemetry ingest against bad-data fixtures (gaps, out-of-range)',
+        'Run regression suites on ETA model after weights retune',
+        'Sign off on fleet dashboard releases — smoke + acceptance tests',
+      ],
+      kpis: ['Defect escape rate', 'ETA regression pass rate', 'Mean time to detect regression'],
+      reports: ['regression-test-coverage', 'defect-log', 'test-run-history', 'smoke-test-status'],
     },
   },
 
@@ -283,6 +338,17 @@ export const rolesByDept = {
       kpis: ['Dashboard uptime', 'Connectivity %', 'Recall drop alerts'],
       reports: ['system-health', 'model-drift', 'pipeline-status', 'anomaly-detection'],
     },
+    tester: {
+      title: 'Manufacturing Quality Tester',
+      responsibilities: [
+        'Sample CV defect-detection false-positive/false-negative images for model eval',
+        'Execute batch-record test scenarios covering OEE, yield, and changeover edges',
+        'Run regression suites for MES/SCADA ingest after schema changes',
+        'Maintain golden-batch fixtures and defect-detection test data sets',
+      ],
+      kpis: ['CV recall on fixture set', 'Defect escape rate', 'Automation coverage %'],
+      reports: ['regression-test-coverage', 'defect-log', 'test-run-history', 'automation-coverage'],
+    },
   },
 
   maintenance: {
@@ -326,6 +392,17 @@ export const rolesByDept = {
       ],
       kpis: ['Offline-sensor MTTR', 'Dashboard freshness', 'Job success %'],
       reports: ['system-health', 'model-drift', 'pipeline-status', 'scheduled-jobs'],
+    },
+    tester: {
+      title: 'Maintenance Reliability QA',
+      responsibilities: [
+        'Design test cases for predictive-failure model against labelled history',
+        'Validate work-order close-out flows with positive/negative path coverage',
+        'Run regression suites after model retrain — precision/recall delta gate',
+        'Maintain vibration/thermal fixture data set for offline model eval',
+      ],
+      kpis: ['Model regression pass rate', 'Defect escape rate', 'Mean time to detect regression'],
+      reports: ['regression-test-coverage', 'defect-log', 'test-run-history', 'smoke-test-status'],
     },
   },
 
@@ -371,6 +448,17 @@ export const rolesByDept = {
       kpis: ['Feed lag', 'Detection precision', 'Mismatch rate'],
       reports: ['system-health', 'model-drift', 'pipeline-status', 'anomaly-detection'],
     },
+    tester: {
+      title: 'Retail QA Analyst',
+      responsibilities: [
+        'Validate planogram-compliance CV output against audit photos (labelled set)',
+        'Execute price-integrity tests comparing ERP vs POS vs shelf tags',
+        'Run regression suites for promotion-uplift model after refresh',
+        'Automate smoke tests for POS feed ingest per chain',
+      ],
+      kpis: ['CV precision on fixture set', 'Price-mismatch catch rate', 'Automation coverage %'],
+      reports: ['regression-test-coverage', 'defect-log', 'test-run-history', 'automation-coverage'],
+    },
   },
 
   customer: {
@@ -414,6 +502,17 @@ export const rolesByDept = {
       ],
       kpis: ['Drift alerts', 'Stream lag', 'Anomalies flagged'],
       reports: ['system-health', 'model-drift', 'pipeline-status', 'anomaly-detection'],
+    },
+    tester: {
+      title: 'Customer Analytics QA',
+      responsibilities: [
+        'Design test cases for churn-predict and cohort-analysis endpoints (edge + boundary)',
+        'Validate churn model output against holdout set — recall/precision gate on release',
+        'Run fairness smoke tests across protected-class cohorts before rollout',
+        'Maintain synthetic customer fixtures for deterministic e2e tests',
+      ],
+      kpis: ['Defect escape rate', 'Model regression pass rate', 'Automation coverage %'],
+      reports: ['regression-test-coverage', 'defect-log', 'test-run-history', 'automation-coverage'],
     },
   },
 
@@ -459,6 +558,17 @@ export const rolesByDept = {
       kpis: ['On-time task %', 'Job SLA %', 'Fraud-signal precision'],
       reports: ['system-health', 'pipeline-status', 'anomaly-detection', 'scheduled-jobs'],
     },
+    tester: {
+      title: 'Finance QA Analyst',
+      responsibilities: [
+        'Execute test cases for close-cycle workflows, variance calc, and accrual flows',
+        'Validate scenario-plan outputs against ground-truth spreadsheets',
+        'Run regression suites after every chart-of-accounts or rule change',
+        'Maintain SOX-aligned test evidence and sign-off artifacts',
+      ],
+      kpis: ['Defect escape rate', 'SOX regression pass rate', 'Mean time to detect regression'],
+      reports: ['regression-test-coverage', 'defect-log', 'test-run-history', 'smoke-test-status'],
+    },
   },
 
   procurement: {
@@ -501,6 +611,17 @@ export const rolesByDept = {
       ],
       kpis: ['Feed freshness', 'Missed renewals', 'Realization %'],
       reports: ['system-health', 'pipeline-status', 'scheduled-jobs'],
+    },
+    tester: {
+      title: 'Procurement QA Analyst',
+      responsibilities: [
+        'Design 3-way-match test cases (PO/GR/invoice) covering exceptions and tolerance bands',
+        'Validate vendor-onboarding KYC flow against sanctions-hit fixtures',
+        'Run regression suites for contract-renewal alerting after rule change',
+        'Automate smoke tests for spend-analytics ingest',
+      ],
+      kpis: ['Defect escape rate', 'Match-test pass rate', 'Automation coverage %'],
+      reports: ['regression-test-coverage', 'defect-log', 'test-run-history', 'automation-coverage'],
     },
   },
 
@@ -546,6 +667,17 @@ export const rolesByDept = {
       kpis: ['Spike MTTD', 'Feed lag', 'Pipeline uptime'],
       reports: ['system-health', 'pipeline-status', 'anomaly-detection'],
     },
+    tester: {
+      title: 'Quality Systems QA',
+      responsibilities: [
+        'Execute CAPA-workflow test scenarios — open, review, close, and audit trail',
+        'Validate LIMS ingestion against known-good and known-bad lab fixtures',
+        'Run recall-readiness drill regression — trace-back / trace-forward coverage',
+        'File defects on NCR classification and route them to resolution',
+      ],
+      kpis: ['Defect escape rate', 'CAPA-flow regression pass rate', 'Automation coverage %'],
+      reports: ['regression-test-coverage', 'defect-log', 'test-run-history', 'smoke-test-status'],
+    },
   },
 
   governance: {
@@ -590,6 +722,17 @@ export const rolesByDept = {
       kpis: ['DQ score trend', 'Dashboard coverage', 'Control breaches'],
       reports: ['system-health', 'model-drift', 'pipeline-status', 'anomaly-detection'],
     },
+    tester: {
+      title: 'Governance Controls QA',
+      responsibilities: [
+        'Execute RBAC-boundary test matrix across every role × endpoint combination',
+        'Validate AI decision logs for completeness (required fields, correlation IDs)',
+        'Run regression suites for policy-violation detectors after rule change',
+        'Maintain audit-trail fixture suites for SOC-2 / ISO readiness checks',
+      ],
+      kpis: ['Unauthorized-access caught', 'Decision-log completeness %', 'Defect escape rate'],
+      reports: ['regression-test-coverage', 'defect-log', 'test-run-history', 'automation-coverage'],
+    },
   },
 
   telehealth: {
@@ -633,6 +776,17 @@ export const rolesByDept = {
       ],
       kpis: ['Feed uptime', 'Agreement trend', 'Call-quality score'],
       reports: ['system-health', 'model-drift', 'pipeline-status', 'api-latency'],
+    },
+    tester: {
+      title: 'Telehealth Clinical QA',
+      responsibilities: [
+        'Validate AI triage recommendations against clinician-adjudicated golden set',
+        'Execute EHR/FHIR integration test suites covering bad-data and timeout cases',
+        'Run regression suites for triage-AI model after prompt/threshold change',
+        'Maintain de-identified patient fixtures for deterministic e2e testing',
+      ],
+      kpis: ['Triage regression pass rate', 'Defect escape rate', 'Mean time to detect regression'],
+      reports: ['regression-test-coverage', 'defect-log', 'test-run-history', 'smoke-test-status'],
     },
   },
 };
