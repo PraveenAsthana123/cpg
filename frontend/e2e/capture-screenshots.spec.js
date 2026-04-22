@@ -306,4 +306,11 @@ test.describe('Sales flagship — demo screenshots', () => {
     // Reset for any downstream re-runs.
     await page.getByLabel('Demo role selector').selectOption('manager');
   });
+
+  test('15 sales tester page — overview', async ({ page }) => {
+    await page.goto('/sales/tester');
+    await expect(page.locator('.page-title')).toContainText('Tester');
+    await page.waitForTimeout(500);
+    await page.screenshot({ path: `${OUT}/15-sales-tester-overview.png`, fullPage: true });
+  });
 });

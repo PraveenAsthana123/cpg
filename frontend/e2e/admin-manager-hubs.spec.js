@@ -48,6 +48,19 @@ test.describe('Admin & Manager hubs — Phase 1 scaffolding', () => {
     await expect(page.locator('.page-title')).toContainText('Admin');
   });
 
+  test('Sidebar shows Tester sub-link for Sales', async ({ page }) => {
+    await page.goto('/');
+    await page.getByText('Sales & Demand', { exact: false }).first().click();
+    await expect(page.getByRole('link', { name: /Tester/ }).first()).toBeVisible();
+  });
+
+  test('Tester page renders 5 tabs for Sales', async ({ page }) => {
+    await page.goto('/sales/tester');
+    await expect(page.locator('.page-title')).toContainText('Tester');
+    const tabs = page.locator('.tab-item');
+    await expect(tabs).toHaveCount(5);
+  });
+
   test('Invalid dept redirects to dashboard', async ({ page }) => {
     await page.goto('/does-not-exist/admin');
     // The redirect sends us to "/" which renders Dashboard
