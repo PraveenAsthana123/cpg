@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { ROLE_IDS, ROLE_LABELS, ROLE_ICONS, getRolesForDept } from '../../data/roles';
 import { getReportById } from '../../data/reports';
 import { getArchetypesForDept } from '../../data/managerArchetypes';
@@ -148,13 +149,27 @@ export default function RolesResponsibilitiesTab({ dept }) {
                 const topResps = (a.responsibilities || []).slice(0, 2);
                 const topKpis = (a.kpis || []).slice(0, 2);
                 return (
-                  <div
+                  <Link
                     key={a.id}
+                    to={`/${deptId}/manager/archetype/${a.id}`}
                     style={{
+                      textDecoration: 'none',
+                      color: 'inherit',
+                      display: 'block',
                       border: `1px solid ${c.border}`,
                       background: '#fff',
                       borderRadius: 8,
                       padding: 12,
+                      transition: 'transform 120ms ease, box-shadow 120ms ease',
+                      cursor: 'pointer',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'translateY(-1px)';
+                      e.currentTarget.style.boxShadow = '0 4px 12px rgba(37,99,235,0.12)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.boxShadow = 'none';
                     }}
                   >
                     <div style={{
@@ -207,7 +222,12 @@ export default function RolesResponsibilitiesTab({ dept }) {
                         </span>
                       ))}
                     </div>
-                  </div>
+                    <div style={{
+                      marginTop: 8, fontSize: 10, fontWeight: 600, color: c.fg,
+                    }}>
+                      Open dashboard →
+                    </div>
+                  </Link>
                 );
               })}
             </div>

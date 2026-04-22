@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { MANAGER_ARCHETYPES } from '../../data/managerArchetypes';
 import { departments } from '../../data/departments';
 
@@ -154,14 +155,38 @@ export default function ManagerArchetypesTab() {
         }}>
           {filtered.map((a) => {
             const pills = typicalDeptPills(a.typicalDepts);
+            // Pick a target dept for the archetype page link:
+            //   - If the user filtered to a specific dept, use that.
+            //   - Else if archetype is typicalDepts='all', default to 'sales' (flagship).
+            //   - Else use the first listed typical dept.
+            const targetDept =
+              deptFilter !== 'all'
+                ? deptFilter
+                : a.typicalDepts === 'all'
+                  ? 'sales'
+                  : a.typicalDepts.split(',').map((s) => s.trim())[0];
             return (
-              <div
+              <Link
                 key={a.id}
+                to={`/${targetDept}/manager/archetype/${a.id}`}
                 style={{
+                  textDecoration: 'none',
+                  color: 'inherit',
+                  display: 'block',
                   border: `1px solid ${MGR_COLOR.border}`,
                   background: MGR_COLOR.bg,
                   borderRadius: 8,
                   padding: 14,
+                  transition: 'transform 120ms ease, box-shadow 120ms ease',
+                  cursor: 'pointer',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-1px)';
+                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(37,99,235,0.12)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = 'none';
                 }}
               >
                 <div style={{
@@ -235,7 +260,13 @@ export default function ManagerArchetypesTab() {
                     </span>
                   ))}
                 </div>
-              </div>
+                <div style={{
+                  marginTop: 10, fontSize: 11, color: MGR_COLOR.fg,
+                  fontWeight: 600,
+                }}>
+                  Open {a.label} dashboard →
+                </div>
+              </Link>
             );
           })}
         </div>

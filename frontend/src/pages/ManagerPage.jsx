@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { useParams, Navigate } from 'react-router-dom';
+import { useParams, Navigate, useNavigate } from 'react-router-dom';
 import { departments } from '../data/departments';
+import { getArchetypesForDept } from '../data/managerArchetypes';
 import KPIDashboardTab from '../components/manager-tabs/KPIDashboardTab';
 import StatusHealthTab from '../components/manager-tabs/StatusHealthTab';
 import ReportsTab from '../components/manager-tabs/ReportsTab';
@@ -63,12 +64,14 @@ function tabsForDept(deptId) {
 
 export default function ManagerPage() {
   const { departmentId } = useParams();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('kpi-dashboard');
   const dept = departments.find((d) => d.id === departmentId);
   if (!dept || dept.id === 'dashboard') return <Navigate to="/" replace />;
 
   const TABS = tabsForDept(dept.id);
   const Active = TABS.find((t) => t.id === activeTab).Component;
+  const archetypes = getArchetypesForDept(dept.id);
 
   return (
     <div>
@@ -77,7 +80,34 @@ export default function ManagerPage() {
           <div className="page-title">📊 {dept.name} — Manager</div>
           <div className="page-subtitle">KPIs, reports, monitoring, team performance for the {dept.name} department</div>
         </div>
-        <div className="page-header-right">
+        <div className="page-header-right" style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+          {archetypes.length > 0 && (
+            <label style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              <span style={{ fontSize: 12, color: '#64748b', fontWeight: 500 }}>
+                📋 Switch archetype
+              </span>
+              <select
+                aria-label="Switch manager archetype"
+                value=""
+                onChange={(e) => {
+                  const id = e.target.value;
+                  if (id) navigate(`/${dept.id}/manager/archetype/${id}`);
+                }}
+                style={{
+                  padding: '6px 10px', fontSize: 12, borderRadius: 6,
+                  border: '1px solid #e2e8f0', background: '#fff',
+                  color: '#0f172a', outline: 'none', cursor: 'pointer',
+                }}
+              >
+                <option value="">(none)</option>
+                {archetypes.map((a) => (
+                  <option key={a.id} value={a.id}>
+                    {a.icon} {a.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+          )}
           <span style={{
             padding: '6px 16px', borderRadius: 'var(--border-radius-lg)',
             background: `${dept.color}15`, border: `1px solid ${dept.color}33`,
