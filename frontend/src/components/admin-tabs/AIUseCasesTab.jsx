@@ -7,6 +7,7 @@ const ROLE_SHORT = {
   'team-member': 'TM',
   compliance: 'Compl',
   'reporting-monitoring': 'R&M',
+  tester: 'Test',
 };
 
 const ROLE_COLORS = {
@@ -14,6 +15,7 @@ const ROLE_COLORS = {
   'team-member': { bg: 'rgba(16,185,129,0.1)', fg: '#059669' },
   compliance: { bg: 'rgba(139,92,246,0.1)', fg: '#7c3aed' },
   'reporting-monitoring': { bg: 'rgba(234,88,12,0.1)', fg: '#c2410c' },
+  tester: { bg: 'rgba(202,138,4,0.1)', fg: '#a16207' },
 };
 
 // Category family palettes — 5 distinct palettes grouped semantically.

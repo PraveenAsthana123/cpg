@@ -1,15 +1,14 @@
 import { useState } from 'react';
-import { ROLE_LABELS, ROLE_ICONS, getRolesForDept } from '../../data/roles';
+import { ROLE_IDS, ROLE_LABELS, ROLE_ICONS, getRolesForDept } from '../../data/roles';
 import { getReportById } from '../../data/reports';
 import { getArchetypesForDept } from '../../data/managerArchetypes';
-
-const ROLES = ['manager', 'team-member', 'compliance', 'reporting-monitoring'];
 
 const ROLE_COLORS = {
   manager: { bg: 'rgba(59,130,246,0.08)', fg: '#2563eb', border: '#bfdbfe' },
   'team-member': { bg: 'rgba(16,185,129,0.08)', fg: '#059669', border: '#a7f3d0' },
   compliance: { bg: 'rgba(139,92,246,0.08)', fg: '#7c3aed', border: '#ddd6fe' },
   'reporting-monitoring': { bg: 'rgba(234,88,12,0.08)', fg: '#c2410c', border: '#fed7aa' },
+  tester: { bg: 'rgba(202,138,4,0.08)', fg: '#a16207', border: '#fde68a' },
 };
 
 export default function RolesResponsibilitiesTab({ dept }) {
@@ -18,7 +17,7 @@ export default function RolesResponsibilitiesTab({ dept }) {
   const archetypes = getArchetypesForDept(deptId);
   const [archetypesOpen, setArchetypesOpen] = useState(false);
 
-  const seeded = ROLES.some((r) => roles[r] && roles[r].title);
+  const seeded = ROLE_IDS.some((r) => roles[r] && roles[r].title);
   if (!seeded) {
     return (
       <div style={{ padding: 48, textAlign: 'center', color: '#64748b', fontSize: 14 }}>
@@ -30,7 +29,7 @@ export default function RolesResponsibilitiesTab({ dept }) {
   return (
     <div style={{ padding: '0 4px' }}>
       <div style={{ fontSize: 13, color: '#64748b', marginBottom: 12 }}>
-        Four canonical roles for <strong style={{ color: '#0f172a' }}>{dept?.name || deptId}</strong> —
+        {ROLE_IDS.length} canonical roles for <strong style={{ color: '#0f172a' }}>{dept?.name || deptId}</strong> —
         each with responsibilities, KPIs, and owned reports.
       </div>
 
@@ -39,7 +38,7 @@ export default function RolesResponsibilitiesTab({ dept }) {
         gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
         gap: 12,
       }}>
-        {ROLES.map((role) => {
+        {ROLE_IDS.map((role) => {
           const r = roles[role] || {};
           const c = ROLE_COLORS[role];
           return (

@@ -1,14 +1,13 @@
 import { useMemo, useState } from 'react';
-import { ROLE_LABELS, ROLE_ICONS, getRolesForDept } from '../../data/roles';
+import { ROLE_IDS, ROLE_LABELS, ROLE_ICONS, getRolesForDept } from '../../data/roles';
 import { seededRng, pick } from '../../utils/seed';
-
-const ROLES = ['manager', 'team-member', 'compliance', 'reporting-monitoring'];
 
 const ROLE_COLORS = {
   manager: { bg: 'rgba(59,130,246,0.1)', fg: '#2563eb' },
   'team-member': { bg: 'rgba(16,185,129,0.1)', fg: '#059669' },
   compliance: { bg: 'rgba(139,92,246,0.1)', fg: '#7c3aed' },
   'reporting-monitoring': { bg: 'rgba(234,88,12,0.1)', fg: '#c2410c' },
+  tester: { bg: 'rgba(202,138,4,0.1)', fg: '#a16207' },
 };
 
 const FIRST_NAMES = [
@@ -25,7 +24,7 @@ function mockUsers(deptId) {
   const rng = seededRng(`users-${deptId}`);
   const roles = getRolesForDept(deptId);
   const rows = [];
-  ROLES.forEach((role) => {
+  ROLE_IDS.forEach((role) => {
     const title = (roles[role] && roles[role].title) || ROLE_LABELS[role];
     for (let i = 0; i < 5; i += 1) {
       const first = pick(rng, FIRST_NAMES);
@@ -54,7 +53,7 @@ export default function UsersRolesTab({ dept }) {
   const users = useMemo(() => mockUsers(deptId), [deptId]);
 
   const filtered = roleFilter === 'all' ? users : users.filter((u) => u.role === roleFilter);
-  const counts = ROLES.reduce(
+  const counts = ROLE_IDS.reduce(
     (acc, r) => ({ ...acc, [r]: users.filter((u) => u.role === r).length }),
     {}
   );
@@ -76,7 +75,7 @@ export default function UsersRolesTab({ dept }) {
         >
           All ({users.length})
         </button>
-        {ROLES.map((r) => {
+        {ROLE_IDS.map((r) => {
           const c = ROLE_COLORS[r];
           const active = roleFilter === r;
           return (

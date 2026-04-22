@@ -1,14 +1,13 @@
 import { useMemo } from 'react';
-import { ROLE_LABELS, ROLE_ICONS, getRolesForDept } from '../../data/roles';
+import { ROLE_IDS, ROLE_LABELS, ROLE_ICONS, getRolesForDept } from '../../data/roles';
 import { seededRng, randInt, randFloat } from '../../utils/seed';
-
-const ROLES = ['manager', 'team-member', 'compliance', 'reporting-monitoring'];
 
 const ROLE_COLORS = {
   manager: '#2563eb',
   'team-member': '#059669',
   compliance: '#7c3aed',
   'reporting-monitoring': '#c2410c',
+  tester: '#a16207',
 };
 
 export default function TeamPerformanceTab({ dept }) {
@@ -17,7 +16,7 @@ export default function TeamPerformanceTab({ dept }) {
 
   const rows = useMemo(() => {
     const rng = seededRng(`team-${deptId}`);
-    return ROLES.map((role) => {
+    return ROLE_IDS.map((role) => {
       const title = (roles[role] && roles[role].title) || ROLE_LABELS[role];
       return {
         role,

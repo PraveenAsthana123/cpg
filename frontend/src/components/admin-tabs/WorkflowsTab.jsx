@@ -1,14 +1,13 @@
 import { useMemo, useState } from 'react';
 import { getWorkflowsForDept } from '../../data/workflows';
-import { ROLE_LABELS, ROLE_ICONS } from '../../data/roles';
-
-const ROLES = ['manager', 'team-member', 'compliance', 'reporting-monitoring'];
+import { ROLE_IDS, ROLE_LABELS, ROLE_ICONS } from '../../data/roles';
 
 const ROLE_SHORT = {
   manager: 'Mgr',
   'team-member': 'TM',
   compliance: 'Compl',
   'reporting-monitoring': 'R&M',
+  tester: 'Test',
 };
 
 const ROLE_COLORS = {
@@ -16,6 +15,7 @@ const ROLE_COLORS = {
   'team-member': { bg: 'rgba(16,185,129,0.1)', fg: '#059669' },
   compliance: { bg: 'rgba(139,92,246,0.1)', fg: '#7c3aed' },
   'reporting-monitoring': { bg: 'rgba(234,88,12,0.1)', fg: '#c2410c' },
+  tester: { bg: 'rgba(202,138,4,0.1)', fg: '#a16207' },
 };
 
 export default function WorkflowsTab({ dept }) {
@@ -54,15 +54,15 @@ export default function WorkflowsTab({ dept }) {
     );
   }
 
-  const counts = ROLES.reduce(
+  const counts = ROLE_IDS.reduce(
     (acc, r) => ({ ...acc, [r]: all.filter((w) => w.role === r).length }),
     {}
   );
-  const countsSummary = ROLES.map((r) => `${counts[r]} ${ROLE_SHORT[r]}`).join(' / ');
+  const countsSummary = ROLE_IDS.map((r) => `${counts[r]} ${ROLE_SHORT[r]}`).join(' / ');
 
   const filterPills = [
     { id: 'all', label: 'All', icon: '' },
-    ...ROLES.map((r) => ({ id: r, label: ROLE_LABELS[r], icon: ROLE_ICONS[r] })),
+    ...ROLE_IDS.map((r) => ({ id: r, label: ROLE_LABELS[r], icon: ROLE_ICONS[r] })),
   ];
 
   return (

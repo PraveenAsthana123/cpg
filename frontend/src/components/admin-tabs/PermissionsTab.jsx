@@ -1,18 +1,16 @@
-import { ROLE_LABELS, ROLE_ICONS } from '../../data/roles';
+import { ROLE_IDS, ROLE_LABELS, ROLE_ICONS } from '../../data/roles';
 
-const ROLES = ['manager', 'team-member', 'compliance', 'reporting-monitoring'];
-
-// 10 actions x 4 roles matrix — modeled on backend/core/rbac_middleware.py
-// (simulate is manager-only; reads are open to all roles).
+// 10 actions x N roles matrix — modeled on backend/core/rbac_middleware.py
+// (simulate is manager-only; reads are open to all roles; testers get read-only).
 const ACTIONS = [
-  { id: 'view-dashboard',    label: 'View dashboards / KPIs',        grants: ['manager', 'team-member', 'compliance', 'reporting-monitoring'] },
-  { id: 'view-reports',      label: 'View reports',                   grants: ['manager', 'team-member', 'compliance', 'reporting-monitoring'] },
+  { id: 'view-dashboard',    label: 'View dashboards / KPIs',        grants: ['manager', 'team-member', 'compliance', 'reporting-monitoring', 'tester'] },
+  { id: 'view-reports',      label: 'View reports',                   grants: ['manager', 'team-member', 'compliance', 'reporting-monitoring', 'tester'] },
   { id: 'run-forecast',      label: 'Run forecast / model scoring',   grants: ['manager', 'team-member', 'reporting-monitoring'] },
   { id: 'run-simulation',    label: 'Run simulation (what-if)',       grants: ['manager'] },
   { id: 'approve-model',     label: 'Approve model deploy',           grants: ['manager'] },
   { id: 'edit-thresholds',   label: 'Edit alert thresholds',          grants: ['manager', 'reporting-monitoring'] },
   { id: 'view-pii',          label: 'View PII / customer data',       grants: ['compliance', 'manager'] },
-  { id: 'audit-trail',       label: 'Read audit trail',               grants: ['compliance', 'manager'] },
+  { id: 'audit-trail',       label: 'Read audit trail',               grants: ['compliance', 'manager', 'tester'] },
   { id: 'manage-users',      label: 'Manage users & roles',           grants: ['manager'] },
   { id: 'export-data',       label: 'Export datasets / reports',      grants: ['manager', 'reporting-monitoring', 'compliance'] },
 ];
@@ -22,6 +20,7 @@ const ROLE_COLORS = {
   'team-member': '#059669',
   compliance: '#7c3aed',
   'reporting-monitoring': '#c2410c',
+  tester: '#a16207',
 };
 
 export default function PermissionsTab({ dept }) {
@@ -42,7 +41,7 @@ export default function PermissionsTab({ dept }) {
           <thead style={{ background: '#f8fafc' }}>
             <tr>
               <th style={{ padding: 10, textAlign: 'left', color: '#64748b', fontWeight: 600 }}>Action</th>
-              {ROLES.map((r) => (
+              {ROLE_IDS.map((r) => (
                 <th key={r} style={{
                   padding: 10, textAlign: 'center', color: ROLE_COLORS[r], fontWeight: 600,
                   whiteSpace: 'nowrap',
@@ -56,7 +55,7 @@ export default function PermissionsTab({ dept }) {
             {ACTIONS.map((a) => (
               <tr key={a.id} style={{ borderTop: '1px solid #f1f5f9' }}>
                 <td style={{ padding: 10, fontWeight: 600, color: '#0f172a' }}>{a.label}</td>
-                {ROLES.map((r) => {
+                {ROLE_IDS.map((r) => {
                   const allowed = a.grants.includes(r);
                   return (
                     <td key={r} style={{

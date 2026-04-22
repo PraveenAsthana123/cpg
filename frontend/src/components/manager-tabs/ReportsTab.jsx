@@ -1,13 +1,12 @@
 import { reportTypes } from '../../data/reports';
-import { ROLE_LABELS, ROLE_ICONS } from '../../data/roles';
-
-const ROLES = ['manager', 'team-member', 'compliance', 'reporting-monitoring'];
+import { ROLE_IDS, ROLE_LABELS, ROLE_ICONS } from '../../data/roles';
 
 const ROLE_COLORS = {
   manager: { bg: 'rgba(59,130,246,0.08)', fg: '#2563eb', border: '#bfdbfe' },
   'team-member': { bg: 'rgba(16,185,129,0.08)', fg: '#059669', border: '#a7f3d0' },
   compliance: { bg: 'rgba(139,92,246,0.08)', fg: '#7c3aed', border: '#ddd6fe' },
   'reporting-monitoring': { bg: 'rgba(234,88,12,0.08)', fg: '#c2410c', border: '#fed7aa' },
+  tester: { bg: 'rgba(202,138,4,0.08)', fg: '#a16207', border: '#fde68a' },
 };
 
 export default function ReportsTab({ dept }) {
@@ -15,7 +14,7 @@ export default function ReportsTab({ dept }) {
   return (
     <div style={{ padding: '0 4px' }}>
       <div style={{ fontSize: 13, color: '#64748b', marginBottom: 12 }}>
-        23 report types grouped by role for <strong style={{ color: '#0f172a' }}>{dept?.name || deptId}</strong>.
+        {reportTypes.length} report types grouped by role for <strong style={{ color: '#0f172a' }}>{dept?.name || deptId}</strong>.
       </div>
 
       <div style={{
@@ -23,7 +22,7 @@ export default function ReportsTab({ dept }) {
         gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
         gap: 12,
       }}>
-        {ROLES.map((role) => {
+        {ROLE_IDS.map((role) => {
           const reports = reportTypes.filter((r) => r.role === role);
           const c = ROLE_COLORS[role];
           return (
