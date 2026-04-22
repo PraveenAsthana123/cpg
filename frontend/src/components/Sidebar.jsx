@@ -83,6 +83,13 @@ export default function Sidebar() {
                     <span className="nav-subitem-icon">📊</span>
                     <span className="nav-subitem-label">Manager</span>
                   </NavLink>
+                  <NavLink
+                    to={`/${dept.id}/tester`}
+                    className={({ isActive }) => 'nav-subitem nav-subitem-tester' + (isActive ? ' active' : '')}
+                  >
+                    <span className="nav-subitem-icon">🧪</span>
+                    <span className="nav-subitem-label">Tester</span>
+                  </NavLink>
                   {dept.id === 'sales' && (
                     <NavLink
                       to={`/${dept.id}/dossier`}

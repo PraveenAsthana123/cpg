@@ -5,6 +5,7 @@ import DepartmentPage from './pages/DepartmentPage';
 import ProcessPage from './pages/ProcessPage';
 import AdminPage from './pages/AdminPage';
 import ManagerPage from './pages/ManagerPage';
+import TesterPage from './pages/TesterPage';
 import DepartmentDossierPage from './pages/DepartmentDossierPage';
 import DataFlowPage from './pages/DataFlowPage';
 import './styles/global.css';
@@ -28,6 +29,7 @@ export default function App() {
           <Route path="/:departmentId" element={<DepartmentPage />} />
           <Route path="/:departmentId/admin" element={<AdminPage />} />
           <Route path="/:departmentId/manager" element={<ManagerPage />} />
+          <Route path="/:departmentId/tester" element={<TesterPage />} />
           <Route path="/:departmentId/dossier" element={<DepartmentDossierPage />} />
           <Route path="/:departmentId/:processId" element={<ProcessPage />} />
         </Route>

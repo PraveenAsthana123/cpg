@@ -259,6 +259,7 @@
 }
 .nav-subitem.nav-subitem-admin,
 .nav-subitem.nav-subitem-manager,
+.nav-subitem.nav-subitem-tester,
 .nav-subitem.nav-subitem-dossier {
   font-weight: 600;
   color: rgba(226, 232, 240, 0.88);
@@ -270,6 +271,10 @@
 .nav-subitem.nav-subitem-manager.active {
   background: rgba(16, 185, 129, 0.22);
   color: #a7f3d0;
+}
+.nav-subitem.nav-subitem-tester.active {
+  background: rgba(202, 138, 4, 0.22);
+  color: #fde68a;
 }
 .nav-subitem.nav-subitem-dossier.active {
   background: rgba(234, 179, 8, 0.22);
