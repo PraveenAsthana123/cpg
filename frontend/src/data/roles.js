@@ -1,15 +1,17 @@
-// roles.js — Four canonical roles, with per-department responsibilities.
+// roles.js — Five canonical roles, with per-department responsibilities.
 // All 14 departments populated. Content is derived from
 // docs/specs/ROLE_ENHANCEMENT_PROCESSES.md (Manager, Team Member, Compliance,
-// Reporting & Monitoring appendices).
+// Reporting & Monitoring appendices). The 5th role "tester" was added in
+// Phase ζ to cover QA-focused enhancement processes across every dept.
 
-export const ROLE_IDS = ['manager', 'team-member', 'compliance', 'reporting-monitoring'];
+export const ROLE_IDS = ['manager', 'team-member', 'compliance', 'reporting-monitoring', 'tester'];
 
 export const ROLE_LABELS = {
   manager: 'Manager',
   'team-member': 'Team Member',
   compliance: 'Compliance',
   'reporting-monitoring': 'Reporting & Monitoring',
+  tester: 'Tester',
 };
 
 export const ROLE_ICONS = {
@@ -17,6 +19,7 @@ export const ROLE_ICONS = {
   'team-member': '🧑‍💻',
   compliance: '🛡️',
   'reporting-monitoring': '📡',
+  tester: '🧪',
 };
 
 // reports array uses IDs from reports.js
