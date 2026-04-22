@@ -114,7 +114,8 @@ test.describe('Demo-mode RBAC — Phase η', () => {
     await page.evaluate(() => localStorage.removeItem('cpg.role'));
   });
 
-  test('Topbar has role selector with 4 options', async ({ page }) => {
+  test('Topbar has role selector with 5 options', async ({ page }) => {
+    // Phase ζ added a 5th canonical role "Tester".
     await page.goto('/');
     const selector = page.getByLabel('Demo role selector');
     await expect(selector).toBeVisible();
@@ -124,6 +125,7 @@ test.describe('Demo-mode RBAC — Phase η', () => {
       'Team Member',
       'Compliance',
       'Reporting & Monitoring',
+      'Tester',
     ]);
   });
 
