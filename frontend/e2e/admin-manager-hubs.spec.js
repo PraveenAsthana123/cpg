@@ -9,13 +9,14 @@ test.describe('Admin & Manager hubs — Phase 1 scaffolding', () => {
     await expect(page.getByRole('link', { name: /Manager/ }).first()).toBeVisible();
   });
 
-  test('Admin page renders 12 tabs for Sales', async ({ page }) => {
+  test('Admin page renders 13 tabs for Sales', async ({ page }) => {
     // 10 baseline admin tabs + 2 shared governance tabs added in Phase 3a
-    // (Override Analytics, Lifecycles).
+    // (Override Analytics, Lifecycles) + Manager Archetypes tab added
+    // alongside the 9-archetype manager sub-specialization catalog.
     await page.goto('/sales/admin');
     await expect(page.locator('.page-title')).toContainText('Admin');
     const tabs = page.locator('.tab-item');
-    await expect(tabs).toHaveCount(12);
+    await expect(tabs).toHaveCount(13);
   });
 
   test('Manager page renders 7 tabs for Logistics', async ({ page }) => {
