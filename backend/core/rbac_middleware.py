@@ -26,45 +26,37 @@ logger = logging.getLogger(__name__)
 # Each entry: (method, path-regex) -> set of roles allowed.
 # If no entry matches, request is ALLOWED (so /health, /docs, etc. stay open).
 
+# Read-only endpoints are open to all four original roles + the Phase ζ "tester".
+# Write/simulate endpoints remain manager-only.
+_READ_ROLES = {"manager", "team-member", "compliance", "reporting-monitoring", "tester"}
+
 PERMS_MATRIX: list[tuple[str, re.Pattern, set[str]]] = [
     # -------- Sales --------
-    ("GET",  re.compile(r"^/api/v1/sales/stores$"),
-     {"manager", "team-member", "compliance", "reporting-monitoring"}),
-    ("POST", re.compile(r"^/api/v1/sales/forecast$"),
-     {"manager", "team-member", "compliance", "reporting-monitoring"}),
-    # Simulation is manager-only per spec §10.8.
-    ("POST", re.compile(r"^/api/v1/sales/simulate$"),
-     {"manager"}),
-    ("POST", re.compile(r"^/api/v1/ai/explain$"),
-     {"manager", "team-member", "compliance", "reporting-monitoring"}),
+    ("GET",  re.compile(r"^/api/v1/sales/stores$"),           _READ_ROLES),
+    ("POST", re.compile(r"^/api/v1/sales/forecast$"),         _READ_ROLES),
+    # Simulation is manager-only per spec §10.8 (tester NOT included).
+    ("POST", re.compile(r"^/api/v1/sales/simulate$"),         {"manager"}),
+    ("POST", re.compile(r"^/api/v1/ai/explain$"),             _READ_ROLES),
 
     # -------- Supply Chain (Wave 3 η) --------
-    ("GET",  re.compile(r"^/api/v1/supply-chain/skus$"),
-     {"manager", "team-member", "compliance", "reporting-monitoring"}),
-    ("GET",  re.compile(r"^/api/v1/supply-chain/suppliers$"),
-     {"manager", "team-member", "compliance", "reporting-monitoring"}),
-    ("POST", re.compile(r"^/api/v1/supply-chain/stockout-risk$"),
-     {"manager", "team-member", "compliance", "reporting-monitoring"}),
-    ("POST", re.compile(r"^/api/v1/supply-chain/eta$"),
-     {"manager", "team-member", "compliance", "reporting-monitoring"}),
+    ("GET",  re.compile(r"^/api/v1/supply-chain/skus$"),            _READ_ROLES),
+    ("GET",  re.compile(r"^/api/v1/supply-chain/suppliers$"),       _READ_ROLES),
+    ("POST", re.compile(r"^/api/v1/supply-chain/stockout-risk$"),   _READ_ROLES),
+    ("POST", re.compile(r"^/api/v1/supply-chain/eta$"),             _READ_ROLES),
     # Network simulation is manager-only (same pattern as Sales simulate).
-    ("POST", re.compile(r"^/api/v1/supply-chain/simulate$"),
-     {"manager"}),
+    ("POST", re.compile(r"^/api/v1/supply-chain/simulate$"),        {"manager"}),
 
     # -------- Customer (Wave 4 depth-pilot) --------
-    # Read-focused analytics — all four roles can view churn predictions.
-    ("POST", re.compile(r"^/api/v1/customer/churn-predict$"),
-     {"manager", "team-member", "compliance", "reporting-monitoring"}),
-    ("GET",  re.compile(r"^/api/v1/customer/churn-top$"),
-     {"manager", "team-member", "compliance", "reporting-monitoring"}),
-    ("GET",  re.compile(r"^/api/v1/customer/churn-metrics$"),
-     {"manager", "team-member", "compliance", "reporting-monitoring"}),
+    # Read-focused analytics — all five roles (incl. tester) can view churn predictions.
+    ("POST", re.compile(r"^/api/v1/customer/churn-predict$"),   _READ_ROLES),
+    ("GET",  re.compile(r"^/api/v1/customer/churn-top$"),       _READ_ROLES),
+    ("GET",  re.compile(r"^/api/v1/customer/churn-metrics$"),   _READ_ROLES),
 ]
 
 # Backwards-compatible alias — earlier commits referenced SALES_PERMS.
 SALES_PERMS = PERMS_MATRIX
 
-VALID_ROLES = {"manager", "team-member", "compliance", "reporting-monitoring"}
+VALID_ROLES = {"manager", "team-member", "compliance", "reporting-monitoring", "tester"}
 DEFAULT_ROLE = "manager"
 
 

@@ -115,3 +115,27 @@ def test_supply_chain_stockout_allowed_for_all_roles(client: TestClient) -> None
         # 404 on unknown sku_id is fine — we only care RBAC is not blocking.
         assert r.status_code != 403, f"role {role} blocked on /supply-chain/stockout-risk"
         assert r.status_code != 400, f"role {role} rejected as invalid role on stockout-risk"
+
+
+# ----- Phase ζ: 5th canonical role "tester" -----
+
+def test_tester_can_hit_stores(client: TestClient) -> None:
+    """Tester (read-only role) is permitted on GET /sales/stores — expect non-403/400."""
+    r = client.get("/api/v1/sales/stores", headers={"X-Demo-Role": "tester"})
+    # /stores may return 404/503 if fact_sales empty, but MUST NOT be RBAC-blocked.
+    assert r.status_code != 403, "tester blocked on /stores (should be allowed)"
+    assert r.status_code != 400, "tester rejected as invalid role on /stores"
+
+
+def test_tester_cannot_simulate(client: TestClient) -> None:
+    """Simulation remains manager-only — tester should be 403 with FORBIDDEN."""
+    body = {"store_id": 1, "discount_pct": 10, "duration_days": 7}
+    r = client.post(
+        "/api/v1/sales/simulate",
+        json=body,
+        headers={"X-Demo-Role": "tester"},
+    )
+    assert r.status_code == 403, "tester incorrectly allowed on /simulate"
+    payload = r.json()
+    assert payload["error_code"] == "FORBIDDEN"
+    assert "tester" in payload["detail"]
