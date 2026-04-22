@@ -216,6 +216,24 @@ test.describe('Sales flagship — demo screenshots', () => {
     });
   });
 
+  test('14 admin manager-archetypes tab', async ({ page }) => {
+    await page.goto('/sales/admin');
+    await page.getByRole('button', { name: /Manager Archetypes/ }).click();
+    // Header line mentions "9 specializations" — wait for it to render.
+    await expect(page.getByText(/9 specializations of the Manager role/)).toBeVisible({
+      timeout: 5000,
+    });
+    // Stats line confirms the 9 archetypes are loaded.
+    await expect(page.locator('text=/\\b9\\s+archetypes/').first()).toBeVisible({
+      timeout: 5000,
+    });
+    await page.waitForTimeout(500);
+    await page.screenshot({
+      path: `${OUT}/14-admin-manager-archetypes.png`,
+      fullPage: true,
+    });
+  });
+
   test('13 feedback drawer — thumbs-up submit', async ({ page }) => {
     test.setTimeout(150_000); // First RAG call can take 15-40s + submit round-trip.
     await page.goto('/sales/manager');
