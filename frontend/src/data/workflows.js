@@ -1,13 +1,14 @@
-// workflows.js — 193 enhancement-process workflows across 4 roles x 14 depts.
+// workflows.js — 235 enhancement-process workflows across 5 roles x 14 depts.
 // Extracted from docs/specs/ROLE_ENHANCEMENT_PROCESSES.md.
 // Feeds Admin -> Workflows tab (Phase 2) and Manager -> Roles & Responsibilities tab.
 //
-// Distribution: 57 manager + 46 team-member + 46 compliance + 44 reporting-monitoring.
-// NOTE: The source doc's "Totals (final)" section claims 66/41/47/42 = 196, but the
-// tabulated markdown content actually contains 57/46/46/44 = 193 rows. This file
-// reflects the tables as written. Update the source markdown if 196 is the target.
+// Distribution: 57 manager + 46 team-member + 46 compliance + 44 reporting-monitoring + 42 tester.
+// NOTE: The source doc's "Totals (final)" section claims 66/41/47/42 = 196 for the
+// original 4 roles, but the tabulated markdown content actually contains 57/46/46/44
+// = 193 rows. Phase ζ added a 5th role "tester" with 3 workflows per dept (14×3=42),
+// bringing the total to 235. Update the source markdown if 196+42 is the target.
 
-export const WORKFLOW_ROLES = ['manager', 'team-member', 'compliance', 'reporting-monitoring'];
+export const WORKFLOW_ROLES = ['manager', 'team-member', 'compliance', 'reporting-monitoring', 'tester'];
 
 export const workflows = [
   {
@@ -1882,6 +1883,414 @@ export const workflows = [
     description: 'Monitor video / audio quality metrics',
     trigger: 'Continuous',
     kpi: 'Call-quality score',
+  },
+
+  // ===== Tester (Phase ζ) — 3 per dept × 14 depts = 42 =====
+
+  // --- Sales ---
+  {
+    id: 'sales-tst-forecast-regression',
+    dept: 'sales',
+    role: 'tester',
+    name: 'Weekly forecast regression',
+    description: 'Re-run Prophet against golden holdout — gate release on MAPE delta',
+    trigger: 'Weekly Fri',
+    kpi: 'MAPE delta',
+  },
+  {
+    id: 'sales-tst-promo-scenario-test',
+    dept: 'sales',
+    role: 'tester',
+    name: 'Promo scenario e2e test',
+    description: 'Validate simulation endpoint with canned discount + duration cases',
+    trigger: 'On /simulate code change',
+    kpi: 'Scenario pass rate',
+  },
+  {
+    id: 'sales-tst-rbac-boundary',
+    dept: 'sales',
+    role: 'tester',
+    name: 'RBAC boundary test',
+    description: 'Assert every role x endpoint combination returns expected 200/403',
+    trigger: 'On role-matrix change',
+    kpi: 'Unauthorized-access caught',
+  },
+
+  // --- Supply Chain ---
+  {
+    id: 'sc-tst-stockout-risk-regression',
+    dept: 'supply-chain',
+    role: 'tester',
+    name: 'Stockout-risk regression',
+    description: 'Score every SKU in the fixture set, diff vs last-known-good output',
+    trigger: 'On scoring-model release',
+    kpi: 'Score delta < 1%',
+  },
+  {
+    id: 'sc-tst-supplier-ingest-contract',
+    dept: 'supply-chain',
+    role: 'tester',
+    name: 'Supplier ingest contract test',
+    description: 'Validate EDI/API payloads against schema + referential integrity',
+    trigger: 'On schema change',
+    kpi: 'Contract-test pass rate',
+  },
+  {
+    id: 'sc-tst-network-sim-smoke',
+    dept: 'supply-chain',
+    role: 'tester',
+    name: 'Network simulation smoke test',
+    description: 'Run canned supplier-outage scenarios and compare impact deltas',
+    trigger: 'Weekly + on release',
+    kpi: 'Scenario pass rate',
+  },
+
+  // --- Logistics ---
+  {
+    id: 'log-tst-eta-regression',
+    dept: 'logistics',
+    role: 'tester',
+    name: 'ETA model regression',
+    description: 'Score holdout trips — pass if MAE within gate vs champion',
+    trigger: 'On ETA model retrain',
+    kpi: 'ETA MAE delta',
+  },
+  {
+    id: 'log-tst-iot-bad-data-test',
+    dept: 'logistics',
+    role: 'tester',
+    name: 'IoT bad-data fixture test',
+    description: 'Inject gaps, out-of-range, and stale telemetry — assert graceful handling',
+    trigger: 'On ingest code change',
+    kpi: 'Exception-path coverage',
+  },
+  {
+    id: 'log-tst-dispatch-e2e',
+    dept: 'logistics',
+    role: 'tester',
+    name: 'Dispatch exception e2e',
+    description: 'End-to-end: exception raised → routed → acknowledged → closed',
+    trigger: 'Nightly',
+    kpi: 'E2E pass rate',
+  },
+
+  // --- Manufacturing ---
+  {
+    id: 'mfg-tst-cv-fp-sampling',
+    dept: 'manufacturing',
+    role: 'tester',
+    name: 'CV defect false-positive sampling',
+    description: 'Sample CV-flagged units, confirm true defect rate, feed model eval',
+    trigger: 'Daily',
+    kpi: 'False-positive rate',
+  },
+  {
+    id: 'mfg-tst-oee-calc-regression',
+    dept: 'manufacturing',
+    role: 'tester',
+    name: 'OEE calc regression',
+    description: 'Recompute OEE over fixture shifts, assert match vs spreadsheet truth',
+    trigger: 'On formula change',
+    kpi: 'Variance vs truth',
+  },
+  {
+    id: 'mfg-tst-mes-scada-smoke',
+    dept: 'manufacturing',
+    role: 'tester',
+    name: 'MES/SCADA ingest smoke',
+    description: 'Validate line-level telemetry ingest after any schema or tag change',
+    trigger: 'On schema change',
+    kpi: 'Smoke-test pass rate',
+  },
+
+  // --- Maintenance ---
+  {
+    id: 'maint-tst-predictive-model-eval',
+    dept: 'maintenance',
+    role: 'tester',
+    name: 'Predictive-failure model eval',
+    description: 'Score labelled history — gate release on precision/recall deltas',
+    trigger: 'On model retrain',
+    kpi: 'Precision / recall delta',
+  },
+  {
+    id: 'maint-tst-workorder-closeout-test',
+    dept: 'maintenance',
+    role: 'tester',
+    name: 'Work-order close-out test',
+    description: 'Validate happy + edge paths for WO open, in-progress, closed flows',
+    trigger: 'On WO workflow change',
+    kpi: 'WO path coverage',
+  },
+  {
+    id: 'maint-tst-sensor-offline-fixture',
+    dept: 'maintenance',
+    role: 'tester',
+    name: 'Sensor-offline fixture test',
+    description: 'Replay known sensor-offline windows and assert alert firing',
+    trigger: 'On alert-rule change',
+    kpi: 'Alert-firing pass rate',
+  },
+
+  // --- Retail ---
+  {
+    id: 'ret-tst-planogram-cv-eval',
+    dept: 'retail',
+    role: 'tester',
+    name: 'Planogram CV precision eval',
+    description: 'Run shelf photos through detector — compare to labelled truth',
+    trigger: 'Weekly + on model retrain',
+    kpi: 'Detector precision',
+  },
+  {
+    id: 'ret-tst-price-integrity-smoke',
+    dept: 'retail',
+    role: 'tester',
+    name: 'Price-integrity smoke test',
+    description: 'Cross-check ERP vs POS vs shelf-tag prices for randomly sampled SKUs',
+    trigger: 'Daily',
+    kpi: 'Mismatch catch rate',
+  },
+  {
+    id: 'ret-tst-pos-feed-contract',
+    dept: 'retail',
+    role: 'tester',
+    name: 'POS feed contract test',
+    description: 'Validate incoming POS payload per chain against agreed schema',
+    trigger: 'On schema change',
+    kpi: 'Contract-test pass rate',
+  },
+
+  // --- Customer ---
+  {
+    id: 'cust-tst-churn-holdout-eval',
+    dept: 'customer',
+    role: 'tester',
+    name: 'Churn model holdout eval',
+    description: 'Score holdout customers — gate release on AUC / recall deltas',
+    trigger: 'On model retrain',
+    kpi: 'AUC / recall delta',
+  },
+  {
+    id: 'cust-tst-fairness-cohort-smoke',
+    dept: 'customer',
+    role: 'tester',
+    name: 'Fairness cohort smoke test',
+    description: 'Assert recall and FPR parity across protected-class cohorts',
+    trigger: 'On model or feature change',
+    kpi: 'Disparity ratio',
+  },
+  {
+    id: 'cust-tst-segment-regression',
+    dept: 'customer',
+    role: 'tester',
+    name: 'Segment-migration regression',
+    description: 'Run canned cohorts, compare segment assignments vs last release',
+    trigger: 'On segmenter change',
+    kpi: 'Migration stability',
+  },
+
+  // --- Finance ---
+  {
+    id: 'fin-tst-close-workflow-regression',
+    dept: 'finance',
+    role: 'tester',
+    name: 'Close-workflow regression',
+    description: 'Dry-run month-end close on fixture ledger — assert tasks fire in order',
+    trigger: 'Monthly + on rule change',
+    kpi: 'Close-flow pass rate',
+  },
+  {
+    id: 'fin-tst-scenario-plan-truth',
+    dept: 'finance',
+    role: 'tester',
+    name: 'Scenario-plan truth test',
+    description: 'Compute price × volume × cost scenarios vs spreadsheet ground truth',
+    trigger: 'On formula change',
+    kpi: 'Variance vs truth',
+  },
+  {
+    id: 'fin-tst-sox-control-smoke',
+    dept: 'finance',
+    role: 'tester',
+    name: 'SOX control smoke test',
+    description: 'Auto-exercise key SOX controls and capture evidence for audit',
+    trigger: 'Quarterly + on release',
+    kpi: 'Control pass rate',
+  },
+
+  // --- Procurement ---
+  {
+    id: 'proc-tst-3-way-match-regression',
+    dept: 'procurement',
+    role: 'tester',
+    name: '3-way match regression',
+    description: 'Fire PO/GR/invoice fixtures across tolerance bands and exception paths',
+    trigger: 'On match-rule change',
+    kpi: 'Match-test pass rate',
+  },
+  {
+    id: 'proc-tst-vendor-kyc-sanctions-test',
+    dept: 'procurement',
+    role: 'tester',
+    name: 'Vendor KYC sanctions test',
+    description: 'Run known sanctions-hit fixtures through onboarding — assert block + alert',
+    trigger: 'On screening-list update',
+    kpi: 'Hit-detection rate',
+  },
+  {
+    id: 'proc-tst-renewal-alert-smoke',
+    dept: 'procurement',
+    role: 'tester',
+    name: 'Contract renewal alert smoke',
+    description: 'Fabricate contracts with near-expiry dates, assert alert fires at T-90',
+    trigger: 'On alert-rule change',
+    kpi: 'Alert-firing accuracy',
+  },
+
+  // --- Quality ---
+  {
+    id: 'qc-tst-capa-workflow-regression',
+    dept: 'quality',
+    role: 'tester',
+    name: 'CAPA workflow regression',
+    description: 'Exercise CAPA open → review → close paths with edge-case fixtures',
+    trigger: 'On CAPA workflow change',
+    kpi: 'CAPA-path pass rate',
+  },
+  {
+    id: 'qc-tst-lims-ingest-fixtures',
+    dept: 'quality',
+    role: 'tester',
+    name: 'LIMS ingest fixture test',
+    description: 'Feed known-good and known-bad LIMS payloads — assert validation',
+    trigger: 'On schema change',
+    kpi: 'Contract-test pass rate',
+  },
+  {
+    id: 'qc-tst-recall-drill-regression',
+    dept: 'quality',
+    role: 'tester',
+    name: 'Recall-drill regression',
+    description: 'Run quarterly trace-back / trace-forward drill against fixture lot',
+    trigger: 'Quarterly',
+    kpi: 'Trace completion time',
+  },
+
+  // --- Governance ---
+  {
+    id: 'gov-tst-rbac-matrix-sweep',
+    dept: 'governance',
+    role: 'tester',
+    name: 'RBAC matrix sweep',
+    description: 'Assert every role × endpoint returns expected allow/deny code',
+    trigger: 'On role-matrix change',
+    kpi: 'Unauthorized-access caught',
+  },
+  {
+    id: 'gov-tst-decision-log-completeness',
+    dept: 'governance',
+    role: 'tester',
+    name: 'Decision-log completeness test',
+    description: 'Sample AI decisions — assert every required field populated + correlation ID',
+    trigger: 'Daily',
+    kpi: 'Decision-log completeness %',
+  },
+  {
+    id: 'gov-tst-policy-detector-regression',
+    dept: 'governance',
+    role: 'tester',
+    name: 'Policy-detector regression',
+    description: 'Replay labelled violation fixtures, gate release on catch-rate delta',
+    trigger: 'On rule / model change',
+    kpi: 'Catch-rate delta',
+  },
+
+  // --- Contact Center ---
+  {
+    id: 'cc-tst-voice-ai-prompt-regression',
+    dept: 'contact-center',
+    role: 'tester',
+    name: 'Voice-AI prompt regression',
+    description: 'Run golden transcripts — assert assistant output matches within tolerance',
+    trigger: 'On prompt/model change',
+    kpi: 'Golden-transcript pass rate',
+  },
+  {
+    id: 'cc-tst-csat-classifier-eval',
+    dept: 'contact-center',
+    role: 'tester',
+    name: 'CSAT classifier eval',
+    description: 'Score labelled transcripts — gate release on accuracy delta',
+    trigger: 'On model retrain',
+    kpi: 'Classifier accuracy',
+  },
+  {
+    id: 'cc-tst-ivr-path-smoke',
+    dept: 'contact-center',
+    role: 'tester',
+    name: 'IVR path smoke test',
+    description: 'Drive scripted calls through IVR decision tree — assert routing',
+    trigger: 'On IVR flow change',
+    kpi: 'IVR path coverage',
+  },
+
+  // --- Marketing ---
+  {
+    id: 'mkt-tst-creative-genai-regression',
+    dept: 'marketing',
+    role: 'tester',
+    name: 'GenAI creative regression',
+    description: 'Compare new creative outputs to golden set for brand voice + factual drift',
+    trigger: 'On prompt/model change',
+    kpi: 'Drift flag rate',
+  },
+  {
+    id: 'mkt-tst-ab-harness-test',
+    dept: 'marketing',
+    role: 'tester',
+    name: 'A/B harness test',
+    description: 'Validate randomization, exposure logging, and winner-calc correctness',
+    trigger: 'On harness change',
+    kpi: 'Harness-test pass rate',
+  },
+  {
+    id: 'mkt-tst-attribution-regression',
+    dept: 'marketing',
+    role: 'tester',
+    name: 'Attribution model regression',
+    description: 'Score fixture campaigns, assert channel-credit match vs ground truth',
+    trigger: 'On model retrain',
+    kpi: 'Credit-allocation delta',
+  },
+
+  // --- Telehealth ---
+  {
+    id: 'tel-tst-triage-ai-golden-eval',
+    dept: 'telehealth',
+    role: 'tester',
+    name: 'Triage-AI golden eval',
+    description: 'Run clinician-adjudicated cases — gate release on agreement rate',
+    trigger: 'On prompt/threshold change',
+    kpi: 'AI vs clinician agreement',
+  },
+  {
+    id: 'tel-tst-fhir-integration-test',
+    dept: 'telehealth',
+    role: 'tester',
+    name: 'FHIR integration test',
+    description: 'Cover bad-data, timeout, and partial-response scenarios against EHR',
+    trigger: 'On EHR connector change',
+    kpi: 'Integration pass rate',
+  },
+  {
+    id: 'tel-tst-session-quality-smoke',
+    dept: 'telehealth',
+    role: 'tester',
+    name: 'Session quality smoke test',
+    description: 'Synthetic session under varied bandwidth — assert quality metrics captured',
+    trigger: 'Weekly',
+    kpi: 'Smoke-test pass rate',
   },
 ];
 
