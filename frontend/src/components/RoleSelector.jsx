@@ -10,6 +10,7 @@ const LABELS = {
   'team-member': 'Team Member',
   compliance: 'Compliance',
   'reporting-monitoring': 'Reporting & Monitoring',
+  tester: 'Tester',
 };
 
 const COLORS = {
@@ -17,6 +18,7 @@ const COLORS = {
   'team-member': '#059669',
   compliance: '#7c3aed',
   'reporting-monitoring': '#c2410c',
+  tester: '#ca8a04',
 };
 
 export default function RoleSelector() {

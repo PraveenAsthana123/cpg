@@ -8,7 +8,7 @@ import {
   ROLE_CHANGE_EVENT_NAME,
 } from '../services/apiFetch';
 
-export const ROLES = ['manager', 'team-member', 'compliance', 'reporting-monitoring'];
+export const ROLES = ['manager', 'team-member', 'compliance', 'reporting-monitoring', 'tester'];
 
 export function useRole() {
   const [role, setRole] = useState(getCurrentRole);
