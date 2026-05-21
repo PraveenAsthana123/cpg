@@ -325,7 +325,7 @@
     "description": "Identify customers at risk of churning and enable proactive retention interventions",
     "inputs": "Purchase frequency trends, engagement signals, NPS/survey data, competitor offers",
     "outputs": "Churn probability scores, at-risk customer list, intervention recommendations",
-    "pain_points": "Defining churn for CPG (no subscription), indirect measurement via loyalty data",
+    "pain_points": "Defining churn for BEV (no subscription), indirect measurement via loyalty data",
     "kpi": "Churn rate reduction, retention campaign ROI, model AUC, intervention lead time",
     "data_needed": "Purchase history, loyalty engagement, survey responses, redemption data"
   },

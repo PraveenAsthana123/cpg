@@ -1,6 +1,6 @@
 """test_rossmann_ingestion.py — data-quality assertions against the ingested tables.
 
-These run against whatever Postgres the CPG backend points at. If the tables
+These run against whatever Postgres the BEV backend points at. If the tables
 are empty (ingestion not run), tests are skipped with a clear message.
 """
 from __future__ import annotations

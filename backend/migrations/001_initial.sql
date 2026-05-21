@@ -1,5 +1,5 @@
 -- =============================================================================
--- 001_initial.sql — CPG Analytics Dashboard — Full Schema
+-- 001_initial.sql — BEV Analytics Dashboard — Full Schema
 -- Star schema + enterprise tables
 -- =============================================================================
 

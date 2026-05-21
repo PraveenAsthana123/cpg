@@ -1,5 +1,5 @@
 """
-Celery tasks for the CPG Analytics platform.
+Celery tasks for the BEV Analytics platform.
 
 Tasks:
     train_model       — load data, train a model, log to MLflow
@@ -247,7 +247,7 @@ def run_pipeline(
     /data/kaggle/{department_id}/.
 
     Args:
-        department_id:  One of the 11 CPG department identifiers.
+        department_id:  One of the 11 BEV department identifiers.
         pipeline_name:  Dotted path to the pipeline class, or empty string
                         to use the registered default.
         dataset_path:   Optional path to dataset CSV. Falls back to sample data.

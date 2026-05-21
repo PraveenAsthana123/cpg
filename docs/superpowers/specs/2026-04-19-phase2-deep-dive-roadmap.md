@@ -22,7 +22,7 @@
 **Do not try to make all 14 departments equally deep.** Reviewer recommendation + my concurrence: pick **3 flagship departments** and build them fully. The other 11 remain scaffolded with Phase 1 stubs.
 
 ### Flagship picks (Phase 2a)
-1. **Sales & Revenue** — core CPG story
+1. **Sales & Revenue** — core BEV story
 2. **Supply Chain & Logistics** — operational depth
 3. **Executive Scorecard** — top-of-funnel, ties everything together
 

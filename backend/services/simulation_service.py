@@ -14,7 +14,7 @@ from services.forecast_service import ForecastService
 logger = logging.getLogger(__name__)
 
 # Industry benchmarks — see /docs/data/elasticity-methodology.md (Phase 1 simplification).
-DEFAULT_ELASTICITY = -2.0         # 1% discount → 2% volume uplift (CPG grocery typical)
+DEFAULT_ELASTICITY = -2.0         # 1% discount → 2% volume uplift (BEV grocery typical)
 DEFAULT_MARGIN_FACTOR = 0.30       # 30% gross margin baseline
 # (Simplification: Rossmann "Sales" column is daily revenue, not units. We compute
 # the revenue waterfall directly.)

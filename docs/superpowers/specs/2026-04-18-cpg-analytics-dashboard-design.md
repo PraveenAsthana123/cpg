@@ -1,4 +1,4 @@
-# CPG Analytics Dashboard — Design Specification
+# BEV Analytics Dashboard — Design Specification
 
 **Date**: 2026-04-18
 **Status**: Approved
@@ -8,7 +8,7 @@
 
 ## 1. Overview
 
-A full-stack CPG (Consumer Packaged Goods) Analytics Dashboard covering 11 enterprise departments. The application serves as both an interactive reference portal (process maps, AI recommendations, ROI benchmarks) and a working analytics platform (real ML models trained on Kaggle data, live predictions, model registry).
+A full-stack BEV (Beverages) Analytics Dashboard covering 11 enterprise departments. The application serves as both an interactive reference portal (process maps, AI recommendations, ROI benchmarks) and a working analytics platform (real ML models trained on Kaggle data, live predictions, model registry).
 
 ### Key Principles
 - **Left sidebar + right content layout** (white background)
@@ -62,7 +62,7 @@ A full-stack CPG (Consumer Packaged Goods) Analytics Dashboard covering 11 enter
 
 ```
 ┌──────────────────────────────────────────────────┐
-│  CPG Analytics Dashboard          [user] [theme] │  ← Topbar (dark: #1b1b32)
+│  BEV Analytics Dashboard          [user] [theme] │  ← Topbar (dark: #1b1b32)
 ├────────────┬─────────────────────────────────────┤
 │            │                                     │
 │  SIDEBAR   │         CONTENT AREA                │

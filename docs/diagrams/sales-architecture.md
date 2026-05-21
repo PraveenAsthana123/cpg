@@ -4,7 +4,7 @@
 graph TB
     subgraph Browser["Browser (localhost:5173)"]
         UI[React + Vite]
-        LS[(localStorage<br/>cpg.role)]
+        LS[(localStorage<br/>bev.role)]
     end
 
     subgraph Dev["Dev host"]
@@ -48,5 +48,5 @@ graph TB
 
 **Notes:**
 - Vite proxy removes CORS concerns in dev. Production uses nginx or equivalent.
-- No real auth — `cpg.role` in localStorage feeds `X-Demo-Role` header; middleware enforces the matrix.
+- No real auth — `bev.role` in localStorage feeds `X-Demo-Role` header; middleware enforces the matrix.
 - `data/sales-context/` is hand-authored markdown for RAG grounding.

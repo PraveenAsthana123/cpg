@@ -3,7 +3,7 @@
 ## Typical promo outcomes by type
 
 - **Deep discount (≥30%)** — drives large same-day volume spike (+40–60%), but margin hit often exceeds uplift; net margin usually negative for single-day events. Useful for clearance, not growth.
-- **Moderate discount (15–25%)** — sweet spot for CPG grocery. Volume uplift 20–35%, net margin impact roughly neutral to slightly positive depending on elasticity.
+- **Moderate discount (15–25%)** — sweet spot for BEV grocery. Volume uplift 20–35%, net margin impact roughly neutral to slightly positive depending on elasticity.
 - **BOGO / multi-buy** — strong basket-size lift, works best on high-stock SKUs; inventory-turn positive.
 - **Digital-only coupon** — smaller volume lift (~10–15%) but preserves margin by excluding price-insensitive shoppers.
 

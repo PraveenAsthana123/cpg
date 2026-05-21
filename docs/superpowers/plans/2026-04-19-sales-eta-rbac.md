@@ -170,13 +170,13 @@ const DEFAULT_ROLE = 'manager';
 
 export function getCurrentRole() {
   if (typeof localStorage === 'undefined') return DEFAULT_ROLE;
-  return localStorage.getItem('cpg.role') || DEFAULT_ROLE;
+  return localStorage.getItem('bev.role') || DEFAULT_ROLE;
 }
 
 export function setCurrentRole(role) {
-  localStorage.setItem('cpg.role', role);
+  localStorage.setItem('bev.role', role);
   // Notify listeners (RoleSelector + SimulationTab).
-  window.dispatchEvent(new CustomEvent('cpg:role-change', { detail: role }));
+  window.dispatchEvent(new CustomEvent('bev:role-change', { detail: role }));
 }
 
 export async function apiFetch(url, init = {}) {
@@ -210,8 +210,8 @@ export function useRole() {
 
   useEffect(() => {
     const onChange = (e) => setRole(e.detail);
-    window.addEventListener('cpg:role-change', onChange);
-    return () => window.removeEventListener('cpg:role-change', onChange);
+    window.addEventListener('bev:role-change', onChange);
+    return () => window.removeEventListener('bev:role-change', onChange);
   }, []);
 
   return [role, (next) => setCurrentRole(next)];

@@ -1,5 +1,5 @@
 """
-Generate synthetic sample CSV/JSON data for each CPG department.
+Generate synthetic sample CSV/JSON data for each BEV department.
 
 This script creates small, realistic sample files so the application can
 run without Kaggle credentials. All data is purely synthetic and for
@@ -28,7 +28,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-DATA_ROOT = Path(os.environ.get("CPG_DATA_DIR", "/mnt/deepa/cpg/data"))
+DATA_ROOT = Path(os.environ.get("BEV_DATA_DIR", "/mnt/deepa/bev/data"))
 KAGGLE_DIR = DATA_ROOT / "kaggle"
 
 RANDOM_SEED = 42
@@ -304,7 +304,7 @@ def generate_all(departments: list[str] | None = None, rows: int = 500) -> None:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Generate synthetic sample data for CPG departments")
+    parser = argparse.ArgumentParser(description="Generate synthetic sample data for BEV departments")
     parser.add_argument(
         "--dept",
         nargs="+",

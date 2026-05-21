@@ -29,11 +29,11 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(mess
 
 
 def _pg_dsn_from_env() -> str:
-    host = os.getenv("CPG_POSTGRES_HOST", "localhost")
-    port = os.getenv("CPG_POSTGRES_PORT", "5432")
-    db = os.getenv("CPG_POSTGRES_DB", "cpg_analytics")
-    user = os.getenv("CPG_POSTGRES_USER", "cpg_user")
-    pwd = os.getenv("CPG_POSTGRES_PASSWORD", "cpg_secret_password")
+    host = os.getenv("BEV_POSTGRES_HOST", "localhost")
+    port = os.getenv("BEV_POSTGRES_PORT", "5432")
+    db = os.getenv("BEV_POSTGRES_DB", "bev_analytics")
+    user = os.getenv("BEV_POSTGRES_USER", "bev_user")
+    pwd = os.getenv("BEV_POSTGRES_PASSWORD", "bev_secret_password")
     return f"host={host} port={port} dbname={db} user={user} password={pwd}"
 
 

@@ -136,7 +136,7 @@ Click the role selector in the top bar, switch to **Team Member**.
 - **Prophet** with trend + weekly + yearly seasonality (promo + state_holiday regressors deferred per Phase 2b roadmap).
 - **RAG corpus**: 4 hand-authored markdown files totaling ~2,000 words, ingested in-process with rank_bm25 + Ollama embeddings.
 - **LLM**: `qwen2.5:latest` via local Ollama.
-- **Elasticity** constant -2.0 (CPG grocery benchmark); real per-store learning is Phase 2b.
+- **Elasticity** constant -2.0 (BEV grocery benchmark); real per-store learning is Phase 2b.
 - **RBAC**: demo-mode via `X-Demo-Role` header; manager / team-member / compliance / reporting-monitoring. Simulation is manager-only.
 ```
 
@@ -264,7 +264,7 @@ Create `docs/diagrams/sales-architecture.md`:
 graph TB
     subgraph Browser["Browser (localhost:5173)"]
         UI[React + Vite]
-        LS[(localStorage<br/>cpg.role)]
+        LS[(localStorage<br/>bev.role)]
     end
 
     subgraph Dev["Dev host"]
@@ -308,7 +308,7 @@ graph TB
 
 **Notes:**
 - Vite proxy removes CORS concerns in dev. Production uses nginx or equivalent.
-- No real auth — `cpg.role` in localStorage feeds `X-Demo-Role` header; middleware enforces the matrix.
+- No real auth — `bev.role` in localStorage feeds `X-Demo-Role` header; middleware enforces the matrix.
 - `data/sales-context/` is hand-authored markdown for RAG grounding.
 ```
 
@@ -330,14 +330,14 @@ sequenceDiagram
     participant EP as Endpoint
 
     U->>TB: select "team-member"
-    TB->>LS: cpg.role = "team-member"
-    TB->>TB: dispatch cpg:role-change event
+    TB->>LS: bev.role = "team-member"
+    TB->>TB: dispatch bev:role-change event
     U->>U: navigate to /sales/manager → Simulation tab
     U->>U: UI hides Run button for non-manager<br/>(defense-in-depth)
 
     Note over U: User bypasses UI via fetch() directly
     U->>AF: POST /api/v1/sales/simulate
-    AF->>LS: read cpg.role = "team-member"
+    AF->>LS: read bev.role = "team-member"
     AF->>BE: attach X-Demo-Role: team-member
     BE->>CID: correlation_id set
     CID->>RBAC: call_next
@@ -366,7 +366,7 @@ Commit `docs(diagrams): architecture + RBAC Mermaid diagrams`.
 Create `docs/STATUS.md`:
 
 ```markdown
-# CPG Platform — Implementation Status
+# BEV Platform — Implementation Status
 
 Updated 2026-04-19 after Sales Phases α–θ.
 
@@ -426,7 +426,7 @@ Rolls up KPIs across all depts, AI weekly narrative, strategy simulator. Spec no
 ```bash
 # 1. Data
 docker compose up -d postgres
-docker compose exec -T postgres psql -U cpg_user -d cpg_analytics < backend/migrations/010_sales_rossmann.sql
+docker compose exec -T postgres psql -U bev_user -d bev_analytics < backend/migrations/010_sales_rossmann.sql
 ./scripts/download_rossmann.sh data/kaggle/rossmann  # or use existing data/
 python scripts/ingest_rossmann.py --dir data/kaggle/rossmann
 

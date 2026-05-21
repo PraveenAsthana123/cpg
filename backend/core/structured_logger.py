@@ -19,7 +19,7 @@ from datetime import datetime, timezone
 
 correlation_id_var: ContextVar[str] = ContextVar("correlation_id", default="-")
 
-_json_logger = logging.getLogger("cpg.events")
+_json_logger = logging.getLogger("bev.events")
 if not _json_logger.handlers:
     _h = logging.StreamHandler(sys.stdout)
     _h.setFormatter(logging.Formatter("%(message)s"))

@@ -92,7 +92,7 @@ class ForecastResponse(BaseModel):
 - [ ] **Step 2: Verify imports**
 
 ```bash
-cd /mnt/deepa/cpg && python -c "from backend.schemas.sales import ForecastRequest, ForecastResponse; print('OK')"
+cd /mnt/deepa/bev && python -c "from backend.schemas.sales import ForecastRequest, ForecastResponse; print('OK')"
 ```
 
 Expected: `OK`.
@@ -302,7 +302,7 @@ def _mape(actual: Iterable[float], predicted: Iterable[float]) -> float:
 - [ ] **Step 2: Quick smoke check**
 
 ```bash
-cd /mnt/deepa/cpg && python -c "
+cd /mnt/deepa/bev && python -c "
 from backend.services.forecast_service import ForecastService
 svc = ForecastService()
 resp = svc.forecast(store_id=1, horizon_days=14)
@@ -402,7 +402,7 @@ def forecast(
 
 - [ ] **Step 2: Wire into `backend/main.py`**
 
-Read the file first: `cat /mnt/deepa/cpg/backend/main.py | head -60` — confirm the pattern for registering routers (`app.include_router(...)`).
+Read the file first: `cat /mnt/deepa/bev/backend/main.py | head -60` — confirm the pattern for registering routers (`app.include_router(...)`).
 
 Then insert:
 ```python
@@ -416,7 +416,7 @@ After existing router registrations.
 - [ ] **Step 3: Smoke-test the endpoint**
 
 ```bash
-cd /mnt/deepa/cpg && python -c "
+cd /mnt/deepa/bev && python -c "
 from fastapi.testclient import TestClient
 from backend.main import app
 c = TestClient(app)
@@ -548,7 +548,7 @@ def test_insufficient_history_raises(mock_repo):
 - [ ] **Step 2: Run**
 
 ```bash
-cd /mnt/deepa/cpg && python -m pytest backend/tests/test_forecast_service.py -v 2>&1 | tail -20
+cd /mnt/deepa/bev && python -m pytest backend/tests/test_forecast_service.py -v 2>&1 | tail -20
 ```
 
 Expected: 7/7 pass. First call fits Prophet which takes ~3–8s; overall test file should finish in <30s.
@@ -647,7 +647,7 @@ def test_forecast_bounds(client: TestClient) -> None:
 - [ ] **Step 2: Run**
 
 ```bash
-cd /mnt/deepa/cpg && python -m pytest backend/tests/test_sales_router.py -v 2>&1 | tail -15
+cd /mnt/deepa/bev && python -m pytest backend/tests/test_sales_router.py -v 2>&1 | tail -15
 ```
 
 Expected: 5/5 pass. First test that hits forecast takes ~10s (Prophet fit for store 1).
@@ -677,7 +677,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 - [ ] **Step 1: Run the whole backend test suite**
 
 ```bash
-cd /mnt/deepa/cpg && python -m pytest backend/tests/ -v 2>&1 | tail -40
+cd /mnt/deepa/bev && python -m pytest backend/tests/ -v 2>&1 | tail -40
 ```
 
 Expected: all sales-related tests pass (at least 4 + 6 + 7 + 5 = 22 new tests pass). Pre-existing tests unchanged.
@@ -685,7 +685,7 @@ Expected: all sales-related tests pass (at least 4 + 6 + 7 + 5 = 22 new tests pa
 - [ ] **Step 2: Confirm Playwright still passes**
 
 ```bash
-cd /mnt/deepa/cpg/frontend && npm run test:e2e 2>&1 | tail -12
+cd /mnt/deepa/bev/frontend && npm run test:e2e 2>&1 | tail -12
 ```
 
 Expected: 7/7 existing Playwright tests still green. No frontend changes in Phase β.
@@ -693,7 +693,7 @@ Expected: 7/7 existing Playwright tests still green. No frontend changes in Phas
 - [ ] **Step 3: Push**
 
 ```bash
-cd /mnt/deepa/cpg && git push 2>&1 | tail -3
+cd /mnt/deepa/bev && git push 2>&1 | tail -3
 ```
 
 ---

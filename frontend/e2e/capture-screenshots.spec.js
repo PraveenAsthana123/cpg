@@ -172,7 +172,7 @@ test.describe('Sales flagship — demo screenshots', () => {
     const SC_OUT = path.resolve(__dirname, '../../docs/screenshots/supply-chain');
     // Guarantee manager role so the Run button is enabled.
     await page.goto('/');
-    await page.evaluate(() => localStorage.removeItem('cpg.role'));
+    await page.evaluate(() => localStorage.removeItem('bev.role'));
     await page.goto('/supply-chain/manager');
     await page.locator('.tab-item').filter({ hasText: /Network Sim/ }).first().click();
     const runBtn = page.getByRole('button', { name: /Run scenario/ });
@@ -285,7 +285,7 @@ test.describe('Sales flagship — demo screenshots', () => {
   test('10c role selector switching visible in topbar (Phase η)', async ({ page }) => {
     // Start from a clean role = manager default.
     await page.goto('/');
-    await page.evaluate(() => localStorage.removeItem('cpg.role'));
+    await page.evaluate(() => localStorage.removeItem('bev.role'));
     await page.goto('/sales/manager');
     await page.locator('.tab-item').filter({ hasText: /Simulation/ }).first().click();
     await page.waitForTimeout(500);

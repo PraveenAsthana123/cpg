@@ -17,7 +17,7 @@
 ## Industry retention benchmarks
 
 - **Telco / subscription** — annual churn 22–30% is normal. Below 15% indicates above-average retention; above 35% indicates a product-market-fit problem that a retention campaign cannot fix alone.
-- **Grocery CPG** — loyalty-defection rate 8–12% annually for branded programs. "Churn" here means a loyalty ID going inactive for > 180 days.
+- **Grocery BEV** — loyalty-defection rate 8–12% annually for branded programs. "Churn" here means a loyalty ID going inactive for > 180 days.
 - **SaaS B2B** — 5–7% gross annual churn is best-in-class; 10–15% is typical; > 20% indicates expansion is being cannibalized by contraction.
 
 ## Intervention timing by lifecycle stage

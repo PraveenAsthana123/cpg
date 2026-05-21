@@ -1,5 +1,5 @@
 """
-Shared ML utilities for the CPG Analytics platform.
+Shared ML utilities for the BEV Analytics platform.
 
 Functions here are intentionally generic — they do not import from any
 specific pipeline so they can be used across all departments without

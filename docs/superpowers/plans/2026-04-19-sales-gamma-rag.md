@@ -122,7 +122,7 @@ Christmas week drives a 2–3× revenue spike; most public holidays suppress sal
 
 ## Pipeline
 
-- **Win rate** = closed_won_deals / total_closed. CPG equivalent is new-distribution retention.
+- **Win rate** = closed_won_deals / total_closed. BEV equivalent is new-distribution retention.
 - **Deal cycle days** = mean(close_date − open_date). Shorter cycles usually indicate healthier pipeline.
 - **Pipeline coverage ratio** = open_pipeline / quota. 3× or higher is healthy.
 
@@ -141,7 +141,7 @@ Christmas week drives a 2–3× revenue spike; most public holidays suppress sal
 ## Typical promo outcomes by type
 
 - **Deep discount (≥30%)** — drives large same-day volume spike (+40–60%), but margin hit often exceeds uplift; net margin usually negative for single-day events. Useful for clearance, not growth.
-- **Moderate discount (15–25%)** — sweet spot for CPG grocery. Volume uplift 20–35%, net margin impact roughly neutral to slightly positive depending on elasticity.
+- **Moderate discount (15–25%)** — sweet spot for BEV grocery. Volume uplift 20–35%, net margin impact roughly neutral to slightly positive depending on elasticity.
 - **BOGO / multi-buy** — strong basket-size lift, works best on high-stock SKUs; inventory-turn positive.
 - **Digital-only coupon** — smaller volume lift (~10–15%) but preserves margin by excluding price-insensitive shoppers.
 
@@ -434,7 +434,7 @@ class RAGService:
             situation = f"\n\nSituation the user is viewing: {context.model_dump_json()}"
 
         return (
-            "You are an enterprise analytics assistant for the CPG Sales module. "
+            "You are an enterprise analytics assistant for the BEV Sales module. "
             "Answer concisely using ONLY the numbered source snippets below. "
             "End each factual claim with a [ref N] referencing the source number. "
             "If the snippets don't answer the question, say so explicitly.\n\n"
@@ -947,7 +947,7 @@ Add `test.setTimeout(120_000)` at the top of that test if needed.
 
 Full verification:
 ```bash
-cd /mnt/deepa/cpg
+cd /mnt/deepa/bev
 python -m pytest backend/tests/test_rag_service.py -v        # 6/6 pass
 python -m pytest backend/tests/ -v --ignore=backend/tests/eval 2>&1 | tail -10     # 36/36 (30 prior + 6 new)
 python -m pytest -m eval backend/tests/eval/ -v -s            # eval prints scores; mean >= 0.6

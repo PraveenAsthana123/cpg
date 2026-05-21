@@ -5,8 +5,8 @@
 // not permitted. Default role is "manager" (matches backend default).
 
 const DEFAULT_ROLE = 'manager';
-const ROLE_KEY = 'cpg.role';
-const ROLE_CHANGE_EVENT = 'cpg:role-change';
+const ROLE_KEY = 'bev.role';
+const ROLE_CHANGE_EVENT = 'bev:role-change';
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || '';
 

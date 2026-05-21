@@ -9,7 +9,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
-        env_prefix="CPG_",
+        env_prefix="BEV_",
         env_file=".env",
         env_file_encoding="utf-8",
         case_sensitive=False,
@@ -19,9 +19,9 @@ class Settings(BaseSettings):
     # PostgreSQL
     postgres_host: str = Field(default="localhost", description="PostgreSQL host")
     postgres_port: int = Field(default=5432, description="PostgreSQL port")
-    postgres_db: str = Field(default="cpg_analytics", description="PostgreSQL database name")
-    postgres_user: str = Field(default="cpg_user", description="PostgreSQL username")
-    postgres_password: str = Field(default="cpg_secret_password", description="PostgreSQL password")
+    postgres_db: str = Field(default="bev_analytics", description="PostgreSQL database name")
+    postgres_user: str = Field(default="bev_user", description="PostgreSQL username")
+    postgres_password: str = Field(default="bev_secret_password", description="PostgreSQL password")
 
     # Redis
     redis_host: str = Field(default="localhost", description="Redis host")

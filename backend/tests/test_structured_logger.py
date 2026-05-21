@@ -15,11 +15,11 @@ from core.structured_logger import (
 
 
 def _capture_logs(func):
-    """Attach a temp StringIO handler to the cpg.events logger, run func, return parsed JSON rows."""
+    """Attach a temp StringIO handler to the bev.events logger, run func, return parsed JSON rows."""
     buf = StringIO()
     h = logging.StreamHandler(buf)
     h.setFormatter(logging.Formatter("%(message)s"))
-    lg = logging.getLogger("cpg.events")
+    lg = logging.getLogger("bev.events")
     lg.addHandler(h)
     try:
         func()

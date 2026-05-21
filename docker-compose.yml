@@ -3,17 +3,17 @@ version: "3.9"
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: cpg_postgres
+    container_name: bev_postgres
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_DB: cpg_analytics
-      POSTGRES_USER: cpg_user
-      POSTGRES_PASSWORD: cpg_secret_password
+      POSTGRES_DB: bev_analytics
+      POSTGRES_USER: bev_user
+      POSTGRES_PASSWORD: bev_secret_password
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U cpg_user -d cpg_analytics"]
+      test: ["CMD-SHELL", "pg_isready -U bev_user -d bev_analytics"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -21,7 +21,7 @@ services:
 
   redis:
     image: redis:7-alpine
-    container_name: cpg_redis
+    container_name: bev_redis
     ports:
       - "6379:6379"
     healthcheck:
@@ -33,7 +33,7 @@ services:
 
   ollama:
     image: ollama/ollama:latest
-    container_name: cpg_ollama
+    container_name: bev_ollama
     ports:
       - "11434:11434"
     volumes:
@@ -42,17 +42,17 @@ services:
 
   mlflow:
     image: ghcr.io/mlflow/mlflow:v2.12.1
-    container_name: cpg_mlflow
+    container_name: bev_mlflow
     ports:
       - "5001:5000"
     environment:
-      MLFLOW_BACKEND_STORE_URI: postgresql://cpg_user:cpg_secret_password@postgres:5432/cpg_analytics
+      MLFLOW_BACKEND_STORE_URI: postgresql://bev_user:bev_secret_password@postgres:5432/bev_analytics
       MLFLOW_DEFAULT_ARTIFACT_ROOT: /mlartifacts
     volumes:
       - mlartifacts:/mlartifacts
     command: >
       mlflow server
-      --backend-store-uri postgresql://cpg_user:cpg_secret_password@postgres:5432/cpg_analytics
+      --backend-store-uri postgresql://bev_user:bev_secret_password@postgres:5432/bev_analytics
       --default-artifact-root /mlartifacts
       --host 0.0.0.0
       --port 5000
@@ -65,20 +65,20 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: cpg_backend
+    container_name: bev_backend
     ports:
       - "8000:8000"
     environment:
-      CPG_POSTGRES_HOST: postgres
-      CPG_POSTGRES_PORT: 5432
-      CPG_POSTGRES_DB: cpg_analytics
-      CPG_POSTGRES_USER: cpg_user
-      CPG_POSTGRES_PASSWORD: cpg_secret_password
-      CPG_REDIS_HOST: redis
-      CPG_REDIS_PORT: 6379
-      CPG_MLFLOW_TRACKING_URI: http://mlflow:5000
-      CPG_OLLAMA_HOST: http://ollama:11434
-      CPG_CORS_ORIGINS: "http://localhost:3000,http://localhost:5173,http://127.0.0.1:5173,http://frontend:3000"
+      BEV_POSTGRES_HOST: postgres
+      BEV_POSTGRES_PORT: 5432
+      BEV_POSTGRES_DB: bev_analytics
+      BEV_POSTGRES_USER: bev_user
+      BEV_POSTGRES_PASSWORD: bev_secret_password
+      BEV_REDIS_HOST: redis
+      BEV_REDIS_PORT: 6379
+      BEV_MLFLOW_TRACKING_URI: http://mlflow:5000
+      BEV_OLLAMA_HOST: http://ollama:11434
+      BEV_CORS_ORIGINS: "http://localhost:3000,http://localhost:5173,http://127.0.0.1:5173,http://frontend:3000"
     volumes:
       - ./backend:/app
       - ./data:/data
@@ -93,18 +93,18 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: cpg_worker
+    container_name: bev_worker
     command: celery -A workers.celery_app worker --loglevel=info
     environment:
-      CPG_POSTGRES_HOST: postgres
-      CPG_POSTGRES_PORT: 5432
-      CPG_POSTGRES_DB: cpg_analytics
-      CPG_POSTGRES_USER: cpg_user
-      CPG_POSTGRES_PASSWORD: cpg_secret_password
-      CPG_REDIS_HOST: redis
-      CPG_REDIS_PORT: 6379
-      CPG_MLFLOW_TRACKING_URI: http://mlflow:5000
-      CPG_OLLAMA_HOST: http://ollama:11434
+      BEV_POSTGRES_HOST: postgres
+      BEV_POSTGRES_PORT: 5432
+      BEV_POSTGRES_DB: bev_analytics
+      BEV_POSTGRES_USER: bev_user
+      BEV_POSTGRES_PASSWORD: bev_secret_password
+      BEV_REDIS_HOST: redis
+      BEV_REDIS_PORT: 6379
+      BEV_MLFLOW_TRACKING_URI: http://mlflow:5000
+      BEV_OLLAMA_HOST: http://ollama:11434
     volumes:
       - ./backend:/app
       - ./data:/data
@@ -119,7 +119,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: cpg_frontend
+    container_name: bev_frontend
     ports:
       - "3000:3000"
     environment:

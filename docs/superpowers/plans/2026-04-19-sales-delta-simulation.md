@@ -16,7 +16,7 @@
 
 ## Scope decisions
 
-- **Elasticity coefficient:** constant **-2.0** (typical CPG grocery: 1% discount → ~2% volume uplift). Documented as "Phase 1 elasticity = industry benchmark; per-store learning deferred".
+- **Elasticity coefficient:** constant **-2.0** (typical BEV grocery: 1% discount → ~2% volume uplift). Documented as "Phase 1 elasticity = industry benchmark; per-store learning deferred".
 - **Margin factor:** constant **0.30** (30% gross margin baseline). Documented same way.
 - **Horizon:** use the simulation's `duration_days` as the forecast horizon for baseline.
 
@@ -102,7 +102,7 @@ from schemas.sales import SimulationRequest, SimulationResponse, WaterfallStep
 logger = logging.getLogger(__name__)
 
 # Industry benchmarks — see /docs/data/elasticity-methodology.md (Phase 1 simplification).
-DEFAULT_ELASTICITY = -2.0         # 1% discount → 2% volume uplift (CPG grocery typical)
+DEFAULT_ELASTICITY = -2.0         # 1% discount → 2% volume uplift (BEV grocery typical)
 DEFAULT_MARGIN_FACTOR = 0.30       # 30% gross margin baseline
 UNIT_PRICE = 10.0                  # Rossmann sales is in $, not units; treat 'sales' as revenue directly
 # (Simplification: Rossmann "Sales" column is daily revenue, not units. We compute revenue waterfall directly.)
@@ -518,7 +518,7 @@ Commit `test(e2e): capture simulation waterfall screenshots`.
 ### Task 9: Verify + push
 
 ```bash
-cd /mnt/deepa/cpg
+cd /mnt/deepa/bev
 python -m pytest backend/tests/ -v 2>&1 | tail -10
 # 27 backend tests total (22 + 5 new simulation)
 cd frontend && npm run test:e2e 2>&1 | tail -10

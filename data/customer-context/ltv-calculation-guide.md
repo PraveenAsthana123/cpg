@@ -13,7 +13,7 @@
 - Both λ and p are drawn from Beta / Gamma priors fit on the observed population.
 - Output: per-customer expected transactions in a future window.
 
-We avoid installing the full `lifetimes` package for the CPG platform and use a simplified heuristic: predicted monthly transactions = last-90-day transactions × 0.92 × (1 - churn_probability).
+We avoid installing the full `lifetimes` package for the BEV platform and use a simplified heuristic: predicted monthly transactions = last-90-day transactions × 0.92 × (1 - churn_probability).
 
 ## Gamma-Gamma — for average order value
 
@@ -30,7 +30,7 @@ Where `discount_rate` is the monthly cost of capital (typically 1% for corporate
 
 ## Using CLV in decisions
 
-- **CAC payback target**: typical CPG benchmark is CAC < 1/3 of expected 12-month CLV. If CAC is higher, bid down or abandon the channel.
+- **CAC payback target**: typical BEV benchmark is CAC < 1/3 of expected 12-month CLV. If CAC is higher, bid down or abandon the channel.
 - **CLV-weighted bidding**: in paid acquisition, bid proportional to predicted CLV by (segment × channel × creative) combination. This beats uniform bidding by 8–15% on blended ROI.
 - **Service tiering**: route customers predicted to have high CLV (top-decile) to priority support; the cost is justified by retention lift.
 

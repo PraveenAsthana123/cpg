@@ -16,11 +16,11 @@ import pytest
 
 def _dsn() -> dict:
     return dict(
-        host=os.getenv("CPG_POSTGRES_HOST", "localhost"),
-        port=int(os.getenv("CPG_POSTGRES_PORT", "5432")),
-        dbname=os.getenv("CPG_POSTGRES_DB", "cpg_analytics"),
-        user=os.getenv("CPG_POSTGRES_USER", "cpg_user"),
-        password=os.getenv("CPG_POSTGRES_PASSWORD", "cpg_secret_password"),
+        host=os.getenv("BEV_POSTGRES_HOST", "localhost"),
+        port=int(os.getenv("BEV_POSTGRES_PORT", "5432")),
+        dbname=os.getenv("BEV_POSTGRES_DB", "bev_analytics"),
+        user=os.getenv("BEV_POSTGRES_USER", "bev_user"),
+        password=os.getenv("BEV_POSTGRES_PASSWORD", "bev_secret_password"),
     )
 
 

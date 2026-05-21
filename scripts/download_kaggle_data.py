@@ -1,5 +1,5 @@
 """
-Download Kaggle datasets for all 11 CPG Analytics departments.
+Download Kaggle datasets for all 11 BEV Analytics departments.
 
 Usage:
     python scripts/download_kaggle_data.py [--dept DEPT_NAME] [--all]
@@ -29,8 +29,8 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Root data directory (can be overridden by CPG_DATA_DIR env var)
-DATA_ROOT = Path(os.environ.get("CPG_DATA_DIR", "/mnt/deepa/cpg/data"))
+# Root data directory (can be overridden by BEV_DATA_DIR env var)
+DATA_ROOT = Path(os.environ.get("BEV_DATA_DIR", "/mnt/deepa/bev/data"))
 KAGGLE_DIR = DATA_ROOT / "kaggle"
 
 DATASETS: dict[str, dict[str, Any]] = {
@@ -207,7 +207,7 @@ def download_all(departments: list[str] | None = None) -> dict[str, bool]:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Download Kaggle datasets for CPG departments")
+    parser = argparse.ArgumentParser(description="Download Kaggle datasets for BEV departments")
     parser.add_argument(
         "--dept",
         nargs="+",

@@ -1,6 +1,6 @@
 # Customer Analytics — Demo Walkthrough
 
-**Audience:** Sales engineers, executive stakeholders, prospective customers evaluating the CPG platform.
+**Audience:** Sales engineers, executive stakeholders, prospective customers evaluating the BEV platform.
 **Duration:** ~8 minutes.
 **Prerequisites:** backend on :8001, frontend on :5173, Telco dataset ingested.
 
@@ -82,7 +82,7 @@ the model with a fresh `trained_at` timestamp:
 ```bash
 # restart backend
 pkill -f "uvicorn main:app"
-CPG_CORS_ORIGINS="http://localhost:5173,http://localhost:3000" \
+BEV_CORS_ORIGINS="http://localhost:5173,http://localhost:3000" \
   python3 -m uvicorn main:app --port 8001 &
 # first call triggers refit; ~1s latency
 curl -s http://localhost:8001/api/v1/customer/churn-metrics | jq

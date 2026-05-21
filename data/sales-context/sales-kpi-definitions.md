@@ -14,7 +14,7 @@
 
 ## Pipeline
 
-- **Win rate** = closed_won_deals / total_closed. CPG equivalent is new-distribution retention.
+- **Win rate** = closed_won_deals / total_closed. BEV equivalent is new-distribution retention.
 - **Deal cycle days** = mean(close_date − open_date). Shorter cycles usually indicate healthier pipeline.
 - **Pipeline coverage ratio** = open_pipeline / quota. 3× or higher is healthy.
 

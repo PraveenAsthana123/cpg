@@ -22,7 +22,7 @@ defect_score = max(0, 100 − defect_rate_pct × 20)
 - 2.5% defect → score 50.
 - 5% defect → score 0 (linear floor).
 
-Most acceptable CPG suppliers operate in the 0.5% – 3.0% band.
+Most acceptable BEV suppliers operate in the 0.5% – 3.0% band.
 
 ## Lead-time sub-score
 

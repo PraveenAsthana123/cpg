@@ -1,8 +1,8 @@
-# CPG Analytics Dashboard Implementation Plan
+# BEV Analytics Dashboard Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Build a full-stack CPG Analytics Dashboard with 11 department modules, left sidebar navigation, working ML pipelines, and Kaggle data integration.
+**Goal:** Build a full-stack BEV Analytics Dashboard with 11 department modules, left sidebar navigation, working ML pipelines, and Kaggle data integration.
 
 **Architecture:** React+Vite frontend with native CSS, FastAPI backend with PostgreSQL, Celery+Redis for ML jobs, MLflow for model registry, all orchestrated via Docker Compose. Each department is a self-contained module with its own component, processes, AI mappings, and ML pipelines.
 
@@ -22,7 +22,7 @@
 - [ ] **Step 1: Initialize git repository**
 
 ```bash
-cd /mnt/deepa/cpg
+cd /mnt/deepa/bev
 git init
 ```
 
@@ -91,9 +91,9 @@ htmlcov/
 # Database
 POSTGRES_HOST=localhost
 POSTGRES_PORT=5432
-POSTGRES_DB=cpg_analytics
-POSTGRES_USER=cpg_user
-POSTGRES_PASSWORD=cpg_secret_password
+POSTGRES_DB=bev_analytics
+POSTGRES_USER=bev_user
+POSTGRES_PASSWORD=bev_secret_password
 
 # Redis
 REDIS_HOST=localhost
@@ -119,9 +119,9 @@ KAGGLE_KEY=
 - [ ] **Step 4: Create README.md**
 
 ```markdown
-# CPG Analytics Dashboard
+# BEV Analytics Dashboard
 
-Enterprise-grade Consumer Packaged Goods analytics platform covering 11 departments with ML pipelines, RAG explainability, and interactive visualizations.
+Enterprise-grade Beverages analytics platform covering 11 departments with ML pipelines, RAG explainability, and interactive visualizations.
 
 ## Quick Start
 
@@ -160,7 +160,7 @@ docker-compose up --build
 
 ```bash
 git add .gitignore .env.template README.md
-git commit -m "feat: initialize CPG analytics dashboard project"
+git commit -m "feat: initialize BEV analytics dashboard project"
 ```
 
 ---
@@ -181,15 +181,15 @@ services:
   postgres:
     image: postgres:16-alpine
     environment:
-      POSTGRES_DB: cpg_analytics
-      POSTGRES_USER: cpg_user
-      POSTGRES_PASSWORD: cpg_secret_password
+      POSTGRES_DB: bev_analytics
+      POSTGRES_USER: bev_user
+      POSTGRES_PASSWORD: bev_secret_password
     ports:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U cpg_user -d cpg_analytics"]
+      test: ["CMD-SHELL", "pg_isready -U bev_user -d bev_analytics"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -209,7 +209,7 @@ services:
     ports:
       - "5001:5000"
     environment:
-      MLFLOW_BACKEND_STORE_URI: postgresql://cpg_user:cpg_secret_password@postgres:5432/cpg_analytics
+      MLFLOW_BACKEND_STORE_URI: postgresql://bev_user:bev_secret_password@postgres:5432/bev_analytics
       MLFLOW_DEFAULT_ARTIFACT_ROOT: /mlartifacts
     volumes:
       - mlartifacts:/mlartifacts
@@ -220,7 +220,7 @@ services:
       mlflow server
       --host 0.0.0.0
       --port 5000
-      --backend-store-uri postgresql://cpg_user:cpg_secret_password@postgres:5432/cpg_analytics
+      --backend-store-uri postgresql://bev_user:bev_secret_password@postgres:5432/bev_analytics
       --default-artifact-root /mlartifacts
 
   backend:
@@ -232,9 +232,9 @@ services:
     environment:
       POSTGRES_HOST: postgres
       POSTGRES_PORT: 5432
-      POSTGRES_DB: cpg_analytics
-      POSTGRES_USER: cpg_user
-      POSTGRES_PASSWORD: cpg_secret_password
+      POSTGRES_DB: bev_analytics
+      POSTGRES_USER: bev_user
+      POSTGRES_PASSWORD: bev_secret_password
       REDIS_HOST: redis
       REDIS_PORT: 6379
       MLFLOW_TRACKING_URI: http://mlflow:5000
@@ -256,9 +256,9 @@ services:
     environment:
       POSTGRES_HOST: postgres
       POSTGRES_PORT: 5432
-      POSTGRES_DB: cpg_analytics
-      POSTGRES_USER: cpg_user
-      POSTGRES_PASSWORD: cpg_secret_password
+      POSTGRES_DB: bev_analytics
+      POSTGRES_USER: bev_user
+      POSTGRES_PASSWORD: bev_secret_password
       REDIS_HOST: redis
       REDIS_PORT: 6379
       MLFLOW_TRACKING_URI: http://mlflow:5000
@@ -403,9 +403,9 @@ class Settings(BaseSettings):
     # Database
     postgres_host: str = "localhost"
     postgres_port: int = 5432
-    postgres_db: str = "cpg_analytics"
-    postgres_user: str = "cpg_user"
-    postgres_password: str = "cpg_secret_password"
+    postgres_db: str = "bev_analytics"
+    postgres_user: str = "bev_user"
+    postgres_password: str = "bev_secret_password"
 
     # Redis
     redis_host: str = "localhost"
@@ -983,7 +983,7 @@ git commit -m "feat: add database setup with star schema and enterprise tables"
 - [ ] **Step 1: Initialize Vite React project**
 
 ```bash
-cd /mnt/deepa/cpg
+cd /mnt/deepa/bev
 npm create vite@latest frontend -- --template react
 cd frontend
 npm install react-router-dom recharts
@@ -1013,7 +1013,7 @@ git commit -m "feat: initialize React + Vite frontend"
 - [ ] **Step 1: Create frontend/src/styles/global.css**
 
 ```css
-/* CPG Analytics Dashboard — Global Styles */
+/* BEV Analytics Dashboard — Global Styles */
 * {
   margin: 0;
   padding: 0;
@@ -1698,7 +1698,7 @@ export default function Sidebar() {
     <aside className="sidebar" aria-label="Main navigation">
       <div className="sidebar-header">
         <span style={{ fontSize: '1.5rem' }}>{'\ud83c\udfed'}</span>
-        <h2>CPG Analytics</h2>
+        <h2>BEV Analytics</h2>
       </div>
       <nav className="sidebar-nav">
         <div className="sidebar-section-title">Modules</div>
@@ -1718,7 +1718,7 @@ export default function Sidebar() {
         ))}
       </nav>
       <div className="sidebar-footer">
-        CPG Enterprise v1.0
+        BEV Enterprise v1.0
       </div>
     </aside>
   );
@@ -2161,7 +2161,7 @@ export default function Dashboard() {
   return (
     <div>
       <div className="page-header">
-        <h1 className="page-title">CPG Analytics Dashboard</h1>
+        <h1 className="page-title">BEV Analytics Dashboard</h1>
         <p className="page-subtitle">
           Enterprise-grade analytics across 11 departments, 100+ processes, 8 AI types
         </p>

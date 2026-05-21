@@ -7,9 +7,9 @@
 - **Detractors (0–6)** — at-risk AND likely to damage word-of-mouth.
 - **NPS = %Promoters − %Detractors**. Range: -100 to +100.
 
-## Industry benchmarks (CPG / retail / telco)
+## Industry benchmarks (BEV / retail / telco)
 
-- **Grocery / CPG brands**: NPS 30–45 is typical; above 55 is excellent.
+- **Grocery / BEV brands**: NPS 30–45 is typical; above 55 is excellent.
 - **Telco / subscription**: NPS 0–20 is typical; above 35 is excellent.
 - **Luxury / specialty retail**: NPS 60–75 is expected.
 - **Banking**: NPS 0–30 typical (customers rarely "love" a bank).

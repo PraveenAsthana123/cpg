@@ -131,7 +131,7 @@ Tabs that can't populate all nine are **not ready to ship** — either a column 
 
 ## Mapping to Current Implementation (as of 2026-04-19)
 
-Current tabs in the CPG app (Admin + Manager) cover ~5 of the 12 modules:
+Current tabs in the BEV app (Admin + Manager) cover ~5 of the 12 modules:
 
 | Master Menu | Current Coverage |
 |---|---|

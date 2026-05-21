@@ -25,7 +25,7 @@ MODIFY: backend/services/rag_service.py                   (emit ai-explain event
 
 ### Task 1 — structured_logger
 
-Create `/mnt/deepa/cpg/backend/core/structured_logger.py`:
+Create `/mnt/deepa/bev/backend/core/structured_logger.py`:
 
 ```python
 """structured_logger — JSON log emitter with correlation_id contextvar.
@@ -49,7 +49,7 @@ from datetime import datetime, timezone
 
 correlation_id_var: ContextVar[str] = ContextVar("correlation_id", default="-")
 
-_json_logger = logging.getLogger("cpg.events")
+_json_logger = logging.getLogger("bev.events")
 if not _json_logger.handlers:
     _h = logging.StreamHandler(sys.stdout)
     _h.setFormatter(logging.Formatter("%(message)s"))
@@ -160,7 +160,7 @@ emit_event("ai.explain", model=MODEL, prompt_chars=len(prompt),
 
 ### Task 4 — tests
 
-Create `/mnt/deepa/cpg/backend/tests/test_structured_logger.py`:
+Create `/mnt/deepa/bev/backend/tests/test_structured_logger.py`:
 
 ```python
 import json
@@ -177,7 +177,7 @@ def _capture_logs(func):
     buf = StringIO()
     h = logging.StreamHandler(buf)
     h.setFormatter(logging.Formatter("%(message)s"))
-    lg = logging.getLogger("cpg.events")
+    lg = logging.getLogger("bev.events")
     lg.addHandler(h)
     try:
         func()

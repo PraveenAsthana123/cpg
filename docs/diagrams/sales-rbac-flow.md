@@ -13,14 +13,14 @@ sequenceDiagram
     participant EP as Endpoint
 
     U->>TB: select "team-member"
-    TB->>LS: cpg.role = "team-member"
-    TB->>TB: dispatch cpg:role-change event
+    TB->>LS: bev.role = "team-member"
+    TB->>TB: dispatch bev:role-change event
     U->>U: navigate to /sales/manager → Simulation tab
     U->>U: UI hides Run button for non-manager<br/>(defense-in-depth)
 
     Note over U: User bypasses UI via fetch() directly
     U->>AF: POST /api/v1/sales/simulate
-    AF->>LS: read cpg.role = "team-member"
+    AF->>LS: read bev.role = "team-member"
     AF->>BE: attach X-Demo-Role: team-member
     BE->>CID: correlation_id set
     CID->>RBAC: call_next

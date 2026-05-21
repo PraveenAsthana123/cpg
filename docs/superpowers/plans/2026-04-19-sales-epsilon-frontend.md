@@ -602,7 +602,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 - [ ] **Step 1: Read current file**
 
 ```bash
-cat /mnt/deepa/cpg/frontend/src/pages/ManagerPage.jsx
+cat /mnt/deepa/bev/frontend/src/pages/ManagerPage.jsx
 ```
 
 Confirm the `TABS` array and the `<Active dept={dept} />` render block.
@@ -651,7 +651,7 @@ const TABS = tabsForDept(dept.id);
 - [ ] **Step 3: Verify build**
 
 ```bash
-cd /mnt/deepa/cpg/frontend && npx vite build 2>&1 | tail -8
+cd /mnt/deepa/bev/frontend && npx vite build 2>&1 | tail -8
 ```
 
 - [ ] **Step 4: Commit**
@@ -677,7 +677,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 - [ ] **Step 1: Read the current file**
 
 ```bash
-cat /mnt/deepa/cpg/frontend/src/components/dept-tabs/OverviewTab.jsx
+cat /mnt/deepa/bev/frontend/src/components/dept-tabs/OverviewTab.jsx
 ```
 
 - [ ] **Step 2: Decide enrichment approach**
@@ -740,7 +740,7 @@ function Tile({ label, value, note }) {
 - [ ] **Step 3: Verify build + screenshot mentally**
 
 ```bash
-cd /mnt/deepa/cpg/frontend && npx vite build 2>&1 | tail -5
+cd /mnt/deepa/bev/frontend && npx vite build 2>&1 | tail -5
 ```
 
 - [ ] **Step 4: Commit**
@@ -800,7 +800,7 @@ test.describe('Sales flagship — Phase ε', () => {
 - [ ] **Step 2: Run the Playwright suite**
 
 ```bash
-cd /mnt/deepa/cpg/frontend && npm run test:e2e 2>&1 | tail -20
+cd /mnt/deepa/bev/frontend && npm run test:e2e 2>&1 | tail -20
 ```
 
 Expected: **11/11 tests pass** (7 existing + 4 new). If any new test fails because the backend is not reachable (the live overview test may fail if `:8000` is down), adjust: the test should still assert rendering of the "Active stores" label even if the number is missing, because `setStores(null)` leaves the loading state. If the label never appears because the fetch hangs, add an explicit timeout.
@@ -825,14 +825,14 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 - [ ] **Step 1: Full test sweep**
 
 ```bash
-cd /mnt/deepa/cpg/frontend && npx vite build 2>&1 | tail -5 && npm run test:e2e 2>&1 | tail -15
+cd /mnt/deepa/bev/frontend && npx vite build 2>&1 | tail -5 && npm run test:e2e 2>&1 | tail -15
 ```
 
 Expected: build succeeds; 11/11 tests pass.
 
 Backend tests unaffected (no backend changes in ε):
 ```bash
-cd /mnt/deepa/cpg && python -m pytest backend/tests/ -v 2>&1 | tail -10
+cd /mnt/deepa/bev && python -m pytest backend/tests/ -v 2>&1 | tail -10
 ```
 
 Expected: 22/22 still pass.
@@ -840,7 +840,7 @@ Expected: 22/22 still pass.
 - [ ] **Step 2: Push**
 
 ```bash
-cd /mnt/deepa/cpg && git push 2>&1 | tail -3
+cd /mnt/deepa/bev && git push 2>&1 | tail -3
 ```
 
 ---

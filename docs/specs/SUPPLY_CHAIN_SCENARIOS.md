@@ -19,7 +19,7 @@ This is the **second flagship** in the 3-dept strategy (Sales → Supply Chain �
 - **Demand-Planning Analyst** (crosses into Sales) — forecast input consumer
 - **Supplier-Relations Analyst** (compliance) — OTIF scorecards, contract adherence
 
-**Why this dept matters for the demo:** supply chain is the CPG industry's #1 pain point post-2020. Showing real stockout detection + supplier-risk scoring + lane-level ETA prediction in one dashboard is exactly what portfolio reviewers want to see.
+**Why this dept matters for the demo:** supply chain is the BEV industry's #1 pain point post-2020. Showing real stockout detection + supplier-risk scoring + lane-level ETA prediction in one dashboard is exactly what portfolio reviewers want to see.
 
 ---
 
@@ -28,7 +28,7 @@ This is the **second flagship** in the 3-dept strategy (Sales → Supply Chain �
 | Dataset | Slug | Pros | Cons |
 |---|---|---|---|
 | **Supply Chain Analysis** | `harshsingh2209/supply-chain-analysis` | 100 SKUs × 9 products, rich feature set, customer demographics, supplier, transport mode, delivery time, defect rate | Small (100 rows) — good for demo, not for ML training |
-| **DataCo Smart Supply Chain** | `shashwatwork/dataco-smart-supply-chain-for-big-data-analysis` | 180k rows, orders + shipments + delivery status, geo coords | Generic / synthetic, not CPG-specific |
+| **DataCo Smart Supply Chain** | `shashwatwork/dataco-smart-supply-chain-for-big-data-analysis` | 180k rows, orders + shipments + delivery status, geo coords | Generic / synthetic, not BEV-specific |
 | **Online Retail II (UCI)** | `lakshmi25npathi/online-retail-dataset` | 1M transactions + SKU-level demand + returns | E-commerce, not pure supply chain |
 | **Walmart M5 (recommended for forecast)** | `c/m5-forecasting-accuracy` | SKU × store × day (58k series) | Competition (rule-acceptance needed); big |
 
@@ -94,7 +94,7 @@ fact_demand(warehouse_id, sku_id, date, shipped_units, stockout_flag)
 **Persona:** Inventory Planner
 1. Lands on `/supply-chain` — Overview heatmap shows red cells in "Beverages × West region"
 2. Clicks the cell → Screen 2 opens, filtered to West + Beverages
-3. Sees SKU `CPG-5521` with 2 days of supply remaining, predicted stockout on day 4
+3. Sees SKU `BEV-5521` with 2 days of supply remaining, predicted stockout on day 4
 4. Clicks "Explain" → AI narrative cites `logistics-playbook.md` → "Supplier delay on lane L-23; typical pattern after carrier strike"
 5. Clicks "Trigger expedite PO" → action logged, alternative supplier suggested
 6. **Outcome:** Potential stockout prevented. Decision takes 90 seconds.

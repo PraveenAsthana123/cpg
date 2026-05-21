@@ -40,7 +40,7 @@ export const departmentModels = {
   customer: [
     { name: 'Segmentation Model', algorithm: 'K-Means + RFM', useCase: 'Customer segmentation', status: 'production', metrics: { mape: null, rmse: null, accuracy: 88, f1: null }, justification: 'RFM-validated; segment stability 85% over 3 months' },
     { name: 'Churn Predictor', algorithm: 'XGBoost', useCase: 'Churn prediction', status: 'production', metrics: { mape: null, rmse: null, accuracy: 90, f1: 0.88 }, justification: 'AUC 0.92; retention campaign lifted by 3.8x ROI' },
-    { name: 'Sentiment Model', algorithm: 'Fine-tuned BERT', useCase: 'Sentiment analysis', status: 'production', metrics: { mape: null, rmse: null, accuracy: 91, f1: 0.90 }, justification: 'Domain-tuned on CPG reviews; outperforms generic BERT by 8%' },
+    { name: 'Sentiment Model', algorithm: 'Fine-tuned BERT', useCase: 'Sentiment analysis', status: 'production', metrics: { mape: null, rmse: null, accuracy: 91, f1: 0.90 }, justification: 'Domain-tuned on BEV reviews; outperforms generic BERT by 8%' },
     { name: 'LTV Model', algorithm: 'Pareto/NBD', useCase: 'Customer lifetime value', status: 'staging', metrics: { mape: 11.3, rmse: null, accuracy: 85, f1: null }, justification: 'Probabilistic model; interpretable LTV decomposition' },
   ],
   finance: [

@@ -146,7 +146,7 @@ CREATE INDEX IF NOT EXISTS idx_fact_shipment_mode     ON fact_shipment(transport
 COMMIT;
 ```
 
-Apply via `docker compose exec -T postgres psql -U cpg_user -d cpg_analytics < backend/migrations/011_supply_chain.sql`. Verify with `\dt+` — three new tables present.
+Apply via `docker compose exec -T postgres psql -U bev_user -d bev_analytics < backend/migrations/011_supply_chain.sql`. Verify with `\dt+` — three new tables present.
 
 Commit `feat(db): migration 011 — supply chain star schema`.
 
@@ -221,11 +221,11 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(mess
 
 def _pg_dsn() -> str:
     return (
-        f"host={os.getenv('CPG_POSTGRES_HOST', 'localhost')} "
-        f"port={os.getenv('CPG_POSTGRES_PORT', '5432')} "
-        f"dbname={os.getenv('CPG_POSTGRES_DB', 'cpg_analytics')} "
-        f"user={os.getenv('CPG_POSTGRES_USER', 'cpg_user')} "
-        f"password={os.getenv('CPG_POSTGRES_PASSWORD', 'cpg_secret_password')}"
+        f"host={os.getenv('BEV_POSTGRES_HOST', 'localhost')} "
+        f"port={os.getenv('BEV_POSTGRES_PORT', '5432')} "
+        f"dbname={os.getenv('BEV_POSTGRES_DB', 'bev_analytics')} "
+        f"user={os.getenv('BEV_POSTGRES_USER', 'bev_user')} "
+        f"password={os.getenv('BEV_POSTGRES_PASSWORD', 'bev_secret_password')}"
     )
 
 
@@ -395,11 +395,11 @@ from psycopg.rows import dict_row
 
 def _pg_dsn() -> str:
     return (
-        f"host={os.getenv('CPG_POSTGRES_HOST', 'localhost')} "
-        f"port={os.getenv('CPG_POSTGRES_PORT', '5432')} "
-        f"dbname={os.getenv('CPG_POSTGRES_DB', 'cpg_analytics')} "
-        f"user={os.getenv('CPG_POSTGRES_USER', 'cpg_user')} "
-        f"password={os.getenv('CPG_POSTGRES_PASSWORD', 'cpg_secret_password')}"
+        f"host={os.getenv('BEV_POSTGRES_HOST', 'localhost')} "
+        f"port={os.getenv('BEV_POSTGRES_PORT', '5432')} "
+        f"dbname={os.getenv('BEV_POSTGRES_DB', 'bev_analytics')} "
+        f"user={os.getenv('BEV_POSTGRES_USER', 'bev_user')} "
+        f"password={os.getenv('BEV_POSTGRES_PASSWORD', 'bev_secret_password')}"
     )
 
 
@@ -565,7 +565,7 @@ Commit `test(supply-chain): repo unit tests + ingestion integration tests`.
 
 ```bash
 docker compose up -d postgres
-docker compose exec -T postgres psql -U cpg_user -d cpg_analytics < backend/migrations/011_supply_chain.sql
+docker compose exec -T postgres psql -U bev_user -d bev_analytics < backend/migrations/011_supply_chain.sql
 ./scripts/download_supply_chain.sh data/kaggle/supply-chain
 python scripts/ingest_supply_chain.py --dir data/kaggle/supply-chain
 python -m pytest backend/tests/test_supply_chain_ingestion.py -v   # expect all pass

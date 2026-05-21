@@ -5,12 +5,21 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   plugins: [react()],
   server: {
+    // Allow demo tunnels (cloudflared, ngrok) to reach the dev server.
+    // Vite blocks unknown Host headers by default for security.
+    allowedHosts: [
+      'localhost',
+      '.trycloudflare.com',
+      '.ngrok.io',
+      '.ngrok-free.app',
+      '.ngrok.app',
+    ],
     proxy: {
       // Proxy all /api/* requests to the FastAPI backend to avoid CORS
       // during dev. salesApi.js uses relative paths so this just works.
-      // Override in local dev by setting CPG_API_TARGET env var.
+      // Override in local dev by setting BEV_API_TARGET env var.
       '/api': {
-        target: process.env.CPG_API_TARGET || 'http://localhost:8001',
+        target: process.env.BEV_API_TARGET || 'http://localhost:8001',
         changeOrigin: true,
       },
     },

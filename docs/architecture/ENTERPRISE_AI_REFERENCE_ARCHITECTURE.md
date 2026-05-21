@@ -1,11 +1,11 @@
 # Enterprise AI Reference Architecture — Policy
 
 **Status:** POLICY (normative, binding for Phase 2+ content)
-**Role:** Architect-level direction for the CPG AI Platform
+**Role:** Architect-level direction for the BEV AI Platform
 **Adopted:** 2026-04-19
 **Supersedes:** course-level / introductory AI system designs
 
-This document is the **architectural policy** that governs Phase 2+ feature work on the CPG AI Platform. Every new feature, data flow, model integration, or governance control MUST map back to one of the nine layers below. Deviations require an ADR (Architecture Decision Record) under `docs/architecture/decisions/`.
+This document is the **architectural policy** that governs Phase 2+ feature work on the BEV AI Platform. Every new feature, data flow, model integration, or governance control MUST map back to one of the nine layers below. Deviations require an ADR (Architecture Decision Record) under `docs/architecture/decisions/`.
 
 ---
 
@@ -61,7 +61,7 @@ Monitoring      (latency, accuracy, cost, drift)
 
 ## 3. Advanced RAG — Normative Spec
 
-"Build a RAG pipeline" is insufficient. The CPG platform RAG MUST implement ALL of the following:
+"Build a RAG pipeline" is insufficient. The BEV platform RAG MUST implement ALL of the following:
 
 ### 3.1 Retrieval Layer
 - BM25 + Vector search (hybrid)
@@ -201,7 +201,7 @@ The AI platform MUST NOT be built on isolated / light datasets. It connects to:
 
 ## 9. Project Position — "Enterprise Knowledge AI Platform"
 
-The CPG AI Platform is NOT positioned as a "Claude chatbot." It is an **Enterprise Knowledge AI Platform** with the following mandatory features:
+The BEV AI Platform is NOT positioned as a "Claude chatbot." It is an **Enterprise Knowledge AI Platform** with the following mandatory features:
 
 | Feature | Description |
 |---|---|
@@ -247,11 +247,11 @@ Deliverables:
 
 ---
 
-## 12. Mapping to CPG Admin & Manager Hubs (for Phase 2+ content)
+## 12. Mapping to BEV Admin & Manager Hubs (for Phase 2+ content)
 
-Each Admin/Manager tab in the CPG app is the operator console for one of the nine layers:
+Each Admin/Manager tab in the BEV app is the operator console for one of the nine layers:
 
-| Architecture Layer | CPG Tab(s) That Host It |
+| Architecture Layer | BEV Tab(s) That Host It |
 |---|---|
 | Experience | Dashboard tiles; Manager → KPI Dashboard |
 | Prompt | Admin → Model Registry (prompt version registry) |

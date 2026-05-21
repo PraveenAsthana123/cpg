@@ -108,5 +108,5 @@ Click the role selector in the top bar, switch to **Team Member**.
 - **Prophet** with trend + weekly + yearly seasonality (promo + state_holiday regressors deferred per Phase 2b roadmap).
 - **RAG corpus**: 4 hand-authored markdown files totaling ~2,000 words, ingested in-process with rank_bm25 + Ollama embeddings.
 - **LLM**: `qwen2.5:latest` via local Ollama.
-- **Elasticity** constant -2.0 (CPG grocery benchmark); real per-store learning is Phase 2b.
+- **Elasticity** constant -2.0 (BEV grocery benchmark); real per-store learning is Phase 2b.
 - **RBAC**: demo-mode via `X-Demo-Role` header; manager / team-member / compliance / reporting-monitoring. Simulation is manager-only.

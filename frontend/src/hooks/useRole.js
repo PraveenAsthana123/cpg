@@ -1,5 +1,5 @@
 // useRole — React hook wrapping getCurrentRole/setCurrentRole + listening
-// for cpg:role-change events so all role-aware components stay in sync.
+// for bev:role-change events so all role-aware components stay in sync.
 import { useEffect, useState } from 'react';
 
 import {

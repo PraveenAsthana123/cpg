@@ -189,7 +189,7 @@ class RAGService:
             situation = f"\n\nSituation the user is viewing: {context.model_dump_json()}"
 
         return (
-            "You are an enterprise analytics assistant for the CPG platform. "
+            "You are an enterprise analytics assistant for the BEV platform. "
             "Answer concisely using ONLY the numbered source snippets below. "
             "End each factual claim with a [ref N] referencing the source number. "
             "If the snippets don't answer the question, say so explicitly.\n\n"

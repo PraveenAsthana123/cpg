@@ -2,7 +2,7 @@
 
 export const departmentDatasets = {
   sales: {
-    name: 'CPG Sales Forecasting Dataset',
+    name: 'BEV Sales Forecasting Dataset',
     kaggleUrl: 'https://www.kaggle.com/datasets/felixzhao/productdemandforecasting',
     description: 'Historical sales data across SKUs, channels, and regions for demand forecasting',
     dataType: 'Tabular time series',

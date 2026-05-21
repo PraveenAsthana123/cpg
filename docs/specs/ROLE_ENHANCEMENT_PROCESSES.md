@@ -2,7 +2,7 @@
 
 **Date:** 2026-04-19
 **Status:** Content spec (feeds Phase 2 UI: Manager → Roles & Responsibilities tab, Admin → Workflows tab)
-**Scope:** Continuous-improvement / enhancement workflows executed by **Manager** and **Team Member (Employee)** roles across all 14 CPG departments.
+**Scope:** Continuous-improvement / enhancement workflows executed by **Manager** and **Team Member (Employee)** roles across all 14 BEV departments.
 
 ## Pattern
 

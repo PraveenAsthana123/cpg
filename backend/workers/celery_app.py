@@ -1,4 +1,4 @@
-"""Celery application factory for CPG Analytics background workers."""
+"""Celery application factory for BEV Analytics background workers."""
 from __future__ import annotations
 
 import sys
@@ -14,7 +14,7 @@ from core.config import get_settings  # noqa: E402
 settings = get_settings()
 
 celery_app = Celery(
-    "cpg_worker",
+    "bev_worker",
     broker=settings.redis_url,
     backend=settings.redis_url,
     include=["workers.tasks"],

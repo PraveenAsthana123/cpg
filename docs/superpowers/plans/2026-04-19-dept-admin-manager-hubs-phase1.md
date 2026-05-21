@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Scaffold the Admin and Manager hubs for every CPG department — routes, sidebar sub-links, stubbed pages/tabs, and data files — so Phase 2+ can fill the tabs without touching the shells.
+**Goal:** Scaffold the Admin and Manager hubs for every BEV department — routes, sidebar sub-links, stubbed pages/tabs, and data files — so Phase 2+ can fill the tabs without touching the shells.
 
 **Architecture:** Data-driven React app. Phase 1 adds three new departments (Contact Center, Marketing, Telehealth) to `departments.js`, creates four new data files (`roles.js`, `reports.js`, `aiUseCases.js`, `dataFlow.js`), adds three pages (`AdminPage`, `ManagerPage`, `DataFlowPage`) with 17 tab stub components, wires new routes, and injects ⚙️ Admin + 📊 Manager sub-links into the existing sidebar. All tab panels are stubs rendering "Coming in Phase 2–5".
 
@@ -134,7 +134,7 @@ Expected: `depts: 14`
 - [ ] **Step 6: Commit**
 
 ```bash
-cd /mnt/deepa/cpg
+cd /mnt/deepa/bev
 git add frontend/src/data/departments.js
 git commit -m "feat(data): add Contact Center, Marketing, Telehealth departments
 
@@ -336,7 +336,7 @@ seeded depts: [ 'sales', 'marketing', 'contact-center' ]
 - [ ] **Step 3: Commit**
 
 ```bash
-cd /mnt/deepa/cpg
+cd /mnt/deepa/bev
 git add frontend/src/data/roles.js
 git commit -m "feat(data): add roles.js with 4 canonical roles × 14 depts
 
@@ -420,7 +420,7 @@ reporting-monitoring: 6
 - [ ] **Step 3: Commit**
 
 ```bash
-cd /mnt/deepa/cpg
+cd /mnt/deepa/bev
 git add frontend/src/data/reports.js
 git commit -m "feat(data): add reports.js — 23 report types tagged by role
 
@@ -777,7 +777,7 @@ contact-center: 9
 - [ ] **Step 3: Commit**
 
 ```bash
-cd /mnt/deepa/cpg
+cd /mnt/deepa/bev
 git add frontend/src/data/aiUseCases.js
 git commit -m "feat(data): add aiUseCases.js — 16 categories, 20 seed entries
 
@@ -847,7 +847,7 @@ marketing in: 4 out: 2
 - [ ] **Step 3: Commit**
 
 ```bash
-cd /mnt/deepa/cpg
+cd /mnt/deepa/bev
 git add frontend/src/data/dataFlow.js
 git commit -m "feat(data): add dataFlow.js — 20 cross-dept data flow edges
 
@@ -908,7 +908,7 @@ export default function TabStub({ name, phase = 'Phase 2–5', description }) {
 - [ ] **Step 2: Commit**
 
 ```bash
-cd /mnt/deepa/cpg
+cd /mnt/deepa/bev
 git add frontend/src/components/common/TabStub.jsx
 git commit -m "feat(ui): add TabStub shared component for Phase 1 scaffolding
 
@@ -1058,7 +1058,7 @@ export default function SettingsTab({ dept }) {
 - [ ] **Step 11: Commit**
 
 ```bash
-cd /mnt/deepa/cpg
+cd /mnt/deepa/bev
 git add frontend/src/components/admin-tabs/
 git commit -m "feat(ui): add 10 admin-tab stub components
 
@@ -1169,7 +1169,7 @@ export default function RolesResponsibilitiesTab({ dept }) {
 - [ ] **Step 8: Commit**
 
 ```bash
-cd /mnt/deepa/cpg
+cd /mnt/deepa/bev
 git add frontend/src/components/manager-tabs/
 git commit -m "feat(ui): add 7 manager-tab stub components
 
@@ -1272,7 +1272,7 @@ export default function AdminPage() {
 - [ ] **Step 2: Commit**
 
 ```bash
-cd /mnt/deepa/cpg
+cd /mnt/deepa/bev
 git add frontend/src/pages/AdminPage.jsx
 git commit -m "feat(ui): add AdminPage with 10 tabs (stubbed)
 
@@ -1370,7 +1370,7 @@ export default function ManagerPage() {
 - [ ] **Step 2: Commit**
 
 ```bash
-cd /mnt/deepa/cpg
+cd /mnt/deepa/bev
 git add frontend/src/pages/ManagerPage.jsx
 git commit -m "feat(ui): add ManagerPage with 7 tabs (stubbed)
 
@@ -1457,7 +1457,7 @@ export default function DataFlowPage() {
 - [ ] **Step 2: Commit**
 
 ```bash
-cd /mnt/deepa/cpg
+cd /mnt/deepa/bev
 git add frontend/src/pages/DataFlowPage.jsx
 git commit -m "feat(ui): add DataFlowPage — global cross-dept flow preview
 
@@ -1531,7 +1531,7 @@ Expected: build succeeds, no import errors.
 - [ ] **Step 4: Commit**
 
 ```bash
-cd /mnt/deepa/cpg
+cd /mnt/deepa/bev
 git add frontend/src/App.jsx
 git commit -m "feat(routing): register /data-flow, /:deptId/admin, /:deptId/manager
 
@@ -1667,7 +1667,7 @@ Append to `frontend/src/styles/sidebar.css`:
 - [ ] **Step 5: Commit**
 
 ```bash
-cd /mnt/deepa/cpg
+cd /mnt/deepa/bev
 git add frontend/src/components/Sidebar.jsx frontend/src/styles/sidebar.css
 git commit -m "feat(ui): inject Admin + Manager sub-links under each dept
 
@@ -1691,7 +1691,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 - [ ] **Step 1: Install Playwright**
 
 ```bash
-cd /mnt/deepa/cpg/frontend
+cd /mnt/deepa/bev/frontend
 npm install --save-dev @playwright/test
 npx playwright install --with-deps chromium
 ```
@@ -1796,7 +1796,7 @@ test.describe('Admin & Manager hubs — Phase 1 scaffolding', () => {
 - [ ] **Step 5: Run the test**
 
 ```bash
-cd /mnt/deepa/cpg/frontend
+cd /mnt/deepa/bev/frontend
 npm run test:e2e
 ```
 
@@ -1807,7 +1807,7 @@ If the dev server fails to start, check `playwright.config.js`'s `webServer.comm
 - [ ] **Step 6: Commit**
 
 ```bash
-cd /mnt/deepa/cpg
+cd /mnt/deepa/bev
 git add frontend/package.json frontend/package-lock.json frontend/playwright.config.js frontend/e2e/
 git commit -m "test(e2e): add Playwright smoke tests for Admin & Manager hubs
 
@@ -1828,7 +1828,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 - [ ] **Step 1: Start dev server**
 
 ```bash
-cd /mnt/deepa/cpg/frontend
+cd /mnt/deepa/bev/frontend
 npm run dev
 ```
 
@@ -1856,7 +1856,7 @@ Press `Ctrl-C` in the terminal running `npm run dev` (or kill the background pro
 - [ ] **Step 4: Final all-tests verification**
 
 ```bash
-cd /mnt/deepa/cpg/frontend
+cd /mnt/deepa/bev/frontend
 npm run lint
 npm run build
 npm run test:e2e

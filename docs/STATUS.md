@@ -1,4 +1,4 @@
-# CPG Platform — Implementation Status
+# BEV Platform — Implementation Status
 
 Updated 2026-04-19 after Sales Phases α–θ and Supply Chain Waves 1–3 (β, δ, ε, γ, ζ, η, θ).
 
@@ -65,7 +65,7 @@ Rolls up KPIs across all depts, AI weekly narrative, strategy simulator. Spec no
 ```bash
 # 1. Data
 docker compose up -d postgres
-docker compose exec -T postgres psql -U cpg_user -d cpg_analytics < backend/migrations/010_sales_rossmann.sql
+docker compose exec -T postgres psql -U bev_user -d bev_analytics < backend/migrations/010_sales_rossmann.sql
 ./scripts/download_rossmann.sh data/kaggle/rossmann  # or use existing data/
 python scripts/ingest_rossmann.py --dir data/kaggle/rossmann
 

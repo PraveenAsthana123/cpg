@@ -47,7 +47,7 @@ requirements.txt                                    # ensure kaggle, psycopg[bin
 
 - [ ] **Step 1: Write the migration file**
 
-Create `/mnt/deepa/cpg/backend/migrations/010_sales_rossmann.sql`:
+Create `/mnt/deepa/bev/backend/migrations/010_sales_rossmann.sql`:
 
 ```sql
 -- 010_sales_rossmann.sql — Rossmann Store Sales canonical schema for Sales deep-dive
@@ -93,14 +93,14 @@ COMMIT;
 
 - [ ] **Step 2: Wire into `backend/database.py`**
 
-Read `/mnt/deepa/cpg/backend/database.py` to find the existing migration runner. Confirm that the runner reads files from `backend/migrations/` in order by filename prefix. The `010_` prefix should sort after any existing migrations (if the highest existing is `009_*`).
+Read `/mnt/deepa/bev/backend/database.py` to find the existing migration runner. Confirm that the runner reads files from `backend/migrations/` in order by filename prefix. The `010_` prefix should sort after any existing migrations (if the highest existing is `009_*`).
 
 If the runner does NOT exist or doesn't pick up the 010 file automatically, ADD the migration to whatever mechanism is in place. Report as DONE_WITH_CONCERNS and describe what you found.
 
 - [ ] **Step 3: Commit**
 
 ```bash
-cd /mnt/deepa/cpg
+cd /mnt/deepa/bev
 git add backend/migrations/010_sales_rossmann.sql
 git commit -m "feat(db): add migration 010 — Rossmann star schema
 
@@ -166,7 +166,7 @@ ls -lh "$DEST"
 - [ ] **Step 2: Make it executable**
 
 ```bash
-chmod +x /mnt/deepa/cpg/scripts/download_rossmann.sh
+chmod +x /mnt/deepa/bev/scripts/download_rossmann.sh
 ```
 
 - [ ] **Step 3: Commit**
@@ -191,7 +191,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 
 - [ ] **Step 1: Write the ingestion script**
 
-Create `/mnt/deepa/cpg/scripts/ingest_rossmann.py`:
+Create `/mnt/deepa/bev/scripts/ingest_rossmann.py`:
 
 ```python
 #!/usr/bin/env python
@@ -225,11 +225,11 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(mess
 
 
 def _pg_dsn_from_env() -> str:
-    host = os.getenv("CPG_POSTGRES_HOST", "localhost")
-    port = os.getenv("CPG_POSTGRES_PORT", "5432")
-    db = os.getenv("CPG_POSTGRES_DB", "cpg_analytics")
-    user = os.getenv("CPG_POSTGRES_USER", "cpg_user")
-    pwd = os.getenv("CPG_POSTGRES_PASSWORD", "cpg_secret_password")
+    host = os.getenv("BEV_POSTGRES_HOST", "localhost")
+    port = os.getenv("BEV_POSTGRES_PORT", "5432")
+    db = os.getenv("BEV_POSTGRES_DB", "bev_analytics")
+    user = os.getenv("BEV_POSTGRES_USER", "bev_user")
+    pwd = os.getenv("BEV_POSTGRES_PASSWORD", "bev_secret_password")
     return f"host={host} port={port} dbname={db} user={user} password={pwd}"
 
 
@@ -348,7 +348,7 @@ if __name__ == "__main__":
 - [ ] **Step 2: Ensure executable**
 
 ```bash
-chmod +x /mnt/deepa/cpg/scripts/ingest_rossmann.py
+chmod +x /mnt/deepa/bev/scripts/ingest_rossmann.py
 ```
 
 - [ ] **Step 3: Commit**
@@ -375,15 +375,15 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 - [ ] **Step 1: Read the existing repo base class**
 
 ```bash
-cat /mnt/deepa/cpg/backend/repositories/base.py 2>/dev/null || echo "NO base.py"
-ls /mnt/deepa/cpg/backend/repositories/
+cat /mnt/deepa/bev/backend/repositories/base.py 2>/dev/null || echo "NO base.py"
+ls /mnt/deepa/bev/backend/repositories/
 ```
 
 If a `base.py` exists with a shared connection-context pattern, inherit from it. Otherwise, create a standalone class that uses psycopg directly.
 
 - [ ] **Step 2: Write the repository**
 
-Create `/mnt/deepa/cpg/backend/repositories/sales_repo.py`:
+Create `/mnt/deepa/bev/backend/repositories/sales_repo.py`:
 
 ```python
 """sales_repo.py — read-only repository for the sales star schema.
@@ -403,11 +403,11 @@ from psycopg.rows import dict_row
 
 
 def _pg_dsn() -> str:
-    host = os.getenv("CPG_POSTGRES_HOST", "localhost")
-    port = os.getenv("CPG_POSTGRES_PORT", "5432")
-    db = os.getenv("CPG_POSTGRES_DB", "cpg_analytics")
-    user = os.getenv("CPG_POSTGRES_USER", "cpg_user")
-    pwd = os.getenv("CPG_POSTGRES_PASSWORD", "cpg_secret_password")
+    host = os.getenv("BEV_POSTGRES_HOST", "localhost")
+    port = os.getenv("BEV_POSTGRES_PORT", "5432")
+    db = os.getenv("BEV_POSTGRES_DB", "bev_analytics")
+    user = os.getenv("BEV_POSTGRES_USER", "bev_user")
+    pwd = os.getenv("BEV_POSTGRES_PASSWORD", "bev_secret_password")
     return f"host={host} port={port} dbname={db} user={user} password={pwd}"
 
 
@@ -483,10 +483,10 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 - [ ] **Step 1: Start Postgres (if not running)**
 
 ```bash
-cd /mnt/deepa/cpg
+cd /mnt/deepa/bev
 docker compose up -d postgres
 sleep 5
-docker compose exec postgres pg_isready -U cpg_user -d cpg_analytics
+docker compose exec postgres pg_isready -U bev_user -d bev_analytics
 ```
 
 Expected: `accepting connections`.
@@ -496,15 +496,15 @@ Expected: `accepting connections`.
 Run the migration runner. If the backend has a `python -m backend.database` command (per README), use it. Otherwise, pipe the SQL directly:
 
 ```bash
-cd /mnt/deepa/cpg
-docker compose exec -T postgres psql -U cpg_user -d cpg_analytics < backend/migrations/010_sales_rossmann.sql
+cd /mnt/deepa/bev
+docker compose exec -T postgres psql -U bev_user -d bev_analytics < backend/migrations/010_sales_rossmann.sql
 ```
 
 Expected: migration runs without error.
 
 Verify:
 ```bash
-docker compose exec postgres psql -U cpg_user -d cpg_analytics -c "\dt+ dim_store dim_date fact_sales"
+docker compose exec postgres psql -U bev_user -d bev_analytics -c "\dt+ dim_store dim_date fact_sales"
 ```
 
 Expected: three tables listed.
@@ -512,7 +512,7 @@ Expected: three tables listed.
 - [ ] **Step 3: Download the dataset (skip if already present)**
 
 ```bash
-cd /mnt/deepa/cpg
+cd /mnt/deepa/bev
 ./scripts/download_rossmann.sh data/kaggle/rossmann
 ls -lh data/kaggle/rossmann/
 ```
@@ -522,7 +522,7 @@ Expected: `train.csv`, `store.csv`, `test.csv` present. If script exits with "no
 - [ ] **Step 4: Run the ingestion**
 
 ```bash
-cd /mnt/deepa/cpg
+cd /mnt/deepa/bev
 python scripts/ingest_rossmann.py --dir data/kaggle/rossmann
 ```
 
@@ -540,7 +540,7 @@ Row counts are approximate — the Rossmann train.csv typically contains 1,017,2
 - [ ] **Step 5: Verify via psycopg**
 
 ```bash
-docker compose exec postgres psql -U cpg_user -d cpg_analytics -c "
+docker compose exec postgres psql -U bev_user -d bev_analytics -c "
   SELECT 'dim_store' AS tbl, COUNT(*) FROM dim_store
   UNION ALL SELECT 'dim_date', COUNT(*) FROM dim_date
   UNION ALL SELECT 'fact_sales', COUNT(*) FROM fact_sales;
@@ -570,7 +570,7 @@ No commit for Task 5 — this is runtime verification.
 ```python
 """test_rossmann_ingestion.py — data-quality assertions against the ingested tables.
 
-These run against whatever Postgres the CPG backend points at. If the tables
+These run against whatever Postgres the BEV backend points at. If the tables
 are empty (ingestion not run), tests are skipped with a clear message.
 """
 from __future__ import annotations
@@ -644,7 +644,7 @@ def test_get_sales_history_returns_nonempty(repo: SalesRepo, counts: dict) -> No
 - [ ] **Step 2: Run the test**
 
 ```bash
-cd /mnt/deepa/cpg
+cd /mnt/deepa/bev
 python -m pytest backend/tests/test_rossmann_ingestion.py -v 2>&1 | tail -30
 ```
 
@@ -757,7 +757,7 @@ def test_get_sales_history_with_dates(mock_repo):
 - [ ] **Step 2: Run the tests**
 
 ```bash
-cd /mnt/deepa/cpg
+cd /mnt/deepa/bev
 python -m pytest backend/tests/test_sales_repo.py -v 2>&1 | tail -20
 ```
 
@@ -786,7 +786,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 
 - [ ] **Step 1: Append Kaggle credentials section**
 
-Append to `/mnt/deepa/cpg/.env.template`:
+Append to `/mnt/deepa/bev/.env.template`:
 
 ```bash
 

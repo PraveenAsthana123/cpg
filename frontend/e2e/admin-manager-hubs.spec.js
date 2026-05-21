@@ -108,7 +108,7 @@ test.describe('Sales flagship — Phase ε', () => {
     // Phase η: default role is 'manager' so Run button is enabled unless the
     // previous test switched roles. Clear localStorage to guarantee default.
     await page.goto('/');
-    await page.evaluate(() => localStorage.removeItem('cpg.role'));
+    await page.evaluate(() => localStorage.removeItem('bev.role'));
     await page.goto('/sales/manager');
     await page.locator('.tab-item').filter({ hasText: /Simulation/ }).first().click();
     const runBtn = page.getByRole('button', { name: /Run scenario/ });
@@ -139,7 +139,7 @@ test.describe('Demo-mode RBAC — Phase η', () => {
   test.beforeEach(async ({ page }) => {
     // Ensure each RBAC test starts from a clean role = 'manager' default.
     await page.goto('/');
-    await page.evaluate(() => localStorage.removeItem('cpg.role'));
+    await page.evaluate(() => localStorage.removeItem('bev.role'));
   });
 
   test('Topbar has role selector with 5 options', async ({ page }) => {

@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     setup_logging()
-    logger.info("Starting CPG Analytics Dashboard")
+    logger.info("Starting BEV Analytics Dashboard")
 
     run_migrations()
     logger.info("Migrations complete")
@@ -32,16 +32,16 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
 
     yield
 
-    logger.info("Shutting down CPG Analytics Dashboard")
+    logger.info("Shutting down BEV Analytics Dashboard")
 
 
 def create_app() -> FastAPI:
     settings = get_settings()
 
     app = FastAPI(
-        title="CPG Analytics Dashboard API",
+        title="BEV Analytics Dashboard API",
         version="1.0.0",
-        description="AI-powered CPG analytics platform covering all 11 business departments",
+        description="AI-powered BEV analytics platform covering all 11 business departments",
         lifespan=lifespan,
     )
 

@@ -7,10 +7,10 @@ export const departments = [
     icon: '🏠',
     route: '/',
     color: '#3b82f6',
-    description: 'Executive overview of all CPG analytics across 11 departments',
+    description: 'Executive overview of all BEV analytics across 11 departments',
     processCount: 0,
     aiTypes: ['ML', 'DL', 'NLP', 'CV', 'RAG', 'RPA', 'n8n'],
-    kaggleDataset: 'cpg-analytics-overview',
+    kaggleDataset: 'bev-analytics-overview',
     roi: 'Enterprise-wide',
   },
   {
@@ -22,7 +22,7 @@ export const departments = [
     description: 'Demand forecasting, sales prediction, and revenue optimization using AI/ML models',
     processCount: 10,
     aiTypes: ['ML', 'DL', 'NLP', 'RAG'],
-    kaggleDataset: 'cpg-sales-forecasting',
+    kaggleDataset: 'bev-sales-forecasting',
     roi: '18–22% revenue uplift',
   },
   {

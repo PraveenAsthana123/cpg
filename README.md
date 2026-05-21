@@ -1,6 +1,6 @@
-# CPG Analytics Dashboard
+# BEV Analytics Dashboard
 
-A full-stack enterprise analytics platform for Consumer Packaged Goods (CPG) companies.
+A full-stack enterprise analytics platform for Beverages (BEV) companies.
 Covers 11 functional departments with real-time KPIs, ML-powered forecasting, and
 AI-driven explanations via Ollama/RAG.
 
@@ -65,7 +65,7 @@ AI-driven explanations via Ollama/RAG.
 ```bash
 # 1. Clone the repository
 git clone <repo-url>
-cd cpg
+cd bev
 
 # 2. Set up environment
 cp .env.template .env
@@ -115,7 +115,7 @@ npm run dev
 ## Project Structure
 
 ```
-cpg/
+bev/
 ├── backend/
 │   ├── core/          # Config, auth, middleware, encryption, logging
 │   ├── repositories/  # All SQL — one file per table group
