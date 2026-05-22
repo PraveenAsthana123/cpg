@@ -1,0 +1,105 @@
+{
+  "department": "finance",
+  "display_name": "Finance",
+  "left_nav": [
+    {
+      "process": "Forecasting",
+      "slug": "forecasting",
+      "sub_processes": [
+        {
+          "name": "Revenue forecast",
+          "slug": "revenue-forecast",
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Revenue forecast \u2014 Time-series ML applied to Sales, orders, subscriptions.",
+            "Data": "Sales, orders, subscriptions",
+            "Input Data Type": "Tabular CSV",
+            "AI Model": "Time-series ML",
+            "Output": "Revenue forecast",
+            "KPI": "Forecast MAPE"
+          }
+        }
+      ]
+    },
+    {
+      "process": "Cost & Margin",
+      "slug": "cost-and-margin",
+      "sub_processes": [
+        {
+          "name": "Budget planning",
+          "slug": "budget-planning",
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Budget planning \u2014 Optimization model applied to Spend, campaign, OPEX.",
+            "Data": "Spend, campaign, OPEX",
+            "Input Data Type": "Tabular CSV",
+            "AI Model": "Optimization model",
+            "Output": "Budget allocation",
+            "KPI": "Budget variance"
+          }
+        },
+        {
+          "name": "Margin analysis",
+          "slug": "margin-analysis",
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Margin analysis \u2014 ML analytics applied to Cost, price, promotion.",
+            "Data": "Cost, price, promotion",
+            "Input Data Type": "Tabular CSV",
+            "AI Model": "ML analytics",
+            "Output": "Margin insights",
+            "KPI": "Gross margin"
+          }
+        }
+      ]
+    },
+    {
+      "process": "Risk",
+      "slug": "risk",
+      "sub_processes": [
+        {
+          "name": "Fraud detection",
+          "slug": "fraud-detection",
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Fraud detection \u2014 Anomaly detection applied to Transactions, invoices.",
+            "Data": "Transactions, invoices",
+            "Input Data Type": "Tabular CSV",
+            "AI Model": "Anomaly detection",
+            "Output": "Fraud alerts",
+            "KPI": "Fraud rate"
+          }
+        }
+      ]
+    }
+  ],
+  "schema_note": "Each sub_process is rendered as a left-sidebar weblink. Selecting it loads a tabbed view (tabs[]). tab_content[<tab>] supplies the rendered content per tab."
+}

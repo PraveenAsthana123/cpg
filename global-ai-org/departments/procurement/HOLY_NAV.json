@@ -1,0 +1,125 @@
+{
+  "department": "procurement",
+  "display_name": "Procurement",
+  "left_nav": [
+    {
+      "process": "Sourcing",
+      "slug": "sourcing",
+      "sub_processes": [
+        {
+          "name": "Supplier scoring",
+          "slug": "supplier-scoring",
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Supplier scoring \u2014 Scoring ML applied to Vendor data, market data.",
+            "Data": "Vendor data, market data",
+            "Input Data Type": "Tabular CSV",
+            "AI Model": "Scoring ML",
+            "Output": "Vendor score",
+            "KPI": "Sourcing savings"
+          }
+        }
+      ]
+    },
+    {
+      "process": "Operations",
+      "slug": "operations",
+      "sub_processes": [
+        {
+          "name": "PO creation",
+          "slug": "po-creation",
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "PO creation \u2014 RPA applied to Request + contract data.",
+            "Data": "Request + contract data",
+            "Input Data Type": "Workflow JSON",
+            "AI Model": "RPA",
+            "Output": "Purchase order",
+            "KPI": "PO cycle time"
+          }
+        },
+        {
+          "name": "Invoice validation",
+          "slug": "invoice-validation",
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Invoice validation \u2014 OCR + rule engine applied to Invoice PDF, PO data.",
+            "Data": "Invoice PDF, PO data",
+            "Input Data Type": "PDF + tabular",
+            "AI Model": "OCR + rule engine",
+            "Output": "Matched invoice",
+            "KPI": "Match rate"
+          }
+        }
+      ]
+    },
+    {
+      "process": "Risk & Optimization",
+      "slug": "risk-and-optimization",
+      "sub_processes": [
+        {
+          "name": "Supplier risk",
+          "slug": "supplier-risk",
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Supplier risk \u2014 Risk model applied to Delivery, quality, financial.",
+            "Data": "Delivery, quality, financial",
+            "Input Data Type": "Tabular CSV",
+            "AI Model": "Risk model",
+            "Output": "Supplier risk alert",
+            "KPI": "Supplier reliability"
+          }
+        },
+        {
+          "name": "Cost optimization",
+          "slug": "cost-optimization",
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Cost optimization \u2014 Optimization model applied to Price, demand, supplier.",
+            "Data": "Price, demand, supplier",
+            "Input Data Type": "Tabular CSV",
+            "AI Model": "Optimization model",
+            "Output": "Procurement savings",
+            "KPI": "Procurement savings %"
+          }
+        }
+      ]
+    }
+  ],
+  "schema_note": "Each sub_process is rendered as a left-sidebar weblink. Selecting it loads a tabbed view (tabs[]). tab_content[<tab>] supplies the rendered content per tab."
+}

@@ -1,0 +1,99 @@
+{
+  "department": "hr",
+  "display_name": "Hr",
+  "left_nav": [
+    {
+      "process": "Talent Acquisition",
+      "slug": "talent-acquisition",
+      "sub_processes": [
+        {
+          "name": "Resume screening",
+          "slug": "resume-screening",
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Resume screening \u2014 NLP matching applied to Resumes, JDs.",
+            "Data": "Resumes, JDs",
+            "Input Data Type": "Text + PDF",
+            "AI Model": "NLP matching",
+            "Output": "Candidate shortlist",
+            "KPI": "Time-to-hire"
+          }
+        },
+        {
+          "name": "Interview scheduling",
+          "slug": "interview-scheduling",
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Interview scheduling \u2014 RPA applied to Calendar data.",
+            "Data": "Calendar data",
+            "Input Data Type": "Tabular",
+            "AI Model": "RPA",
+            "Output": "Scheduled interviews",
+            "KPI": "Scheduling cycle"
+          }
+        }
+      ]
+    },
+    {
+      "process": "Performance & Retention",
+      "slug": "performance-and-retention",
+      "sub_processes": [
+        {
+          "name": "Performance analytics",
+          "slug": "performance-analytics",
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Performance analytics \u2014 Analytics ML applied to KPI, attendance.",
+            "Data": "KPI, attendance",
+            "Input Data Type": "Tabular CSV",
+            "AI Model": "Analytics ML",
+            "Output": "Performance summary",
+            "KPI": "Retention %"
+          }
+        },
+        {
+          "name": "Retention risk",
+          "slug": "retention-risk",
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Retention risk \u2014 Churn model applied to Engagement, attrition.",
+            "Data": "Engagement, attrition",
+            "Input Data Type": "Tabular CSV",
+            "AI Model": "Churn model",
+            "Output": "Attrition risk",
+            "KPI": "Attrition rate"
+          }
+        }
+      ]
+    }
+  ],
+  "schema_note": "Each sub_process is rendered as a left-sidebar weblink. Selecting it loads a tabbed view (tabs[]). tab_content[<tab>] supplies the rendered content per tab."
+}

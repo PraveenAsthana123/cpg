@@ -1,0 +1,145 @@
+{
+  "department": "sales",
+  "display_name": "Sales",
+  "left_nav": [
+    {
+      "process": "Lead Management",
+      "slug": "lead-management",
+      "sub_processes": [
+        {
+          "name": "Lead identification",
+          "slug": "lead-identification",
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Lead identification \u2014 Lead scoring model applied to CRM, retailer data.",
+            "Data": "CRM, retailer data",
+            "Input Data Type": "Tabular CSV",
+            "AI Model": "Lead scoring model",
+            "Output": "Qualified leads",
+            "KPI": "Lead conversion"
+          }
+        },
+        {
+          "name": "Account prioritization",
+          "slug": "account-prioritization",
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Account prioritization \u2014 Predictive ML applied to Sales history, revenue.",
+            "Data": "Sales history, revenue",
+            "Input Data Type": "Tabular CSV",
+            "AI Model": "Predictive ML",
+            "Output": "Account priority",
+            "KPI": "Account value"
+          }
+        }
+      ]
+    },
+    {
+      "process": "Pricing & Proposals",
+      "slug": "pricing-and-proposals",
+      "sub_processes": [
+        {
+          "name": "Proposal generation",
+          "slug": "proposal-generation",
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Proposal generation \u2014 GenAI + RAG applied to Product catalog, pricing.",
+            "Data": "Product catalog, pricing",
+            "Input Data Type": "Text + tabular",
+            "AI Model": "GenAI + RAG",
+            "Output": "Sales proposal",
+            "KPI": "Proposal win rate"
+          }
+        },
+        {
+          "name": "Pricing recommendation",
+          "slug": "pricing-recommendation",
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Pricing recommendation \u2014 Optimization model applied to Margin, competitor data.",
+            "Data": "Margin, competitor data",
+            "Input Data Type": "Tabular CSV",
+            "AI Model": "Optimization model",
+            "Output": "Suggested price",
+            "KPI": "Margin"
+          }
+        }
+      ]
+    },
+    {
+      "process": "Sales Operations",
+      "slug": "sales-operations",
+      "sub_processes": [
+        {
+          "name": "Cross-sell/upsell",
+          "slug": "cross-sell-upsell",
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Cross-sell/upsell \u2014 Recommendation model applied to Purchase history.",
+            "Data": "Purchase history",
+            "Input Data Type": "Tabular CSV",
+            "AI Model": "Recommendation model",
+            "Output": "Offer recommendation",
+            "KPI": "AOV"
+          }
+        },
+        {
+          "name": "Sales forecast",
+          "slug": "sales-forecast",
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Sales forecast \u2014 Forecasting model applied to Pipeline, orders.",
+            "Data": "Pipeline, orders",
+            "Input Data Type": "Tabular CSV",
+            "AI Model": "Forecasting model",
+            "Output": "Sales forecast",
+            "KPI": "Forecast accuracy"
+          }
+        }
+      ]
+    }
+  ],
+  "schema_note": "Each sub_process is rendered as a left-sidebar weblink. Selecting it loads a tabbed view (tabs[]). tab_content[<tab>] supplies the rendered content per tab."
+}
