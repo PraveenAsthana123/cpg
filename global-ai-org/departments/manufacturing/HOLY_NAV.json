@@ -10,8 +10,6 @@
           "name": "Production schedule",
           "slug": "production-schedule",
           "audiences": [
-            "b2b",
-            "b2c",
             "b2e"
           ],
           "tabs": [
@@ -30,6 +28,29 @@
             "Output": "Production plan",
             "KPI": "OEE"
           }
+        },
+        {
+          "name": "Changeover optimization",
+          "slug": "changeover-optimization",
+          "audiences": [
+            "b2e"
+          ],
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Changeover optimization \u2014 Optimization AI applied to Recipe + line constraints.",
+            "Data": "Recipe + line constraints",
+            "Input Data Type": "Tabular CSV",
+            "AI Model": "Optimization AI",
+            "Output": "Optimal changeover sequence",
+            "KPI": "Changeover time"
+          }
         }
       ]
     },
@@ -41,8 +62,6 @@
           "name": "Predictive maintenance",
           "slug": "predictive-maintenance",
           "audiences": [
-            "b2b",
-            "b2c",
             "b2e"
           ],
           "tabs": [
@@ -61,6 +80,29 @@
             "Output": "Failure risk",
             "KPI": "Downtime"
           }
+        },
+        {
+          "name": "Anomaly detection",
+          "slug": "anomaly-detection",
+          "audiences": [
+            "b2e"
+          ],
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Anomaly detection \u2014 Anomaly ML applied to Vibration + acoustics.",
+            "Data": "Vibration + acoustics",
+            "Input Data Type": "Time-series IoT",
+            "AI Model": "Anomaly ML",
+            "Output": "Anomaly alerts",
+            "KPI": "MTTR"
+          }
         }
       ]
     },
@@ -72,8 +114,6 @@
           "name": "Mixing/formulation",
           "slug": "mixing-formulation",
           "audiences": [
-            "b2b",
-            "b2c",
             "b2e"
           ],
           "tabs": [
@@ -97,8 +137,6 @@
           "name": "Visual inspection",
           "slug": "visual-inspection",
           "audiences": [
-            "b2b",
-            "b2c",
             "b2e"
           ],
           "tabs": [
@@ -122,8 +160,6 @@
           "name": "Label verification",
           "slug": "label-verification",
           "audiences": [
-            "b2b",
-            "b2c",
             "b2e"
           ],
           "tabs": [
@@ -141,6 +177,58 @@
             "AI Model": "CV + OCR",
             "Output": "Label validation",
             "KPI": "Compliance %"
+          }
+        }
+      ]
+    },
+    {
+      "process": "Energy & Sustainability",
+      "slug": "energy-and-sustainability",
+      "sub_processes": [
+        {
+          "name": "Energy optimization",
+          "slug": "energy-optimization",
+          "audiences": [
+            "b2e"
+          ],
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Energy optimization \u2014 Optimization AI applied to Sub-meter telemetry.",
+            "Data": "Sub-meter telemetry",
+            "Input Data Type": "Streaming IoT",
+            "AI Model": "Optimization AI",
+            "Output": "Energy reduction plan",
+            "KPI": "kWh per unit"
+          }
+        },
+        {
+          "name": "Water-use forecasting",
+          "slug": "water-use-forecasting",
+          "audiences": [
+            "b2e"
+          ],
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Water-use forecasting \u2014 Forecasting ML applied to Process telemetry + weather.",
+            "Data": "Process telemetry + weather",
+            "Input Data Type": "Streaming + tabular",
+            "AI Model": "Forecasting ML",
+            "Output": "Water demand forecast",
+            "KPI": "Water per unit"
           }
         }
       ]

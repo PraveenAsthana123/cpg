@@ -11,7 +11,6 @@
           "slug": "supplier-scoring",
           "audiences": [
             "b2b",
-            "b2c",
             "b2e"
           ],
           "tabs": [
@@ -30,6 +29,30 @@
             "Output": "Vendor score",
             "KPI": "Sourcing savings"
           }
+        },
+        {
+          "name": "Supplier discovery",
+          "slug": "supplier-discovery",
+          "audiences": [
+            "b2b",
+            "b2e"
+          ],
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Supplier discovery \u2014 NLP search applied to Web + vendor DB.",
+            "Data": "Web + vendor DB",
+            "Input Data Type": "Text + tabular",
+            "AI Model": "NLP search",
+            "Output": "Candidate vendor list",
+            "KPI": "Supplier diversity"
+          }
         }
       ]
     },
@@ -42,7 +65,6 @@
           "slug": "po-creation",
           "audiences": [
             "b2b",
-            "b2c",
             "b2e"
           ],
           "tabs": [
@@ -67,7 +89,6 @@
           "slug": "invoice-validation",
           "audiences": [
             "b2b",
-            "b2c",
             "b2e"
           ],
           "tabs": [
@@ -86,19 +107,41 @@
             "Output": "Matched invoice",
             "KPI": "Match rate"
           }
+        },
+        {
+          "name": "Three-way match automation",
+          "slug": "three-way-match-automation",
+          "audiences": [
+            "b2e"
+          ],
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Three-way match automation \u2014 Rule + ML applied to PO + receipt + invoice.",
+            "Data": "PO + receipt + invoice",
+            "Input Data Type": "Tabular + PDF",
+            "AI Model": "Rule + ML",
+            "Output": "Auto-approved invoices",
+            "KPI": "Touchless invoice %"
+          }
         }
       ]
     },
     {
-      "process": "Risk & Optimization",
-      "slug": "risk-and-optimization",
+      "process": "Risk & Compliance",
+      "slug": "risk-and-compliance",
       "sub_processes": [
         {
           "name": "Supplier risk",
           "slug": "supplier-risk",
           "audiences": [
             "b2b",
-            "b2c",
             "b2e"
           ],
           "tabs": [
@@ -119,11 +162,62 @@
           }
         },
         {
+          "name": "ESG supplier monitoring",
+          "slug": "esg-supplier-monitoring",
+          "audiences": [
+            "b2b",
+            "b2e"
+          ],
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "ESG supplier monitoring \u2014 Governance AI applied to ESG data + audits.",
+            "Data": "ESG data + audits",
+            "Input Data Type": "Tabular + text",
+            "AI Model": "Governance AI",
+            "Output": "ESG compliance score",
+            "KPI": "Scope-3 emissions"
+          }
+        },
+        {
+          "name": "Contract risk extraction",
+          "slug": "contract-risk-extraction",
+          "audiences": [
+            "b2e"
+          ],
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Contract risk extraction \u2014 NLP clause extraction applied to Contract PDFs.",
+            "Data": "Contract PDFs",
+            "Input Data Type": "PDF + text",
+            "AI Model": "NLP clause extraction",
+            "Output": "Risk-flagged clauses",
+            "KPI": "Contract review time"
+          }
+        }
+      ]
+    },
+    {
+      "process": "Optimization",
+      "slug": "optimization",
+      "sub_processes": [
+        {
           "name": "Cost optimization",
           "slug": "cost-optimization",
           "audiences": [
-            "b2b",
-            "b2c",
             "b2e"
           ],
           "tabs": [
@@ -141,6 +235,30 @@
             "AI Model": "Optimization model",
             "Output": "Procurement savings",
             "KPI": "Procurement savings %"
+          }
+        },
+        {
+          "name": "Demand-aware reorder",
+          "slug": "demand-aware-reorder",
+          "audiences": [
+            "b2b",
+            "b2e"
+          ],
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Demand-aware reorder \u2014 Predictive ML applied to Inventory + production plan.",
+            "Data": "Inventory + production plan",
+            "Input Data Type": "Tabular CSV",
+            "AI Model": "Predictive ML",
+            "Output": "Reorder recommendation",
+            "KPI": "Stockout rate"
           }
         }
       ]

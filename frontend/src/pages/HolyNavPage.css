@@ -395,3 +395,248 @@
 .holy-back:hover {
   text-decoration: underline;
 }
+
+/* Spec link is now a button (was an anchor) */
+.holy-spec-link {
+  display: inline-block;
+  font-size: 12px;
+  color: #1b1b32;
+  text-decoration: none;
+  padding: 4px 8px;
+  background: #eef2ff;
+  border-radius: 4px;
+  border: 1px solid #c7d2fe;
+  transition: all 0.1s;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.holy-spec-link:hover {
+  background: #3b82f6;
+  color: white;
+  border-color: #3b82f6;
+}
+
+/* HOLY_SPEC.md modal */
+.holy-spec-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.holy-spec-modal {
+  background: white;
+  width: min(900px, 90vw);
+  max-height: 85vh;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.2);
+}
+
+.holy-spec-modal-header {
+  padding: 16px 24px;
+  background: #1b1b32;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.holy-spec-modal-header h2 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.holy-spec-close {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+}
+
+.holy-spec-close:hover {
+  opacity: 0.7;
+}
+
+.holy-spec-modal-body {
+  padding: 24px;
+  overflow-y: auto;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #2a2a3a;
+}
+
+.holy-spec-modal-body h1 {
+  font-size: 22px;
+  margin: 0 0 12px;
+}
+
+.holy-spec-modal-body h2 {
+  font-size: 18px;
+  margin: 24px 0 8px;
+  color: #3b82f6;
+}
+
+.holy-spec-modal-body h3 {
+  font-size: 15px;
+  margin: 16px 0 8px;
+}
+
+.holy-spec-modal-body table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+  font-size: 13px;
+}
+
+.holy-spec-modal-body th, .holy-spec-modal-body td {
+  border: 1px solid #e0e0e8;
+  padding: 6px 10px;
+  text-align: left;
+}
+
+.holy-spec-modal-body th {
+  background: #f8f9fb;
+  font-weight: 600;
+}
+
+.holy-spec-modal-body code {
+  background: #f3f4f6;
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-size: 12px;
+}
+
+/* Council section */
+.holy-council-section {
+  margin-top: 32px;
+  padding: 20px;
+  background: linear-gradient(135deg, #fafbff 0%, #f0f4ff 100%);
+  border: 1px solid #c7d2fe;
+  border-radius: 10px;
+}
+
+.holy-council-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.holy-council-header h3 {
+  margin: 0;
+  font-size: 16px;
+  color: #1b1b32;
+}
+
+.holy-council-btn {
+  padding: 8px 16px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.1s;
+}
+
+.holy-council-btn:hover:not(:disabled) {
+  background: #2563eb;
+}
+
+.holy-council-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.holy-council-status {
+  margin: 8px 0;
+  color: #666;
+  font-size: 13px;
+}
+
+.holy-council-status code {
+  background: white;
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 11px;
+}
+
+.holy-council-error {
+  margin: 8px 0;
+  padding: 8px 12px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+  color: #991b1b;
+  font-size: 13px;
+}
+
+.holy-council-result {
+  margin-top: 12px;
+}
+
+.holy-council-meta {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 12px;
+  font-size: 11px;
+  color: #666;
+}
+
+.holy-council-meta code {
+  background: white;
+  padding: 1px 6px;
+  border-radius: 3px;
+}
+
+.holy-council-stage {
+  background: white;
+  padding: 12px 16px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  border-left: 3px solid #c7d2fe;
+}
+
+.holy-council-stage--final {
+  border-left-color: #3b82f6;
+  background: #eef2ff;
+}
+
+.holy-council-stage-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: #6366f1;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+
+.holy-council-stage-title code {
+  background: rgba(99, 102, 241, 0.1);
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 10px;
+  text-transform: none;
+  font-weight: 500;
+}
+
+.holy-council-stage-body {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #2a2a3a;
+  white-space: pre-wrap;
+}

@@ -11,7 +11,6 @@
           "slug": "store-level-forecast",
           "audiences": [
             "b2b",
-            "b2c",
             "b2e"
           ],
           "tabs": [
@@ -30,6 +29,29 @@
             "Output": "Store demand",
             "KPI": "Store revenue"
           }
+        },
+        {
+          "name": "Footfall prediction",
+          "slug": "footfall-prediction",
+          "audiences": [
+            "b2b"
+          ],
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Footfall prediction \u2014 Forecasting ML applied to Foot-traffic counter + weather.",
+            "Data": "Foot-traffic counter + weather",
+            "Input Data Type": "Time-series",
+            "AI Model": "Forecasting ML",
+            "Output": "Hourly footfall",
+            "KPI": "Conversion %"
+          }
         }
       ]
     },
@@ -42,7 +64,6 @@
           "slug": "shelf-monitoring",
           "audiences": [
             "b2b",
-            "b2c",
             "b2e"
           ],
           "tabs": [
@@ -66,9 +87,7 @@
           "name": "Planogram validation",
           "slug": "planogram-validation",
           "audiences": [
-            "b2b",
-            "b2c",
-            "b2e"
+            "b2b"
           ],
           "tabs": [
             "Overview",
@@ -86,6 +105,29 @@
             "Output": "Compliance score",
             "KPI": "Compliance %"
           }
+        },
+        {
+          "name": "Out-of-stock detection",
+          "slug": "out-of-stock-detection",
+          "audiences": [
+            "b2b"
+          ],
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Out-of-stock detection \u2014 CV + anomaly applied to Shelf images + POS gap.",
+            "Data": "Shelf images + POS gap",
+            "Input Data Type": "Image + tabular",
+            "AI Model": "CV + anomaly",
+            "Output": "OOS alerts",
+            "KPI": "Lost sales $"
+          }
         }
       ]
     },
@@ -97,9 +139,8 @@
           "name": "Promotion impact",
           "slug": "promotion-impact",
           "audiences": [
-            "b2b",
             "b2c",
-            "b2e"
+            "b2b"
           ],
           "tabs": [
             "Overview",
@@ -116,6 +157,59 @@
             "AI Model": "Causal ML",
             "Output": "Promo impact",
             "KPI": "Promo ROI"
+          }
+        },
+        {
+          "name": "Dynamic promotion optimization",
+          "slug": "dynamic-promotion-optimization",
+          "audiences": [
+            "b2c",
+            "b2b"
+          ],
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Dynamic promotion optimization \u2014 Reinforcement learning applied to Real-time POS + inventory.",
+            "Data": "Real-time POS + inventory",
+            "Input Data Type": "Streaming",
+            "AI Model": "Reinforcement learning",
+            "Output": "Live promo adjustment",
+            "KPI": "Margin lift"
+          }
+        }
+      ]
+    },
+    {
+      "process": "Workforce",
+      "slug": "workforce",
+      "sub_processes": [
+        {
+          "name": "Store-staffing optimization",
+          "slug": "store-staffing-optimization",
+          "audiences": [
+            "b2e"
+          ],
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Store-staffing optimization \u2014 Optimization AI applied to Footfall + sales forecast.",
+            "Data": "Footfall + sales forecast",
+            "Input Data Type": "Tabular CSV",
+            "AI Model": "Optimization AI",
+            "Output": "Shift schedule",
+            "KPI": "Labor cost %"
           }
         }
       ]

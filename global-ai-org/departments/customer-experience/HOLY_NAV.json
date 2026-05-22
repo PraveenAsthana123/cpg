@@ -10,9 +10,8 @@
           "name": "Intent detection",
           "slug": "intent-detection",
           "audiences": [
-            "b2b",
             "b2c",
-            "b2e"
+            "b2b"
           ],
           "tabs": [
             "Overview",
@@ -35,9 +34,8 @@
           "name": "FAQ retrieval",
           "slug": "faq-retrieval",
           "audiences": [
-            "b2b",
             "b2c",
-            "b2e"
+            "b2b"
           ],
           "tabs": [
             "Overview",
@@ -55,6 +53,29 @@
             "Output": "Grounded answer",
             "KPI": "FCR"
           }
+        },
+        {
+          "name": "Multilingual translation",
+          "slug": "multilingual-translation",
+          "audiences": [
+            "b2c"
+          ],
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Multilingual translation \u2014 NMT (NLLB / m2m) applied to Inbound message + language tag.",
+            "Data": "Inbound message + language tag",
+            "Input Data Type": "Text",
+            "AI Model": "NMT (NLLB / m2m)",
+            "Output": "Translated reply",
+            "KPI": "Translation BLEU"
+          }
         }
       ]
     },
@@ -66,9 +87,8 @@
           "name": "Sentiment detection",
           "slug": "sentiment-detection",
           "audiences": [
-            "b2b",
             "b2c",
-            "b2e"
+            "b2b"
           ],
           "tabs": [
             "Overview",
@@ -91,9 +111,8 @@
           "name": "Escalation routing",
           "slug": "escalation-routing",
           "audiences": [
-            "b2b",
             "b2c",
-            "b2e"
+            "b2b"
           ],
           "tabs": [
             "Overview",
@@ -111,6 +130,30 @@
             "Output": "Human handoff",
             "KPI": "MTTR"
           }
+        },
+        {
+          "name": "VIP customer routing",
+          "slug": "vip-customer-routing",
+          "audiences": [
+            "b2c",
+            "b2b"
+          ],
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "VIP customer routing \u2014 Scoring + rules applied to Customer LTV + tier.",
+            "Data": "Customer LTV + tier",
+            "Input Data Type": "Tabular CSV",
+            "AI Model": "Scoring + rules",
+            "Output": "Priority queue assignment",
+            "KPI": "VIP CSAT"
+          }
         }
       ]
     },
@@ -122,9 +165,7 @@
           "name": "Churn trigger",
           "slug": "churn-trigger",
           "audiences": [
-            "b2b",
-            "b2c",
-            "b2e"
+            "b2c"
           ],
           "tabs": [
             "Overview",
@@ -141,6 +182,82 @@
             "AI Model": "Churn model",
             "Output": "Retention action",
             "KPI": "Retention %"
+          }
+        },
+        {
+          "name": "Win-back recommendation",
+          "slug": "win-back-recommendation",
+          "audiences": [
+            "b2c"
+          ],
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Win-back recommendation \u2014 Recommendation AI applied to Lapsed customer profile.",
+            "Data": "Lapsed customer profile",
+            "Input Data Type": "Tabular CSV",
+            "AI Model": "Recommendation AI",
+            "Output": "Offer set",
+            "KPI": "Reactivation rate"
+          }
+        }
+      ]
+    },
+    {
+      "process": "Voice & Conversational",
+      "slug": "voice-and-conversational",
+      "sub_processes": [
+        {
+          "name": "Live call summarization",
+          "slug": "live-call-summarization",
+          "audiences": [
+            "b2c",
+            "b2b"
+          ],
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Live call summarization \u2014 STT + LLM summarization applied to Audio + transcript.",
+            "Data": "Audio + transcript",
+            "Input Data Type": "Audio + text",
+            "AI Model": "STT + LLM summarization",
+            "Output": "Call summary + action items",
+            "KPI": "After-call work time"
+          }
+        },
+        {
+          "name": "AI agent assist (live copilot)",
+          "slug": "ai-agent-assist-(live-copilot)",
+          "audiences": [
+            "b2e"
+          ],
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "AI agent assist (live copilot) \u2014 RAG + LLM applied to Real-time transcript + KB.",
+            "Data": "Real-time transcript + KB",
+            "Input Data Type": "Streaming text",
+            "AI Model": "RAG + LLM",
+            "Output": "Suggested next-best-action",
+            "KPI": "Resolution rate"
           }
         }
       ]

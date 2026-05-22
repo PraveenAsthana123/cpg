@@ -97,6 +97,7 @@ services:
     volumes:
       - ./backend:/app
       - ./data:/data
+      - ./global-ai-org:/global-ai-org:ro
     depends_on:
       postgres:
         condition: service_healthy
@@ -123,6 +124,7 @@ services:
     volumes:
       - ./backend:/app
       - ./data:/data
+      - ./global-ai-org:/global-ai-org:ro
     depends_on:
       postgres:
         condition: service_healthy

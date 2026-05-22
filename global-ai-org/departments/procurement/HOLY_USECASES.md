@@ -7,6 +7,7 @@
 | Sub-process | B2B Use Case | B2C Use Case | B2E Use Case |
 |---|---|---|---|
 | Supplier scoring | Vendor score delivered to retailer/distributor account managers via API | Vendor score surfaced in HOLY consumer app / web storefront | Vendor score powering internal dashboards + copilots for the procurement team |
+| Supplier discovery | Candidate vendor list delivered to retailer/distributor account managers via API | Candidate vendor list surfaced in HOLY consumer app / web storefront | Candidate vendor list powering internal dashboards + copilots for the procurement team |
 
 ## Operations
 
@@ -14,13 +15,22 @@
 |---|---|---|---|
 | PO creation | Purchase order delivered to retailer/distributor account managers via API | Purchase order surfaced in HOLY consumer app / web storefront | Purchase order powering internal dashboards + copilots for the procurement team |
 | Invoice validation | Matched invoice delivered to retailer/distributor account managers via API | Matched invoice surfaced in HOLY consumer app / web storefront | Matched invoice powering internal dashboards + copilots for the procurement team |
+| Three-way match automation | Auto-approved invoices delivered to retailer/distributor account managers via API | Auto-approved invoices surfaced in HOLY consumer app / web storefront | Auto-approved invoices powering internal dashboards + copilots for the procurement team |
 
-## Risk & Optimization
+## Risk & Compliance
 
 | Sub-process | B2B Use Case | B2C Use Case | B2E Use Case |
 |---|---|---|---|
 | Supplier risk | Supplier risk alert delivered to retailer/distributor account managers via API | Supplier risk alert surfaced in HOLY consumer app / web storefront | Supplier risk alert powering internal dashboards + copilots for the procurement team |
+| ESG supplier monitoring | ESG compliance score delivered to retailer/distributor account managers via API | ESG compliance score surfaced in HOLY consumer app / web storefront | ESG compliance score powering internal dashboards + copilots for the procurement team |
+| Contract risk extraction | Risk-flagged clauses delivered to retailer/distributor account managers via API | Risk-flagged clauses surfaced in HOLY consumer app / web storefront | Risk-flagged clauses powering internal dashboards + copilots for the procurement team |
+
+## Optimization
+
+| Sub-process | B2B Use Case | B2C Use Case | B2E Use Case |
+|---|---|---|---|
 | Cost optimization | Procurement savings delivered to retailer/distributor account managers via API | Procurement savings surfaced in HOLY consumer app / web storefront | Procurement savings powering internal dashboards + copilots for the procurement team |
+| Demand-aware reorder | Reorder recommendation delivered to retailer/distributor account managers via API | Reorder recommendation surfaced in HOLY consumer app / web storefront | Reorder recommendation powering internal dashboards + copilots for the procurement team |
 
 ---
 

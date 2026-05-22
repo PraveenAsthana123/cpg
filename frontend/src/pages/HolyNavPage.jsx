@@ -1,23 +1,34 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import ReactMarkdown from 'react-markdown';
 import './HolyNavPage.css';
 
-const HOLY_DEPTS = [
-  'digital-marketing', 'customer-experience', 'supply-chain', 'manufacturing',
-  'product-rd', 'retail-operations', 'sales', 'finance', 'hr', 'procurement',
-  'executive-leadership', 'e-commerce',
-];
-
 const ALL_AUDIENCES = ['b2b', 'b2c', 'b2e'];
+const API_BASE = '/api/v1/holy';
 
 export default function HolyNavPage() {
   const { departmentId } = useParams();
+  const [depts, setDepts] = useState([]);
   const [nav, setNav] = useState(null);
   const [error, setError] = useState(null);
   const [selected, setSelected] = useState({ process: null, sub: null });
   const [activeTab, setActiveTab] = useState('Overview');
   const [audiences, setAudiences] = useState(ALL_AUDIENCES);
+  const [specOpen, setSpecOpen] = useState(false);
+  const [specMd, setSpecMd] = useState('');
+  const [council, setCouncil] = useState({ status: 'idle', taskId: null, result: null, error: null });
+  const pollTimer = useRef(null);
 
+  // Load dept list (for picker)
+  useEffect(() => {
+    if (departmentId) return;
+    fetch(`${API_BASE}/depts`)
+      .then((r) => r.json())
+      .then((d) => setDepts(d.departments || []))
+      .catch((e) => setError(String(e)));
+  }, [departmentId]);
+
+  // Load nav for selected dept
   useEffect(() => {
     if (!departmentId) {
       setNav(null);
@@ -26,9 +37,11 @@ export default function HolyNavPage() {
     setError(null);
     setSelected({ process: null, sub: null });
     setAudiences(ALL_AUDIENCES);
-    fetch(`/holy-nav/${departmentId}.json`)
+    setSpecOpen(false);
+    setCouncil({ status: 'idle', taskId: null, result: null, error: null });
+    fetch(`${API_BASE}/nav/${departmentId}`)
       .then((r) => {
-        if (!r.ok) throw new Error(`Failed to load nav for ${departmentId}: HTTP ${r.status}`);
+        if (!r.ok) throw new Error(`Failed to load nav: HTTP ${r.status}`);
         return r.json();
       })
       .then((data) => {
@@ -44,7 +57,13 @@ export default function HolyNavPage() {
       .catch((e) => setError(String(e)));
   }, [departmentId]);
 
-  // Filter nav by selected audiences
+  // Cleanup polling on unmount or dept change
+  useEffect(() => {
+    return () => {
+      if (pollTimer.current) clearTimeout(pollTimer.current);
+    };
+  }, [departmentId]);
+
   const filteredNav = useMemo(() => {
     if (!nav) return null;
     const filtered = nav.left_nav
@@ -67,24 +86,76 @@ export default function HolyNavPage() {
   const toggleAudience = (a) => {
     setAudiences((prev) => {
       if (prev.includes(a)) {
-        if (prev.length === 1) return prev; // don't allow all-off
+        if (prev.length === 1) return prev;
         return prev.filter((x) => x !== a);
       }
       return [...prev, a];
     });
   };
 
-  // No dept selected — dept picker
+  const openSpec = async () => {
+    setSpecOpen(true);
+    if (specMd) return;
+    try {
+      const r = await fetch(`${API_BASE}/spec/${departmentId}`);
+      const d = await r.json();
+      setSpecMd(d.markdown || '_(empty)_');
+    } catch (e) {
+      setSpecMd(`Error loading spec: ${e}`);
+    }
+  };
+
+  const askCouncil = async () => {
+    if (!selected.sub) return;
+    setCouncil({ status: 'submitting', taskId: null, result: null, error: null });
+    const prompt = selected.sub.tab_content?.Overview ?? selected.sub.name;
+    try {
+      const r = await fetch(`${API_BASE}/council/ask`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt, department: departmentId }),
+      });
+      const d = await r.json();
+      if (!r.ok) throw new Error(d.detail || `HTTP ${r.status}`);
+      setCouncil({ status: 'pending', taskId: d.task_id, result: null, error: null });
+      pollCouncil(d.task_id);
+    } catch (e) {
+      setCouncil({ status: 'error', taskId: null, result: null, error: String(e) });
+    }
+  };
+
+  const pollCouncil = (taskId, attempt = 0) => {
+    if (attempt > 60) {
+      // 60 attempts × 5s = 5 min max
+      setCouncil((c) => ({ ...c, status: 'error', error: 'Timeout waiting for council (5 min)' }));
+      return;
+    }
+    pollTimer.current = setTimeout(async () => {
+      try {
+        const r = await fetch(`${API_BASE}/council/result/${taskId}`);
+        const d = await r.json();
+        if (d.status === 'done') {
+          setCouncil({ status: 'done', taskId, result: d.result, error: null });
+        } else {
+          pollCouncil(taskId, attempt + 1);
+        }
+      } catch (e) {
+        setCouncil((c) => ({ ...c, status: 'error', error: String(e) }));
+      }
+    }, 5000);
+  };
+
   if (!departmentId) {
     return (
       <div className="holy-nav-container">
         <h1>HOLY Beverage — Department Navigator</h1>
         <p className="holy-subtitle">
           Pick a department to explore its processes, sub-processes, data inputs, AI models, outputs, and KPIs.
-          Filter by audience: B2B (business customers) / B2C (consumers) / B2E (employees).
+          Filter by audience (B2B / B2C / B2E) and ask the AI council about any process.
         </p>
         <div className="holy-dept-grid">
-          {HOLY_DEPTS.map((d) => (
+          {depts.length === 0 && <p>Loading depts…</p>}
+          {depts.map((d) => (
             <Link key={d} to={`/holy/${d}`} className="holy-dept-card">
               <span className="holy-dept-name">{d.replace(/-/g, ' ')}</span>
               <span className="holy-dept-cta">Open →</span>
@@ -118,7 +189,6 @@ export default function HolyNavPage() {
 
   return (
     <div className="holy-nav-page">
-      {/* Left sidebar: process → sub-process tree */}
       <aside className="holy-sidebar">
         <div className="holy-sidebar-header">
           <Link to="/holy" className="holy-back-link">← All HOLY depts</Link>
@@ -127,17 +197,11 @@ export default function HolyNavPage() {
             {filteredNav.left_nav.length} processes · {totalVisibleSubs} sub-processes shown
           </p>
           <div className="holy-spec-link-wrap">
-            <a
-              href={`/holy-specs/${departmentId}.md`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="holy-spec-link"
-            >
-              📄 View full HOLY_SPEC.md ↗
-            </a>
+            <button type="button" onClick={openSpec} className="holy-spec-link">
+              📄 View full HOLY_SPEC.md
+            </button>
           </div>
 
-          {/* Audience filter chips */}
           <div className="holy-audience-filter">
             <span className="holy-audience-label">Filter by audience:</span>
             <div className="holy-audience-chips">
@@ -178,6 +242,7 @@ export default function HolyNavPage() {
                         onClick={() => {
                           setSelected({ process: proc.process, sub: s });
                           setActiveTab('Overview');
+                          setCouncil({ status: 'idle', taskId: null, result: null, error: null });
                         }}
                       >
                         <span>{s.name}</span>
@@ -196,7 +261,6 @@ export default function HolyNavPage() {
         </nav>
       </aside>
 
-      {/* Main: tabbed view */}
       <section className="holy-main">
         {!sub || !subStillVisible ? (
           <div className="holy-empty">
@@ -219,9 +283,7 @@ export default function HolyNavPage() {
                 {sub.audiences && (
                   <div className="holy-sub-audiences">
                     {sub.audiences.map((a) => (
-                      <span key={a} className="holy-aud-badge">
-                        {a.toUpperCase()}
-                      </span>
+                      <span key={a} className="holy-aud-badge">{a.toUpperCase()}</span>
                     ))}
                   </div>
                 )}
@@ -245,11 +307,84 @@ export default function HolyNavPage() {
               <p>{sub.tab_content?.[activeTab] ?? '(no content for this tab)'}</p>
             </div>
 
+            {/* Ask Council */}
+            <div className="holy-council-section">
+              <div className="holy-council-header">
+                <h3>🤖 Ask the AI Council</h3>
+                <button
+                  type="button"
+                  onClick={askCouncil}
+                  disabled={council.status === 'submitting' || council.status === 'pending'}
+                  className="holy-council-btn"
+                >
+                  {council.status === 'submitting'
+                    ? 'Submitting…'
+                    : council.status === 'pending'
+                    ? 'Council processing…'
+                    : 'Ask council about this sub-process'}
+                </button>
+              </div>
+
+              {council.status === 'pending' && (
+                <p className="holy-council-status">
+                  ⏳ Council working (3 stages × ~30s each on CPU). Task ID: <code>{council.taskId}</code>
+                </p>
+              )}
+
+              {council.status === 'error' && (
+                <p className="holy-council-error">⚠ {council.error}</p>
+              )}
+
+              {council.status === 'done' && council.result && (
+                <div className="holy-council-result">
+                  <div className="holy-council-meta">
+                    <span>Total: {Math.round(council.result.elapsed_ms / 1000)}s</span>
+                    <span>Task: <code>{council.result.task_id}</code></span>
+                  </div>
+                  <div className="holy-council-stage">
+                    <div className="holy-council-stage-title">
+                      ① AUTHOR · <code>{council.result.author?.model}</code> · {council.result.author?.ms}ms
+                    </div>
+                    <div className="holy-council-stage-body">{council.result.author?.response}</div>
+                  </div>
+                  <div className="holy-council-stage">
+                    <div className="holy-council-stage-title">
+                      ② REVIEWER · <code>{council.result.reviewer?.model}</code> · {council.result.reviewer?.ms}ms
+                    </div>
+                    <div className="holy-council-stage-body">{council.result.reviewer?.response}</div>
+                  </div>
+                  <div className="holy-council-stage holy-council-stage--final">
+                    <div className="holy-council-stage-title">
+                      ③ CHAIR (FINAL) · <code>{council.result.chair?.model}</code> · {council.result.chair?.ms}ms
+                    </div>
+                    <div className="holy-council-stage-body">{council.result.chair?.response}</div>
+                  </div>
+                </div>
+              )}
+            </div>
+
             <details className="holy-debug">
               <summary>Raw JSON for this sub-process</summary>
               <pre>{JSON.stringify(sub, null, 2)}</pre>
             </details>
           </>
+        )}
+
+        {/* HOLY_SPEC.md inline modal */}
+        {specOpen && (
+          <div className="holy-spec-modal-backdrop" onClick={() => setSpecOpen(false)}>
+            <div className="holy-spec-modal" onClick={(e) => e.stopPropagation()}>
+              <div className="holy-spec-modal-header">
+                <h2>HOLY_SPEC.md — {nav.display_name}</h2>
+                <button type="button" onClick={() => setSpecOpen(false)} className="holy-spec-close">
+                  ✕
+                </button>
+              </div>
+              <div className="holy-spec-modal-body">
+                {specMd ? <ReactMarkdown>{specMd}</ReactMarkdown> : <p>Loading spec…</p>}
+              </div>
+            </div>
+          </div>
         )}
       </section>
     </div>

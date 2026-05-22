@@ -76,6 +76,7 @@ def create_app() -> FastAPI:
     from routers.supply_chain import router as supply_chain_router
     from routers.customer import router as customer_router
     from routers.ai_explain import router as ai_explain_router
+    from routers.holy import router as holy_router
 
     app.include_router(health_router)
     app.include_router(dept_router)
@@ -88,6 +89,7 @@ def create_app() -> FastAPI:
     app.include_router(supply_chain_router)
     app.include_router(customer_router)
     app.include_router(ai_explain_router)
+    app.include_router(holy_router)
 
     return app
 

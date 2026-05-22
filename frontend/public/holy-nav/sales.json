@@ -10,9 +10,7 @@
           "name": "Lead identification",
           "slug": "lead-identification",
           "audiences": [
-            "b2b",
-            "b2c",
-            "b2e"
+            "b2b"
           ],
           "tabs": [
             "Overview",
@@ -35,9 +33,7 @@
           "name": "Account prioritization",
           "slug": "account-prioritization",
           "audiences": [
-            "b2b",
-            "b2c",
-            "b2e"
+            "b2b"
           ],
           "tabs": [
             "Overview",
@@ -55,6 +51,29 @@
             "Output": "Account priority",
             "KPI": "Account value"
           }
+        },
+        {
+          "name": "Intent-signal mining",
+          "slug": "intent-signal-mining",
+          "audiences": [
+            "b2b"
+          ],
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Intent-signal mining \u2014 Predictive ML applied to Third-party intent + CRM.",
+            "Data": "Third-party intent + CRM",
+            "Input Data Type": "Tabular + text",
+            "AI Model": "Predictive ML",
+            "Output": "Hot-account list",
+            "KPI": "Win rate"
+          }
         }
       ]
     },
@@ -66,9 +85,7 @@
           "name": "Proposal generation",
           "slug": "proposal-generation",
           "audiences": [
-            "b2b",
-            "b2c",
-            "b2e"
+            "b2b"
           ],
           "tabs": [
             "Overview",
@@ -92,8 +109,7 @@
           "slug": "pricing-recommendation",
           "audiences": [
             "b2b",
-            "b2c",
-            "b2e"
+            "b2c"
           ],
           "tabs": [
             "Overview",
@@ -111,6 +127,29 @@
             "Output": "Suggested price",
             "KPI": "Margin"
           }
+        },
+        {
+          "name": "Quote-to-close prediction",
+          "slug": "quote-to-close-prediction",
+          "audiences": [
+            "b2b"
+          ],
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Quote-to-close prediction \u2014 Predictive ML applied to Pipeline telemetry.",
+            "Data": "Pipeline telemetry",
+            "Input Data Type": "Tabular CSV",
+            "AI Model": "Predictive ML",
+            "Output": "Win probability",
+            "KPI": "Forecast accuracy"
+          }
         }
       ]
     },
@@ -122,9 +161,8 @@
           "name": "Cross-sell/upsell",
           "slug": "cross-sell-upsell",
           "audiences": [
-            "b2b",
             "b2c",
-            "b2e"
+            "b2b"
           ],
           "tabs": [
             "Overview",
@@ -148,7 +186,6 @@
           "slug": "sales-forecast",
           "audiences": [
             "b2b",
-            "b2c",
             "b2e"
           ],
           "tabs": [
@@ -166,6 +203,58 @@
             "AI Model": "Forecasting model",
             "Output": "Sales forecast",
             "KPI": "Forecast accuracy"
+          }
+        },
+        {
+          "name": "Territory optimization",
+          "slug": "territory-optimization",
+          "audiences": [
+            "b2e"
+          ],
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Territory optimization \u2014 Optimization AI applied to Account distribution + travel.",
+            "Data": "Account distribution + travel",
+            "Input Data Type": "Tabular CSV",
+            "AI Model": "Optimization AI",
+            "Output": "Territory assignments",
+            "KPI": "Revenue per rep"
+          }
+        }
+      ]
+    },
+    {
+      "process": "Enablement",
+      "slug": "enablement",
+      "sub_processes": [
+        {
+          "name": "Call-coaching analytics",
+          "slug": "call-coaching-analytics",
+          "audiences": [
+            "b2e"
+          ],
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Call-coaching analytics \u2014 STT + NLP scoring applied to Sales call recordings.",
+            "Data": "Sales call recordings",
+            "Input Data Type": "Audio + text",
+            "AI Model": "STT + NLP scoring",
+            "Output": "Coaching recommendations",
+            "KPI": "Ramp time"
           }
         }
       ]

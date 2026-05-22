@@ -8,6 +8,7 @@
 |---|---|---|---|
 | Lead identification | Qualified leads delivered to retailer/distributor account managers via API | Qualified leads surfaced in HOLY consumer app / web storefront | Qualified leads powering internal dashboards + copilots for the sales team |
 | Account prioritization | Account priority delivered to retailer/distributor account managers via API | Account priority surfaced in HOLY consumer app / web storefront | Account priority powering internal dashboards + copilots for the sales team |
+| Intent-signal mining | Hot-account list delivered to retailer/distributor account managers via API | Hot-account list surfaced in HOLY consumer app / web storefront | Hot-account list powering internal dashboards + copilots for the sales team |
 
 ## Pricing & Proposals
 
@@ -15,6 +16,7 @@
 |---|---|---|---|
 | Proposal generation | Sales proposal delivered to retailer/distributor account managers via API | Sales proposal surfaced in HOLY consumer app / web storefront | Sales proposal powering internal dashboards + copilots for the sales team |
 | Pricing recommendation | Suggested price delivered to retailer/distributor account managers via API | Suggested price surfaced in HOLY consumer app / web storefront | Suggested price powering internal dashboards + copilots for the sales team |
+| Quote-to-close prediction | Win probability delivered to retailer/distributor account managers via API | Win probability surfaced in HOLY consumer app / web storefront | Win probability powering internal dashboards + copilots for the sales team |
 
 ## Sales Operations
 
@@ -22,6 +24,13 @@
 |---|---|---|---|
 | Cross-sell/upsell | Offer recommendation delivered to retailer/distributor account managers via API | Offer recommendation surfaced in HOLY consumer app / web storefront | Offer recommendation powering internal dashboards + copilots for the sales team |
 | Sales forecast | Sales forecast delivered to retailer/distributor account managers via API | Sales forecast surfaced in HOLY consumer app / web storefront | Sales forecast powering internal dashboards + copilots for the sales team |
+| Territory optimization | Territory assignments delivered to retailer/distributor account managers via API | Territory assignments surfaced in HOLY consumer app / web storefront | Territory assignments powering internal dashboards + copilots for the sales team |
+
+## Enablement
+
+| Sub-process | B2B Use Case | B2C Use Case | B2E Use Case |
+|---|---|---|---|
+| Call-coaching analytics | Coaching recommendations delivered to retailer/distributor account managers via API | Coaching recommendations surfaced in HOLY consumer app / web storefront | Coaching recommendations powering internal dashboards + copilots for the sales team |
 
 ---
 

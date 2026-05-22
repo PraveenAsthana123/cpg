@@ -10,8 +10,6 @@
           "name": "Resume screening",
           "slug": "resume-screening",
           "audiences": [
-            "b2b",
-            "b2c",
             "b2e"
           ],
           "tabs": [
@@ -35,8 +33,6 @@
           "name": "Interview scheduling",
           "slug": "interview-scheduling",
           "audiences": [
-            "b2b",
-            "b2c",
             "b2e"
           ],
           "tabs": [
@@ -55,6 +51,29 @@
             "Output": "Scheduled interviews",
             "KPI": "Scheduling cycle"
           }
+        },
+        {
+          "name": "Bias-audited matching",
+          "slug": "bias-audited-matching",
+          "audiences": [
+            "b2e"
+          ],
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Bias-audited matching \u2014 Fairness AI applied to Candidate scores + demographics.",
+            "Data": "Candidate scores + demographics",
+            "Input Data Type": "Tabular CSV",
+            "AI Model": "Fairness AI",
+            "Output": "Bias-checked shortlist",
+            "KPI": "Adverse-impact ratio"
+          }
         }
       ]
     },
@@ -66,8 +85,6 @@
           "name": "Performance analytics",
           "slug": "performance-analytics",
           "audiences": [
-            "b2b",
-            "b2c",
             "b2e"
           ],
           "tabs": [
@@ -91,8 +108,6 @@
           "name": "Retention risk",
           "slug": "retention-risk",
           "audiences": [
-            "b2b",
-            "b2c",
             "b2e"
           ],
           "tabs": [
@@ -110,6 +125,110 @@
             "AI Model": "Churn model",
             "Output": "Attrition risk",
             "KPI": "Attrition rate"
+          }
+        },
+        {
+          "name": "Compensation-fairness analysis",
+          "slug": "compensation-fairness-analysis",
+          "audiences": [
+            "b2e"
+          ],
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Compensation-fairness analysis \u2014 Statistical fairness applied to Salary + demographics + role.",
+            "Data": "Salary + demographics + role",
+            "Input Data Type": "Tabular CSV",
+            "AI Model": "Statistical fairness",
+            "Output": "Pay-equity gap report",
+            "KPI": "Pay gap %"
+          }
+        }
+      ]
+    },
+    {
+      "process": "Learning & Development",
+      "slug": "learning-and-development",
+      "sub_processes": [
+        {
+          "name": "Skill-gap detection",
+          "slug": "skill-gap-detection",
+          "audiences": [
+            "b2e"
+          ],
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Skill-gap detection \u2014 Similarity ML applied to Skills + role requirements.",
+            "Data": "Skills + role requirements",
+            "Input Data Type": "Tabular CSV",
+            "AI Model": "Similarity ML",
+            "Output": "Skill gaps per person",
+            "KPI": "Coverage %"
+          }
+        },
+        {
+          "name": "Learning-path recommendation",
+          "slug": "learning-path-recommendation",
+          "audiences": [
+            "b2e"
+          ],
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Learning-path recommendation \u2014 Recommendation AI applied to Career goals + skills.",
+            "Data": "Career goals + skills",
+            "Input Data Type": "Tabular + text",
+            "AI Model": "Recommendation AI",
+            "Output": "Personalized learning path",
+            "KPI": "Completion rate"
+          }
+        }
+      ]
+    },
+    {
+      "process": "Employee Experience",
+      "slug": "employee-experience",
+      "sub_processes": [
+        {
+          "name": "Pulse-sentiment analysis",
+          "slug": "pulse-sentiment-analysis",
+          "audiences": [
+            "b2e"
+          ],
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Pulse-sentiment analysis \u2014 Sentiment + topic ML applied to Survey + open-text.",
+            "Data": "Survey + open-text",
+            "Input Data Type": "Text",
+            "AI Model": "Sentiment + topic ML",
+            "Output": "Sentiment dashboard",
+            "KPI": "eNPS"
           }
         }
       ]

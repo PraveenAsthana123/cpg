@@ -19,7 +19,9 @@ export default defineConfig({
       // during dev. salesApi.js uses relative paths so this just works.
       // Override in local dev by setting BEV_API_TARGET env var.
       '/api': {
-        target: process.env.BEV_API_TARGET || 'http://localhost:8001',
+        // 'backend' is the docker-compose service name; resolves on the bev_default network.
+        // Override with BEV_API_TARGET for non-docker dev (e.g., http://localhost:8000).
+        target: process.env.BEV_API_TARGET || 'http://backend:8000',
         changeOrigin: true,
       },
     },
