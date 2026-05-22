@@ -152,6 +152,29 @@ services:
         condition: service_healthy
     restart: unless-stopped
 
+
+  # Council-of-agents (3-stage: author/reviewer/chair) using gemma3:4b + gemma3:1b
+  # Scale with: docker compose up -d --scale council_agents=N
+  council_agents:
+    build:
+      context: ./agents
+      dockerfile: Dockerfile
+    command: ["python", "-u", "council_agent.py"]
+    environment:
+      REDIS_URL: redis://redis:6379/0
+      OLLAMA_URL: http://ollama:11434
+      AUTHOR_MODEL: gemma3:4b
+      REVIEWER_MODEL: gemma3:4b
+      CHAIR_MODEL: gemma3:1b
+      POLL_TIMEOUT: "5"
+      STAGE_TIMEOUT: "120"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
 volumes:
   pgdata:
   ollama_data:

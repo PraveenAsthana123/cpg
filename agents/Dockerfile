@@ -6,8 +6,8 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy agent code
-COPY agent.py seeder.py ./
+# Copy agent code (both simple agent and council-of-agents)
+COPY agent.py seeder.py council_agent.py council_seeder.py ./
 
 # Run as non-root for security
 RUN useradd -m -u 1000 agent && chown -R agent:agent /app
