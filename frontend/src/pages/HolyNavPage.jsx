@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import PipelineOutput from '../components/PipelineOutput';
+import ProcessSimulator from '../components/ProcessSimulator';
 import './HolyNavPage.css';
 
 // Reference pipeline assigned per dept — these have working lifecycle runs.
@@ -322,6 +323,9 @@ export default function HolyNavPage() {
                 pipeline={REFERENCE_PIPELINE[departmentId].pipeline}
               />
             )}
+
+            {/* Process simulator — per §64.34, every dept gets a simulator tab */}
+            <ProcessSimulator dept={departmentId} />
 
             {/* Ask Council */}
             <div className="holy-council-section">

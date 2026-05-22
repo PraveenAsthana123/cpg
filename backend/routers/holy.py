@@ -188,3 +188,143 @@ def get_latest(dept: str, pipeline: str, run_id: str = "latest") -> dict:
         raise HTTPException(404, "no completed runs")
     target = runs[0] if run_id == "latest" else _safe_run_dir(dept, pipeline, run_id)
     return json.loads((target / "manifest.json").read_text())
+
+
+# ============================================================
+# Simulation — per-process Manual vs Auto runner per §64.34
+# ============================================================
+
+_SIM_ROOT_CANDIDATES = [
+    Path("/data/eval/sim"),
+    Path("/mnt/deepa/bev/data/eval/sim"),
+    Path(__file__).resolve().parents[2] / "data" / "eval" / "sim",
+]
+SIM_ROOT = next((p for p in _SIM_ROOT_CANDIDATES if p.exists()), _SIM_ROOT_CANDIDATES[2])
+
+
+def _safe_sim_dir(dept: str, process: str, sim_id: str) -> Path:
+    base = SIM_ROOT.resolve()
+    target = (base / dept / process / sim_id).resolve()
+    if not str(target).startswith(str(base)):
+        raise HTTPException(400, "invalid path component")
+    return target
+
+
+@router.get("/sim/reference-processes")
+def list_reference_processes() -> dict:
+    """List the (dept, process) pairs that have a defined simulation."""
+    # Import lazily — module pulls in matplotlib, want fast startup
+    try:
+        from ml.reference.simulation_engine import REFERENCE_PROCESSES
+        return {
+            "reference_processes": [
+                {"dept": d, "process": p, "n_steps": len(steps)}
+                for (d, p), steps in REFERENCE_PROCESSES.items()
+            ]
+        }
+    except Exception as exc:
+        raise HTTPException(500, f"simulator unavailable: {exc}")
+
+
+@router.post("/sim/{dept}/{process}/run")
+def run_simulation(dept: str, process: str, payload: dict | None = None) -> dict:
+    """Trigger a simulation in BOTH modes. Body: {n_inputs, seed}. Returns manifest."""
+    try:
+        from ml.reference.simulation_engine import (
+            ProcessSimulator,
+            REFERENCE_PROCESSES,
+        )
+    except Exception as exc:
+        raise HTTPException(500, f"simulator unavailable: {exc}")
+
+    key = (dept, process)
+    if key not in REFERENCE_PROCESSES:
+        raise HTTPException(
+            404,
+            f"no reference process for ({dept}, {process}); see /sim/reference-processes",
+        )
+
+    body = payload or {}
+    n_inputs = int(body.get("n_inputs", 15))
+    seed = int(body.get("seed", 42))
+
+    import random as _random
+    rng = _random.Random(seed)
+    inputs = [
+        {
+            "lead_id": f"L{i:04d}",
+            "company_size": rng.choice(["SMB", "MM", "ENT"]),
+            "industry": rng.choice(["fintech", "saas", "retail", "manufacturing"]),
+            "score_hint": rng.uniform(0, 1),
+            "is_qualified_truth": rng.random() < 0.4,
+        }
+        for i in range(n_inputs)
+    ]
+
+    sim = ProcessSimulator(
+        dept=dept,
+        process=process,
+        steps=REFERENCE_PROCESSES[key],
+        inputs=inputs,
+        artifacts_root=str(SIM_ROOT),
+        seed=seed,
+        ground_truth_key="is_qualified_truth",
+    )
+    manifest = sim.run()
+    from dataclasses import asdict
+    return asdict(manifest)
+
+
+@router.get("/sim/{dept}/{process}/runs")
+def list_sim_runs(dept: str, process: str) -> dict:
+    """List past simulation runs for (dept, process), newest first."""
+    pdir = SIM_ROOT / dept / process
+    if not pdir.exists():
+        return {"dept": dept, "process": process, "runs": []}
+    runs = []
+    for d in sorted(pdir.iterdir(), reverse=True):
+        if d.is_dir() and (d / "manifest.json").exists():
+            try:
+                m = json.loads((d / "manifest.json").read_text())
+                runs.append(
+                    {
+                        "sim_id": d.name,
+                        "duration_wall": m.get("duration_seconds_wall", 0),
+                        "n_inputs": m.get("n_inputs", 0),
+                        "comparison": m.get("comparison", {}),
+                    }
+                )
+            except Exception:
+                continue
+    return {"dept": dept, "process": process, "runs": runs}
+
+
+@router.get("/sim/{dept}/{process}/runs/{sim_id}/manifest")
+def get_sim_manifest(dept: str, process: str, sim_id: str) -> dict:
+    rdir = _safe_sim_dir(dept, process, sim_id)
+    mp = rdir / "manifest.json"
+    if not mp.exists():
+        raise HTTPException(404, "simulation manifest not found")
+    return json.loads(mp.read_text())
+
+
+@router.get("/sim/{dept}/{process}/runs/{sim_id}/events")
+def get_sim_events(dept: str, process: str, sim_id: str, layer: str | None = None) -> dict:
+    """Return all events for a simulation. Optional ?layer=backend|process|data|accuracy|reporting."""
+    rdir = _safe_sim_dir(dept, process, sim_id)
+    ep = rdir / "events.jsonl"
+    if not ep.exists():
+        raise HTTPException(404, "events.jsonl not found")
+    events: list[dict] = []
+    for line in ep.read_text().splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        try:
+            ev = json.loads(line)
+            if layer and ev.get("layer") != layer:
+                continue
+            events.append(ev)
+        except Exception:
+            continue
+    return {"sim_id": sim_id, "n_events": len(events), "events": events}
