@@ -109,6 +109,126 @@
   padding: 8px 0;
 }
 
+/* HOLY_SPEC link */
+.holy-spec-link-wrap {
+  margin-top: 12px;
+}
+
+.holy-spec-link {
+  display: inline-block;
+  font-size: 12px;
+  color: #1b1b32;
+  text-decoration: none;
+  padding: 4px 8px;
+  background: #eef2ff;
+  border-radius: 4px;
+  border: 1px solid #c7d2fe;
+  transition: all 0.1s;
+}
+
+.holy-spec-link:hover {
+  background: #3b82f6;
+  color: white;
+  border-color: #3b82f6;
+}
+
+/* Audience filter */
+.holy-audience-filter {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px dashed #e0e0e8;
+}
+
+.holy-audience-label {
+  display: block;
+  font-size: 11px;
+  color: #888;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+
+.holy-audience-chips {
+  display: flex;
+  gap: 6px;
+}
+
+.holy-audience-chip {
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  background: #f3f4f6;
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 0.1s;
+}
+
+.holy-audience-chip:hover {
+  background: #e5e7eb;
+}
+
+.holy-audience-chip--active {
+  background: #3b82f6;
+  color: white;
+  border-color: #2563eb;
+}
+
+.holy-empty-nav {
+  padding: 16px 20px;
+  font-size: 13px;
+  color: #888;
+  font-style: italic;
+}
+
+/* Sub-process audience badge (when filtered) */
+.holy-sub-aud-badge {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 1px 6px;
+  font-size: 9px;
+  font-weight: 700;
+  background: #fef3c7;
+  color: #92400e;
+  border-radius: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  vertical-align: middle;
+}
+
+.holy-sub-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Main title row with audience badges */
+.holy-main-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.holy-sub-audiences {
+  display: flex;
+  gap: 6px;
+}
+
+.holy-aud-badge {
+  padding: 3px 10px;
+  font-size: 10px;
+  font-weight: 700;
+  background: #fef3c7;
+  color: #92400e;
+  border-radius: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
 .holy-proc-group {
   margin-bottom: 8px;
 }

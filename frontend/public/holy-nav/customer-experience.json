@@ -9,6 +9,11 @@
         {
           "name": "Intent detection",
           "slug": "intent-detection",
+          "audiences": [
+            "b2b",
+            "b2c",
+            "b2e"
+          ],
           "tabs": [
             "Overview",
             "Data",
@@ -29,6 +34,11 @@
         {
           "name": "FAQ retrieval",
           "slug": "faq-retrieval",
+          "audiences": [
+            "b2b",
+            "b2c",
+            "b2e"
+          ],
           "tabs": [
             "Overview",
             "Data",
@@ -55,6 +65,11 @@
         {
           "name": "Sentiment detection",
           "slug": "sentiment-detection",
+          "audiences": [
+            "b2b",
+            "b2c",
+            "b2e"
+          ],
           "tabs": [
             "Overview",
             "Data",
@@ -75,6 +90,11 @@
         {
           "name": "Escalation routing",
           "slug": "escalation-routing",
+          "audiences": [
+            "b2b",
+            "b2c",
+            "b2e"
+          ],
           "tabs": [
             "Overview",
             "Data",
@@ -101,6 +121,11 @@
         {
           "name": "Churn trigger",
           "slug": "churn-trigger",
+          "audiences": [
+            "b2b",
+            "b2c",
+            "b2e"
+          ],
           "tabs": [
             "Overview",
             "Data",
@@ -121,5 +146,10 @@
       ]
     }
   ],
-  "schema_note": "Each sub_process is rendered as a left-sidebar weblink. Selecting it loads a tabbed view (tabs[]). tab_content[<tab>] supplies the rendered content per tab."
+  "audiences_available": [
+    "b2b",
+    "b2c",
+    "b2e"
+  ],
+  "schema_note": "Each sub_process has audiences[] (subset of b2b/b2c/b2e). UI can filter by audience. Selecting a sub-process loads tabs[] with tab_content[<tab>]."
 }

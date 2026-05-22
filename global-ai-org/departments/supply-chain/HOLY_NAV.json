@@ -9,6 +9,11 @@
         {
           "name": "Time-series forecast",
           "slug": "time-series-forecast",
+          "audiences": [
+            "b2b",
+            "b2c",
+            "b2e"
+          ],
           "tabs": [
             "Overview",
             "Data",
@@ -35,6 +40,11 @@
         {
           "name": "Inventory analysis",
           "slug": "inventory-analysis",
+          "audiences": [
+            "b2b",
+            "b2c",
+            "b2e"
+          ],
           "tabs": [
             "Overview",
             "Data",
@@ -55,6 +65,11 @@
         {
           "name": "Replenishment trigger",
           "slug": "replenishment-trigger",
+          "audiences": [
+            "b2b",
+            "b2c",
+            "b2e"
+          ],
           "tabs": [
             "Overview",
             "Data",
@@ -81,6 +96,11 @@
         {
           "name": "Supplier risk scoring",
           "slug": "supplier-risk-scoring",
+          "audiences": [
+            "b2b",
+            "b2c",
+            "b2e"
+          ],
           "tabs": [
             "Overview",
             "Data",
@@ -101,6 +121,11 @@
         {
           "name": "Route optimization",
           "slug": "route-optimization",
+          "audiences": [
+            "b2b",
+            "b2c",
+            "b2e"
+          ],
           "tabs": [
             "Overview",
             "Data",
@@ -121,6 +146,11 @@
         {
           "name": "Shipment tracking",
           "slug": "shipment-tracking",
+          "audiences": [
+            "b2b",
+            "b2c",
+            "b2e"
+          ],
           "tabs": [
             "Overview",
             "Data",
@@ -141,5 +171,10 @@
       ]
     }
   ],
-  "schema_note": "Each sub_process is rendered as a left-sidebar weblink. Selecting it loads a tabbed view (tabs[]). tab_content[<tab>] supplies the rendered content per tab."
+  "audiences_available": [
+    "b2b",
+    "b2c",
+    "b2e"
+  ],
+  "schema_note": "Each sub_process has audiences[] (subset of b2b/b2c/b2e). UI can filter by audience. Selecting a sub-process loads tabs[] with tab_content[<tab>]."
 }

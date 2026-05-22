@@ -20,9 +20,9 @@ export default function Sidebar() {
   return (
     <aside className="sidebar" aria-label="Main navigation">
       <div className="sidebar-header">
-        <div className="sidebar-logo">CPG</div>
+        <div className="sidebar-logo">HOLY</div>
         <div>
-          <div className="sidebar-title">CPG Analytics</div>
+          <div className="sidebar-title">HOLY Analytics</div>
           <div style={{ fontSize: '10px', color: 'rgba(226,232,240,0.45)', marginTop: '1px' }}>AI Platform</div>
         </div>
       </div>

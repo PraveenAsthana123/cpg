@@ -9,6 +9,11 @@
         {
           "name": "Catalog optimization",
           "slug": "catalog-optimization",
+          "audiences": [
+            "b2b",
+            "b2c",
+            "b2e"
+          ],
           "tabs": [
             "Overview",
             "Data",
@@ -29,6 +34,11 @@
         {
           "name": "Search ranking",
           "slug": "search-ranking",
+          "audiences": [
+            "b2b",
+            "b2c",
+            "b2e"
+          ],
           "tabs": [
             "Overview",
             "Data",
@@ -55,6 +65,11 @@
         {
           "name": "Renewal prediction",
           "slug": "renewal-prediction",
+          "audiences": [
+            "b2b",
+            "b2c",
+            "b2e"
+          ],
           "tabs": [
             "Overview",
             "Data",
@@ -75,6 +90,11 @@
         {
           "name": "Churn detection",
           "slug": "churn-detection",
+          "audiences": [
+            "b2b",
+            "b2c",
+            "b2e"
+          ],
           "tabs": [
             "Overview",
             "Data",
@@ -101,6 +121,11 @@
         {
           "name": "Cart abandonment",
           "slug": "cart-abandonment",
+          "audiences": [
+            "b2b",
+            "b2c",
+            "b2e"
+          ],
           "tabs": [
             "Overview",
             "Data",
@@ -121,6 +146,11 @@
         {
           "name": "Payment fraud",
           "slug": "payment-fraud",
+          "audiences": [
+            "b2b",
+            "b2c",
+            "b2e"
+          ],
           "tabs": [
             "Overview",
             "Data",
@@ -147,6 +177,11 @@
         {
           "name": "Product recommendation",
           "slug": "product-recommendation",
+          "audiences": [
+            "b2b",
+            "b2c",
+            "b2e"
+          ],
           "tabs": [
             "Overview",
             "Data",
@@ -167,5 +202,10 @@
       ]
     }
   ],
-  "schema_note": "Each sub_process is rendered as a left-sidebar weblink. Selecting it loads a tabbed view (tabs[]). tab_content[<tab>] supplies the rendered content per tab."
+  "audiences_available": [
+    "b2b",
+    "b2c",
+    "b2e"
+  ],
+  "schema_note": "Each sub_process has audiences[] (subset of b2b/b2c/b2e). UI can filter by audience. Selecting a sub-process loads tabs[] with tab_content[<tab>]."
 }

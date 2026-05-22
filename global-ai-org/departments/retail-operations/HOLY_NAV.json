@@ -9,6 +9,11 @@
         {
           "name": "Store-level forecast",
           "slug": "store-level-forecast",
+          "audiences": [
+            "b2b",
+            "b2c",
+            "b2e"
+          ],
           "tabs": [
             "Overview",
             "Data",
@@ -35,6 +40,11 @@
         {
           "name": "Shelf monitoring",
           "slug": "shelf-monitoring",
+          "audiences": [
+            "b2b",
+            "b2c",
+            "b2e"
+          ],
           "tabs": [
             "Overview",
             "Data",
@@ -55,6 +65,11 @@
         {
           "name": "Planogram validation",
           "slug": "planogram-validation",
+          "audiences": [
+            "b2b",
+            "b2c",
+            "b2e"
+          ],
           "tabs": [
             "Overview",
             "Data",
@@ -81,6 +96,11 @@
         {
           "name": "Promotion impact",
           "slug": "promotion-impact",
+          "audiences": [
+            "b2b",
+            "b2c",
+            "b2e"
+          ],
           "tabs": [
             "Overview",
             "Data",
@@ -101,5 +121,10 @@
       ]
     }
   ],
-  "schema_note": "Each sub_process is rendered as a left-sidebar weblink. Selecting it loads a tabbed view (tabs[]). tab_content[<tab>] supplies the rendered content per tab."
+  "audiences_available": [
+    "b2b",
+    "b2c",
+    "b2e"
+  ],
+  "schema_note": "Each sub_process has audiences[] (subset of b2b/b2c/b2e). UI can filter by audience. Selecting a sub-process loads tabs[] with tab_content[<tab>]."
 }
