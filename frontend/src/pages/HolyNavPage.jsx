@@ -1,7 +1,15 @@
 import { useEffect, useMemo, useState, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
+import PipelineOutput from '../components/PipelineOutput';
 import './HolyNavPage.css';
+
+// Reference pipeline assigned per dept — these have working lifecycle runs.
+// Other depts fall back to {dept}/reference if a manifest exists.
+const REFERENCE_PIPELINE = {
+  sales: { dept: 'sales', pipeline: 'churn_reference' },
+  'customer-experience': { dept: 'customer-experience', pipeline: 'rag_reference' },
+};
 
 const ALL_AUDIENCES = ['b2b', 'b2c', 'b2e'];
 const API_BASE = '/api/v1/holy';
@@ -306,6 +314,14 @@ export default function HolyNavPage() {
             <div className="holy-tab-content">
               <p>{sub.tab_content?.[activeTab] ?? '(no content for this tab)'}</p>
             </div>
+
+            {/* Pipeline output — shows the latest reference-pipeline run for this dept */}
+            {REFERENCE_PIPELINE[departmentId] && (
+              <PipelineOutput
+                dept={REFERENCE_PIPELINE[departmentId].dept}
+                pipeline={REFERENCE_PIPELINE[departmentId].pipeline}
+              />
+            )}
 
             {/* Ask Council */}
             <div className="holy-council-section">

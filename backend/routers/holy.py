@@ -10,6 +10,7 @@ from typing import Any
 
 import redis
 from fastapi import APIRouter, HTTPException
+from fastapi.responses import FileResponse
 
 router = APIRouter(prefix="/api/v1/holy", tags=["holy"])
 
@@ -102,3 +103,88 @@ def council_result(task_id: str) -> dict:
         except Exception:
             continue
     return {"status": "pending", "task_id": task_id}
+
+
+# ============================================================
+# Eval — read manifests + plots produced by the reference pipelines
+# ============================================================
+
+# Lifecycle artifacts root: configurable so docker + host both work
+_EVAL_ROOT_CANDIDATES = [
+    Path("/data/eval"),                                          # docker volume mount
+    Path("/mnt/deepa/bev/data/eval"),                           # host
+    Path(__file__).resolve().parents[2] / "data" / "eval",      # parent of routers/
+]
+EVAL_ROOT = next((p for p in _EVAL_ROOT_CANDIDATES if p.exists()), _EVAL_ROOT_CANDIDATES[0])
+
+
+def _safe_run_dir(dept: str, pipeline: str, run_id: str) -> Path:
+    """Resolve + path-traversal guard. Every component must stay under EVAL_ROOT."""
+    base = EVAL_ROOT.resolve()
+    target = (base / dept / pipeline / run_id).resolve()
+    if not str(target).startswith(str(base)):
+        raise HTTPException(400, "invalid path component")
+    return target
+
+
+@router.get("/eval/{dept}/{pipeline}/runs")
+def list_runs(dept: str, pipeline: str) -> dict:
+    """List all completed runs for a pipeline (most recent first)."""
+    pdir = EVAL_ROOT / dept / pipeline
+    if not pdir.exists():
+        return {"dept": dept, "pipeline": pipeline, "runs": []}
+    runs = []
+    for d in sorted(pdir.iterdir(), reverse=True):
+        if d.is_dir() and (d / "manifest.json").exists():
+            try:
+                m = json.loads((d / "manifest.json").read_text())
+                runs.append(
+                    {
+                        "run_id": d.name,
+                        "duration_seconds": m.get("duration_seconds", 0),
+                        "n_rows": m.get("n_rows", m.get("n_chunks", 0)),
+                        "metrics_summary": list(m.get("metrics", {}).keys())[:6]
+                        or list(m.get("eval", {}).keys())[:6],
+                    }
+                )
+            except Exception:
+                continue
+    return {"dept": dept, "pipeline": pipeline, "runs": runs}
+
+
+@router.get("/eval/{dept}/{pipeline}/runs/{run_id}/manifest")
+def get_manifest(dept: str, pipeline: str, run_id: str) -> dict:
+    """Return the full manifest for a specific run."""
+    rdir = _safe_run_dir(dept, pipeline, run_id)
+    mp = rdir / "manifest.json"
+    if not mp.exists():
+        raise HTTPException(404, f"manifest not found at {mp}")
+    return json.loads(mp.read_text())
+
+
+@router.get("/eval/{dept}/{pipeline}/runs/{run_id}/plots/{plot_name}")
+def get_plot(dept: str, pipeline: str, run_id: str, plot_name: str) -> FileResponse:
+    """Serve a PNG plot file. Path-traversal guarded."""
+    if not plot_name.endswith(".png") or "/" in plot_name or ".." in plot_name:
+        raise HTTPException(400, "invalid plot name")
+    rdir = _safe_run_dir(dept, pipeline, run_id)
+    pp = rdir / "plots" / plot_name
+    if not pp.exists():
+        raise HTTPException(404, f"plot not found: {plot_name}")
+    return FileResponse(pp, media_type="image/png")
+
+
+@router.get("/eval/{dept}/{pipeline}/runs/{run_id}/latest")
+def get_latest(dept: str, pipeline: str, run_id: str = "latest") -> dict:
+    """Convenience: return manifest of newest run (alias for /runs/<id>/manifest)."""
+    pdir = EVAL_ROOT / dept / pipeline
+    if not pdir.exists():
+        raise HTTPException(404, "no runs for this pipeline")
+    runs = sorted(
+        [d for d in pdir.iterdir() if d.is_dir() and (d / "manifest.json").exists()],
+        reverse=True,
+    )
+    if not runs:
+        raise HTTPException(404, "no completed runs")
+    target = runs[0] if run_id == "latest" else _safe_run_dir(dept, pipeline, run_id)
+    return json.loads((target / "manifest.json").read_text())

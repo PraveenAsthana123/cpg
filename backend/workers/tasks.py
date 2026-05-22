@@ -306,3 +306,80 @@ def run_pipeline(
     except Exception as exc:
         logger.exception("run_pipeline failed | dept=%s error=%s", department_id, exc)
         raise self.retry(exc=exc) from exc
+
+
+# ============================================================
+# HOLY reference-lifecycle tasks (operator request 2026-05-22)
+# Run by Celery beat per the schedule in workers/celery_app.py
+# ============================================================
+
+
+@celery_app.task(bind=True, name="holy.run_structured_lifecycle")
+def run_structured_lifecycle(self, *, dataset, target, task_type, dept, pipeline_name,
+                              date_cols=None, drop_cols=None, n_trials=10, sample_rows=None):
+    """Run the full structured-ML lifecycle (EDA → eval → SHAP) and persist
+    manifest + plots under data/eval/<dept>/<pipeline>/<run_id>/.
+    """
+    from ml.reference.full_lifecycle import FullLifecycle
+
+    logger.info(
+        "holy.run_structured_lifecycle | dept=%s pipeline=%s dataset=%s",
+        dept, pipeline_name, dataset,
+    )
+    self.update_state(state="PROGRESS", meta={"step": "starting"})
+
+    runner = FullLifecycle(
+        dataset_path=dataset,
+        target_col=target,
+        task=task_type,
+        dept=dept,
+        pipeline_name=pipeline_name,
+        date_cols=date_cols or [],
+        drop_cols=drop_cols or [],
+        n_trials=n_trials,
+        sample_rows=sample_rows,
+        mlflow_tracking_uri=settings.mlflow_tracking_uri,
+    )
+    manifest = runner.run()
+    return {
+        "run_id": manifest.run_id,
+        "dept": dept,
+        "pipeline": pipeline_name,
+        "duration_seconds": manifest.duration_seconds,
+        "metrics": manifest.metrics,
+        "n_plots": len(manifest.plots),
+    }
+
+
+@celery_app.task(bind=True, name="holy.run_rag_lifecycle")
+def run_rag_lifecycle(self, *, corpus, dept, pipeline_name, chunking="sentence_aware",
+                       llm="gemma3:1b", top_k=4):
+    """Run the full RAG lifecycle: chunk → embed → index → retrieve → answer → cite."""
+    from ml.reference.rag_lifecycle import RagLifecycle
+
+    logger.info(
+        "holy.run_rag_lifecycle | dept=%s pipeline=%s corpus=%s",
+        dept, pipeline_name, corpus,
+    )
+    self.update_state(state="PROGRESS", meta={"step": "starting"})
+
+    ollama_url = os.environ.get("BEV_OLLAMA_HOST", "http://ollama:11434")
+    runner = RagLifecycle(
+        corpus_paths=corpus,
+        dept=dept,
+        pipeline_name=pipeline_name,
+        chunking=chunking,
+        llm_model=llm,
+        ollama_url=ollama_url,
+        top_k=top_k,
+    )
+    manifest = runner.run()
+    return {
+        "run_id": manifest.run_id,
+        "dept": dept,
+        "pipeline": pipeline_name,
+        "duration_seconds": manifest.duration_seconds,
+        "n_chunks": manifest.n_chunks,
+        "eval": manifest.eval,
+        "circuit_breaker_state": manifest.circuit_breaker_state,
+    }
