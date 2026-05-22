@@ -37,6 +37,19 @@ services:
       - 1.1.1.1
     # No host port mapping — host already runs Ollama on 11434.
     # Agents reach bev_ollama via docker network at http://ollama:11434.
+    # NOTE: GPU passthrough disabled until nvidia-container-toolkit is installed.
+    # To enable (one-time setup):
+    #   sudo apt-get install -y nvidia-container-toolkit
+    #   sudo nvidia-ctk runtime configure --runtime=docker
+    #   sudo systemctl restart docker
+    # Then uncomment the deploy block below + `docker compose up -d --force-recreate ollama`
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: all
+    #           capabilities: [gpu]
     volumes:
       - ollama_data:/root/.ollama
     restart: unless-stopped
