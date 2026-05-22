@@ -1,0 +1,277 @@
+/* HOLY Nav Page — per-dept process/sub-process explorer with tabs */
+
+.holy-nav-container {
+  padding: 32px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.holy-nav-container h1 {
+  margin: 0 0 8px;
+  font-size: 28px;
+  color: #1b1b32;
+}
+
+.holy-subtitle {
+  color: #555;
+  margin: 0 0 24px;
+  font-size: 15px;
+}
+
+.holy-dept-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.holy-dept-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px;
+  border: 1px solid #e0e0e8;
+  border-radius: 10px;
+  background: #ffffff;
+  text-decoration: none;
+  color: #1b1b32;
+  transition: all 0.15s;
+}
+
+.holy-dept-card:hover {
+  border-color: #3b82f6;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+  transform: translateY(-2px);
+}
+
+.holy-dept-name {
+  font-weight: 600;
+  font-size: 16px;
+  text-transform: capitalize;
+  margin-bottom: 12px;
+}
+
+.holy-dept-cta {
+  color: #3b82f6;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* Main layout: sidebar + content */
+.holy-nav-page {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  min-height: calc(100vh - 60px);
+  background: #ffffff;
+}
+
+.holy-sidebar {
+  border-right: 1px solid #e0e0e8;
+  background: #f8f9fb;
+  overflow-y: auto;
+  max-height: calc(100vh - 60px);
+}
+
+.holy-sidebar-header {
+  padding: 20px 16px 16px;
+  border-bottom: 1px solid #e0e0e8;
+  background: #ffffff;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.holy-back-link {
+  display: inline-block;
+  font-size: 12px;
+  color: #6366f1;
+  text-decoration: none;
+  margin-bottom: 8px;
+}
+
+.holy-back-link:hover {
+  text-decoration: underline;
+}
+
+.holy-sidebar-header h2 {
+  margin: 0;
+  font-size: 18px;
+  text-transform: capitalize;
+  color: #1b1b32;
+}
+
+.holy-sidebar-sub {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: #666;
+}
+
+.holy-sidebar-nav {
+  padding: 8px 0;
+}
+
+.holy-proc-group {
+  margin-bottom: 8px;
+}
+
+.holy-proc-title {
+  padding: 12px 16px 4px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #888;
+}
+
+.holy-sub-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.holy-sub-list li {
+  margin: 0;
+}
+
+.holy-sub-link {
+  display: block;
+  width: 100%;
+  padding: 8px 16px 8px 24px;
+  font-size: 14px;
+  background: none;
+  border: none;
+  border-left: 3px solid transparent;
+  text-align: left;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.1s;
+}
+
+.holy-sub-link:hover {
+  background: #eef2ff;
+  color: #3b82f6;
+}
+
+.holy-sub-link--active {
+  background: #eef2ff;
+  border-left-color: #3b82f6;
+  color: #3b82f6;
+  font-weight: 600;
+}
+
+/* Main content area */
+.holy-main {
+  padding: 32px 40px;
+  overflow-y: auto;
+  max-height: calc(100vh - 60px);
+}
+
+.holy-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  color: #888;
+}
+
+.holy-main-header {
+  margin-bottom: 24px;
+}
+
+.holy-breadcrumb {
+  margin: 0 0 8px;
+  font-size: 12px;
+  color: #888;
+}
+
+.holy-breadcrumb-current {
+  color: #1b1b32;
+  font-weight: 500;
+}
+
+.holy-main-header h1 {
+  margin: 0;
+  font-size: 26px;
+  color: #1b1b32;
+}
+
+/* Tabs */
+.holy-tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid #e0e0e8;
+  margin-bottom: 24px;
+}
+
+.holy-tab {
+  padding: 10px 16px;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  font-size: 14px;
+  color: #555;
+  transition: all 0.1s;
+}
+
+.holy-tab:hover {
+  color: #3b82f6;
+}
+
+.holy-tab--active {
+  color: #3b82f6;
+  border-bottom-color: #3b82f6;
+  font-weight: 600;
+}
+
+/* Tab content */
+.holy-tab-content {
+  padding: 16px 20px;
+  background: #f8f9fb;
+  border-radius: 8px;
+  border: 1px solid #e0e0e8;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #2a2a3a;
+  margin-bottom: 24px;
+}
+
+.holy-debug {
+  margin-top: 32px;
+  font-size: 12px;
+  color: #666;
+}
+
+.holy-debug summary {
+  cursor: pointer;
+  user-select: none;
+  padding: 8px 0;
+}
+
+.holy-debug pre {
+  background: #1b1b32;
+  color: #e0e0e8;
+  padding: 16px;
+  border-radius: 6px;
+  overflow-x: auto;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.holy-error {
+  color: #ef4444;
+  padding: 16px;
+  background: #fef2f2;
+  border-radius: 6px;
+  border: 1px solid #fecaca;
+}
+
+.holy-back {
+  display: inline-block;
+  margin-top: 16px;
+  color: #6366f1;
+  text-decoration: none;
+}
+
+.holy-back:hover {
+  text-decoration: underline;
+}

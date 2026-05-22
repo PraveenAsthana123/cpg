@@ -9,6 +9,7 @@ import ManagerArchetypePage from './pages/ManagerArchetypePage';
 import TesterPage from './pages/TesterPage';
 import DepartmentDossierPage from './pages/DepartmentDossierPage';
 import DataFlowPage from './pages/DataFlowPage';
+import HolyNavPage from './pages/HolyNavPage';
 import './styles/global.css';
 import './styles/sidebar.css';
 import './styles/topbar.css';
@@ -27,6 +28,8 @@ export default function App() {
         <Route element={<Layout />}>
           <Route path="/" element={<Dashboard />} />
           <Route path="/data-flow" element={<DataFlowPage />} />
+          <Route path="/holy" element={<HolyNavPage />} />
+          <Route path="/holy/:departmentId" element={<HolyNavPage />} />
           <Route path="/:departmentId" element={<DepartmentPage />} />
           <Route path="/:departmentId/admin" element={<AdminPage />} />
           <Route path="/:departmentId/manager" element={<ManagerPage />} />

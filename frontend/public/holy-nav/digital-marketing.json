@@ -1,0 +1,177 @@
+{
+  "department": "digital-marketing",
+  "display_name": "Digital Marketing",
+  "left_nav": [
+    {
+      "process": "Trend Analysis",
+      "slug": "trend-analysis",
+      "sub_processes": [
+        {
+          "name": "Social trend mining",
+          "slug": "social-trend-mining",
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Social trend mining \u2014 NLP + trend detection applied to Social text, hashtags, videos.",
+            "Data": "Social text, hashtags, videos",
+            "Input Data Type": "Text + image streams",
+            "AI Model": "NLP + trend detection",
+            "Output": "Trending topics",
+            "KPI": "Trend volume"
+          }
+        },
+        {
+          "name": "Influencer scoring",
+          "slug": "influencer-scoring",
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Influencer scoring \u2014 ML scoring applied to Engagement metrics.",
+            "Data": "Engagement metrics",
+            "Input Data Type": "Tabular CSV",
+            "AI Model": "ML scoring",
+            "Output": "Influencer ranking",
+            "KPI": "Influencer ROI"
+          }
+        }
+      ]
+    },
+    {
+      "process": "Customer Segmentation",
+      "slug": "customer-segmentation",
+      "sub_processes": [
+        {
+          "name": "Behavioral clustering",
+          "slug": "behavioral-clustering",
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Behavioral clustering \u2014 Clustering ML applied to CRM, orders, clickstream.",
+            "Data": "CRM, orders, clickstream",
+            "Input Data Type": "Tabular + clickstream JSON",
+            "AI Model": "Clustering ML",
+            "Output": "Customer segments",
+            "KPI": "Segment retention"
+          }
+        }
+      ]
+    },
+    {
+      "process": "Campaign Planning",
+      "slug": "campaign-planning",
+      "sub_processes": [
+        {
+          "name": "Campaign recommendation",
+          "slug": "campaign-recommendation",
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Campaign recommendation \u2014 Predictive ML applied to Past campaigns, budget.",
+            "Data": "Past campaigns, budget",
+            "Input Data Type": "Tabular CSV",
+            "AI Model": "Predictive ML",
+            "Output": "Campaign plan",
+            "KPI": "ROAS"
+          }
+        },
+        {
+          "name": "Brand review",
+          "slug": "brand-review",
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Brand review \u2014 NLP classifier applied to Text, image, claims.",
+            "Data": "Text, image, claims",
+            "Input Data Type": "Text + image",
+            "AI Model": "NLP classifier",
+            "Output": "Approved/rejected",
+            "KPI": "Brand violation rate"
+          }
+        }
+      ]
+    },
+    {
+      "process": "Content Creation",
+      "slug": "content-creation",
+      "sub_processes": [
+        {
+          "name": "Ad copy generation",
+          "slug": "ad-copy-generation",
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Ad copy generation \u2014 GenAI + RAG applied to Brand docs, product catalog.",
+            "Data": "Brand docs, product catalog",
+            "Input Data Type": "Text + product JSON",
+            "AI Model": "GenAI + RAG",
+            "Output": "Ad copy / email / social",
+            "KPI": "Content cost"
+          }
+        }
+      ]
+    },
+    {
+      "process": "Optimization",
+      "slug": "optimization",
+      "sub_processes": [
+        {
+          "name": "Live campaign optimization",
+          "slug": "live-campaign-optimization",
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Live campaign optimization \u2014 Reinforcement / optimization AI applied to Campaign metrics.",
+            "Data": "Campaign metrics",
+            "Input Data Type": "Streaming telemetry",
+            "AI Model": "Reinforcement / optimization AI",
+            "Output": "Budget/content adjustment",
+            "KPI": "CAC, conversion"
+          }
+        }
+      ]
+    }
+  ],
+  "schema_note": "Each sub_process is rendered as a left-sidebar weblink. Selecting it loads a tabbed view (tabs[]). tab_content[<tab>] supplies the rendered content per tab."
+}

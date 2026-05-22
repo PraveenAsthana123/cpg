@@ -1,0 +1,105 @@
+{
+  "department": "product-rd",
+  "display_name": "Product Rd",
+  "left_nav": [
+    {
+      "process": "Consumer Insight",
+      "slug": "consumer-insight",
+      "sub_processes": [
+        {
+          "name": "Trend analysis",
+          "slug": "trend-analysis",
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Trend analysis \u2014 NLP applied to Reviews, social, surveys.",
+            "Data": "Reviews, social, surveys",
+            "Input Data Type": "Text",
+            "AI Model": "NLP",
+            "Output": "Preference insights",
+            "KPI": "Innovation pipeline"
+          }
+        }
+      ]
+    },
+    {
+      "process": "Formulation",
+      "slug": "formulation",
+      "sub_processes": [
+        {
+          "name": "Ingredient research",
+          "slug": "ingredient-research",
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Ingredient research \u2014 RAG + knowledge graph applied to Nutrition DB, ingredient docs.",
+            "Data": "Nutrition DB, ingredient docs",
+            "Input Data Type": "Structured + text",
+            "AI Model": "RAG + knowledge graph",
+            "Output": "Ingredient intelligence",
+            "KPI": "R&D speed"
+          }
+        },
+        {
+          "name": "Formula optimization",
+          "slug": "formula-optimization",
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Formula optimization \u2014 Bayesian optimization applied to Lab test results.",
+            "Data": "Lab test results",
+            "Input Data Type": "Tabular CSV",
+            "AI Model": "Bayesian optimization",
+            "Output": "Best formula",
+            "KPI": "Launch success"
+          }
+        }
+      ]
+    },
+    {
+      "process": "Validation",
+      "slug": "validation",
+      "sub_processes": [
+        {
+          "name": "Nutrition validation",
+          "slug": "nutrition-validation",
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Nutrition validation \u2014 Rule engine + NLP applied to Ingredient + nutrition facts.",
+            "Data": "Ingredient + nutrition facts",
+            "Input Data Type": "Structured + text",
+            "AI Model": "Rule engine + NLP",
+            "Output": "Nutrition compliance",
+            "KPI": "Compliance %"
+          }
+        }
+      ]
+    }
+  ],
+  "schema_note": "Each sub_process is rendered as a left-sidebar weblink. Selecting it loads a tabbed view (tabs[]). tab_content[<tab>] supplies the rendered content per tab."
+}

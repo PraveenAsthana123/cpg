@@ -1,0 +1,171 @@
+{
+  "department": "e-commerce",
+  "display_name": "E Commerce",
+  "left_nav": [
+    {
+      "process": "Storefront",
+      "slug": "storefront",
+      "sub_processes": [
+        {
+          "name": "Catalog optimization",
+          "slug": "catalog-optimization",
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Catalog optimization \u2014 Recommendation AI applied to Product metadata.",
+            "Data": "Product metadata",
+            "Input Data Type": "Tabular + JSON",
+            "AI Model": "Recommendation AI",
+            "Output": "Optimized catalog",
+            "KPI": "Conversion rate"
+          }
+        },
+        {
+          "name": "Search ranking",
+          "slug": "search-ranking",
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Search ranking \u2014 Ranking AI applied to Search telemetry.",
+            "Data": "Search telemetry",
+            "Input Data Type": "Streaming",
+            "AI Model": "Ranking AI",
+            "Output": "Ranked products",
+            "KPI": "Search conversion"
+          }
+        }
+      ]
+    },
+    {
+      "process": "Subscription",
+      "slug": "subscription",
+      "sub_processes": [
+        {
+          "name": "Renewal prediction",
+          "slug": "renewal-prediction",
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Renewal prediction \u2014 Predictive ML applied to Subscription telemetry.",
+            "Data": "Subscription telemetry",
+            "Input Data Type": "Tabular CSV",
+            "AI Model": "Predictive ML",
+            "Output": "Renewal forecast",
+            "KPI": "Renewal %"
+          }
+        },
+        {
+          "name": "Churn detection",
+          "slug": "churn-detection",
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Churn detection \u2014 Churn AI applied to Subscription telemetry.",
+            "Data": "Subscription telemetry",
+            "Input Data Type": "Tabular CSV",
+            "AI Model": "Churn AI",
+            "Output": "Churn alerts",
+            "KPI": "Subscription churn"
+          }
+        }
+      ]
+    },
+    {
+      "process": "Checkout & Payments",
+      "slug": "checkout-and-payments",
+      "sub_processes": [
+        {
+          "name": "Cart abandonment",
+          "slug": "cart-abandonment",
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Cart abandonment \u2014 Predictive ML applied to Cart telemetry.",
+            "Data": "Cart telemetry",
+            "Input Data Type": "Streaming",
+            "AI Model": "Predictive ML",
+            "Output": "Abandonment alerts",
+            "KPI": "Abandonment rate"
+          }
+        },
+        {
+          "name": "Payment fraud",
+          "slug": "payment-fraud",
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Payment fraud \u2014 Fraud AI applied to Payment telemetry.",
+            "Data": "Payment telemetry",
+            "Input Data Type": "Streaming",
+            "AI Model": "Fraud AI",
+            "Output": "Fraud alerts",
+            "KPI": "Fraud loss"
+          }
+        }
+      ]
+    },
+    {
+      "process": "Personalization",
+      "slug": "personalization",
+      "sub_processes": [
+        {
+          "name": "Product recommendation",
+          "slug": "product-recommendation",
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Product recommendation \u2014 Recommendation AI applied to Purchase telemetry.",
+            "Data": "Purchase telemetry",
+            "Input Data Type": "Tabular + streaming",
+            "AI Model": "Recommendation AI",
+            "Output": "Product suggestions",
+            "KPI": "AOV"
+          }
+        }
+      ]
+    }
+  ],
+  "schema_note": "Each sub_process is rendered as a left-sidebar weblink. Selecting it loads a tabbed view (tabs[]). tab_content[<tab>] supplies the rendered content per tab."
+}

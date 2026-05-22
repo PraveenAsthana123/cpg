@@ -1,0 +1,125 @@
+{
+  "department": "manufacturing",
+  "display_name": "Manufacturing",
+  "left_nav": [
+    {
+      "process": "Production Planning",
+      "slug": "production-planning",
+      "sub_processes": [
+        {
+          "name": "Production schedule",
+          "slug": "production-schedule",
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Production schedule \u2014 Optimization model applied to Demand, capacity, inventory.",
+            "Data": "Demand, capacity, inventory",
+            "Input Data Type": "Tabular",
+            "AI Model": "Optimization model",
+            "Output": "Production plan",
+            "KPI": "OEE"
+          }
+        }
+      ]
+    },
+    {
+      "process": "Machine Monitoring",
+      "slug": "machine-monitoring",
+      "sub_processes": [
+        {
+          "name": "Predictive maintenance",
+          "slug": "predictive-maintenance",
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Predictive maintenance \u2014 Predictive ML applied to IoT sensor streams.",
+            "Data": "IoT sensor streams",
+            "Input Data Type": "Streaming IoT",
+            "AI Model": "Predictive ML",
+            "Output": "Failure risk",
+            "KPI": "Downtime"
+          }
+        }
+      ]
+    },
+    {
+      "process": "Quality Control",
+      "slug": "quality-control",
+      "sub_processes": [
+        {
+          "name": "Mixing/formulation",
+          "slug": "mixing-formulation",
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Mixing/formulation \u2014 ML regression applied to Recipe, batch data.",
+            "Data": "Recipe, batch data",
+            "Input Data Type": "Tabular CSV",
+            "AI Model": "ML regression",
+            "Output": "Batch quality prediction",
+            "KPI": "Defect rate"
+          }
+        },
+        {
+          "name": "Visual inspection",
+          "slug": "visual-inspection",
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Visual inspection \u2014 Computer vision applied to Images/video.",
+            "Data": "Images/video",
+            "Input Data Type": "Image + video",
+            "AI Model": "Computer vision",
+            "Output": "Defect detection",
+            "KPI": "Defect rate"
+          }
+        },
+        {
+          "name": "Label verification",
+          "slug": "label-verification",
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Label verification \u2014 CV + OCR applied to Images + OCR.",
+            "Data": "Images + OCR",
+            "Input Data Type": "Image + text",
+            "AI Model": "CV + OCR",
+            "Output": "Label validation",
+            "KPI": "Compliance %"
+          }
+        }
+      ]
+    }
+  ],
+  "schema_note": "Each sub_process is rendered as a left-sidebar weblink. Selecting it loads a tabbed view (tabs[]). tab_content[<tab>] supplies the rendered content per tab."
+}

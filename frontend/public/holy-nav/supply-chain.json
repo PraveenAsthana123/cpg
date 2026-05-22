@@ -1,0 +1,145 @@
+{
+  "department": "supply-chain",
+  "display_name": "Supply Chain",
+  "left_nav": [
+    {
+      "process": "Demand Forecasting",
+      "slug": "demand-forecasting",
+      "sub_processes": [
+        {
+          "name": "Time-series forecast",
+          "slug": "time-series-forecast",
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Time-series forecast \u2014 Prophet / XGBoost forecasting applied to Sales, weather, promos.",
+            "Data": "Sales, weather, promos",
+            "Input Data Type": "CSV time-series",
+            "AI Model": "Prophet / XGBoost forecasting",
+            "Output": "Demand forecast",
+            "KPI": "Forecast MAPE"
+          }
+        }
+      ]
+    },
+    {
+      "process": "Inventory & Replenishment",
+      "slug": "inventory-and-replenishment",
+      "sub_processes": [
+        {
+          "name": "Inventory analysis",
+          "slug": "inventory-analysis",
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Inventory analysis \u2014 ML forecasting applied to Stock, warehouse, POS.",
+            "Data": "Stock, warehouse, POS",
+            "Input Data Type": "Tabular CSV",
+            "AI Model": "ML forecasting",
+            "Output": "Reorder signals",
+            "KPI": "Stockout rate"
+          }
+        },
+        {
+          "name": "Replenishment trigger",
+          "slug": "replenishment-trigger",
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Replenishment trigger \u2014 Predictive model applied to POS + inventory.",
+            "Data": "POS + inventory",
+            "Input Data Type": "Streaming + tabular",
+            "AI Model": "Predictive model",
+            "Output": "Auto replenishment",
+            "KPI": "Inventory cost"
+          }
+        }
+      ]
+    },
+    {
+      "process": "Supplier & Logistics",
+      "slug": "supplier-and-logistics",
+      "sub_processes": [
+        {
+          "name": "Supplier risk scoring",
+          "slug": "supplier-risk-scoring",
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Supplier risk scoring \u2014 Risk scoring ML applied to Supplier history, delays.",
+            "Data": "Supplier history, delays",
+            "Input Data Type": "Tabular CSV",
+            "AI Model": "Risk scoring ML",
+            "Output": "Supplier risk score",
+            "KPI": "Supplier reliability"
+          }
+        },
+        {
+          "name": "Route optimization",
+          "slug": "route-optimization",
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Route optimization \u2014 Optimization AI applied to Route, fuel, delivery.",
+            "Data": "Route, fuel, delivery",
+            "Input Data Type": "GPS + tabular",
+            "AI Model": "Optimization AI",
+            "Output": "Delivery schedule",
+            "KPI": "Delivery efficiency"
+          }
+        },
+        {
+          "name": "Shipment tracking",
+          "slug": "shipment-tracking",
+          "tabs": [
+            "Overview",
+            "Data",
+            "Input Data Type",
+            "AI Model",
+            "Output",
+            "KPI"
+          ],
+          "tab_content": {
+            "Overview": "Shipment tracking \u2014 Anomaly detection applied to GPS, IoT, ERP.",
+            "Data": "GPS, IoT, ERP",
+            "Input Data Type": "Streaming IoT",
+            "AI Model": "Anomaly detection",
+            "Output": "Delay alerts",
+            "KPI": "On-time delivery"
+          }
+        }
+      ]
+    }
+  ],
+  "schema_note": "Each sub_process is rendered as a left-sidebar weblink. Selecting it loads a tabbed view (tabs[]). tab_content[<tab>] supplies the rendered content per tab."
+}
