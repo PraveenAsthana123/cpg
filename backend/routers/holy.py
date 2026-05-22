@@ -308,6 +308,87 @@ def get_sim_manifest(dept: str, process: str, sim_id: str) -> dict:
     return json.loads(mp.read_text())
 
 
+# ============================================================
+# Role dashboards + reports per §64.37
+# ============================================================
+
+ROLE_LIST = [
+    "admin", "manager", "team-member", "tester", "security", "devops",
+    "ai-reviewer", "digital-transformation", "system-architect",
+    "test-architect", "database-architect", "api-architect",
+    "data-owner", "ai-strategy", "information-security",
+]
+
+
+@router.get("/roles")
+def list_roles() -> dict:
+    """All 15 standard roles per global §64.37."""
+    return {"roles": ROLE_LIST, "count": len(ROLE_LIST)}
+
+
+@router.get("/dashboards/{dept}/{role}")
+def get_role_dashboard(dept: str, role: str) -> dict:
+    """Return synthesized tile + chart payload for (dept, role).
+    Tiles/charts use deterministic synthetic data per global §64.37."""
+    if role not in ROLE_LIST:
+        raise HTTPException(404, f"unknown role '{role}'; see /api/v1/holy/roles")
+    try:
+        from ml.reference.role_dashboard_catalog import build_dashboard_payload
+    except Exception as exc:
+        raise HTTPException(500, f"catalog unavailable: {exc}")
+    payload = build_dashboard_payload(dept, role)
+    if payload is None:
+        raise HTTPException(404, f"no catalog entry for role '{role}'")
+    return payload
+
+
+@router.get("/reports/{dept}/{role}")
+def get_role_reports(dept: str, role: str) -> dict:
+    """Return standard-report list for (dept, role) per §64.37."""
+    if role not in ROLE_LIST:
+        raise HTTPException(404, f"unknown role '{role}'")
+    try:
+        from ml.reference.role_dashboard_catalog import build_reports_payload
+    except Exception as exc:
+        raise HTTPException(500, f"catalog unavailable: {exc}")
+    payload = build_reports_payload(dept, role)
+    if payload is None:
+        raise HTTPException(404, f"no catalog entry for role '{role}'")
+    return payload
+
+
+@router.post("/reports/{dept}/{role}/{report_id}/run")
+def run_role_report(dept: str, role: str, report_id: str, payload: dict | None = None) -> dict:
+    """Trigger a report run. Logs to Redis audit list (proxy for §38.3 audit row)."""
+    if role not in ROLE_LIST:
+        raise HTTPException(404, "unknown role")
+    run_id = f"report-{uuid.uuid4().hex[:8]}"
+    audit = {
+        "request_id": run_id,
+        "kind": "report_run",
+        "dept": dept,
+        "role": role,
+        "report_id": report_id,
+        "timestamp": time.time(),
+        "format": (payload or {}).get("format", "PDF"),
+        "actor": (payload or {}).get("actor", "unknown"),
+    }
+    if _r is not None:
+        try:
+            _r.lpush("holy_report_audit", json.dumps(audit))
+            _r.ltrim("holy_report_audit", 0, 999)  # keep last 1000
+        except Exception:
+            pass
+    return {
+        "run_id": run_id,
+        "status": "queued",
+        "dept": dept,
+        "role": role,
+        "report_id": report_id,
+        "audit": audit,
+    }
+
+
 @router.get("/sim/{dept}/{process}/runs/{sim_id}/events")
 def get_sim_events(dept: str, process: str, sim_id: str, layer: str | None = None) -> dict:
     """Return all events for a simulation. Optional ?layer=backend|process|data|accuracy|reporting."""
